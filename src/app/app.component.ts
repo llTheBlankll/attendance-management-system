@@ -7,9 +7,6 @@ import {PrimeNGConfig} from "primeng/api";
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
-  providers: [
-    provideAnimations()
-  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -21,5 +18,4 @@ export class AppComponent implements OnInit {
   }
 
   title = 'attendance-management-system';
-
 }
