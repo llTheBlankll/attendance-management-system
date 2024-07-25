@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import {CardModule} from "primeng/card";
-import {NgClass} from "@angular/common";
+import {NgClass, NgOptimizedImage} from "@angular/common";
 import {StyleClassModule} from "primeng/styleclass";
+import {IconFieldModule} from "primeng/iconfield";
+import {InputIconModule} from "primeng/inputicon";
+import {InputTextModule} from "primeng/inputtext";
+import {FloatLabelModule} from "primeng/floatlabel";
 
 @Component({
   selector: 'app-auth',
@@ -9,7 +13,12 @@ import {StyleClassModule} from "primeng/styleclass";
   imports: [
     CardModule,
     NgClass,
-    StyleClassModule
+    StyleClassModule,
+    NgOptimizedImage,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    FloatLabelModule
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css'

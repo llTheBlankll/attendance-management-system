@@ -13,3 +13,7 @@
   margin: 0 auto;
   padding: 0 16px;
 }
+
+.test-border {
+  border: 1px solid red;
+}
