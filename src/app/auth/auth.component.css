@@ -9,11 +9,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url("/cover.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 :host ::ng-deep .login-card {
   border-radius: 8px;
-  padding: 16px;
+  padding: 32px;
   width: 500px !important;
   height: 700px !important;
 }
