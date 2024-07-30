@@ -1,0 +1,21 @@
+<p-card subheader="Today's Activities" styleClass="h-full">
+  <p-timeline [value]="activities" styleClass="h-18rem overflow-auto">
+    <ng-template pTemplate="marker" let-activities>
+      <span
+        class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1"
+        [style]="{ 'background-color': activities.color }">
+                    <i [class]="activities.icon"></i>
+            </span>
+    </ng-template>
+    <ng-template pTemplate="content" let-activities>
+      <small class="p-text-secondary">
+        {{ activities.status }}
+      </small>
+    </ng-template>
+    <ng-template pTemplate="opposite" let-activities>
+      <small class="p-text-secondary">
+        <span class="pi pi-fw pi-clock" ></span> {{ activities.date }}
+      </small>
+    </ng-template>
+  </p-timeline>
+</p-card>
