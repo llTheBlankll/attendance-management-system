@@ -1,0 +1,20 @@
+<p-menubar>
+  <ng-template pTemplate="start">
+    <span href="" class="flex align-items-center" style="text-decoration: none;">
+      <p-avatar image="/school-logo.png" class="mr-2"></p-avatar>
+      <span class="font-bold">Punturin <span class="text-green-800">SHS</span></span>
+    </span>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <div class="flex align-items-center gap-2">
+      <p-iconField>
+        <p-inputIcon styleClass="pi pi-search"></p-inputIcon>
+        <input type="text" pInputText placeholder="Search" class="w-15rem" style="height: 2.2rem" />
+      </p-iconField>
+      <p-avatar image="/school-logo.png" (click)="menu.toggle($event)" shape="circle">
+      </p-avatar>
+    </div>    <!-- PrimeNG Dropdown Avatar -->
+    <p-tieredMenu #menu [popup]="true" [model]="adminAvatarMenu">
+    </p-tieredMenu>
+  </ng-template>
+</p-menubar>

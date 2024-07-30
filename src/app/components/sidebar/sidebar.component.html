@@ -1,30 +1,12 @@
-<p-menu [model]="this.adminMenu" styleClass="w-full md:w-18rem text-center" [style]="{'height': '100vh'}">
-  <ng-template pTemplate="start">
-        <span class="inline-flex align-items-center align-items-center gap-1 px-2 py-2">
-          <p-image src="/school-logo.png" width="32" height="32" class="mr-1"></p-image>
-            <span class="font-medium text-xl font-semibold">
-                PUNTURIN <span class="text-primary">SHS</span>
-            </span>
-        </span>
-    <button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
-      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle"/>
-      <span class="inline-flex flex-column">
-        <span class="font-bold">Vince Angelo Batecan</span>
-        <span class="text-sm text-primary">Admin</span>
-      </span>
-    </button>
-  </ng-template>
-  <ng-template pTemplate="submenuheader" let-item>
-    <span class="text-primary font-bold">{{ item.label }}</span>
-  </ng-template>
-  <ng-template pTemplate="item" let-item>
-    <a pRipple class="flex align-items-center p-menuitem-link">
-      <span [class]="item.icon"></span>
-      <span class="ml-2">{{ item.label }}</span>
-      <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge"/>
-      <span *ngIf="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">
-        {{ item.shortcut }}
-      </span>
-    </a>
-  </ng-template>
-</p-menu>
+<div class="sidebar-container">
+  <div class="flex-column justify-content-center text-center p-3">
+    <img ngSrc="/school-logo.png" alt="" width="156" height="156" priority>
+    <h2 class="text-color-secondary">Punturin <span class="font-bold text-green-800">SHS</span></h2>
+  </div>
+  <p-tieredMenu [model]="this.adminMenu" styleClass="w-full border-none"></p-tieredMenu>
+</div>
+<div class="main-content">
+  <ng-content>
+
+  </ng-content>
+</div>

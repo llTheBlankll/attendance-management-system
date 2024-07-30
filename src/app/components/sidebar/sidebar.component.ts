@@ -1,11 +1,16 @@
-import {Component, Input} from '@angular/core'; import {SidebarModule} from "primeng/sidebar";
+import {Component, Input} from '@angular/core';
+import {SidebarModule} from "primeng/sidebar";
 import {ImageModule} from "primeng/image";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {AvatarModule} from "primeng/avatar";
 import {Ripple} from "primeng/ripple";
 import {BadgeModule} from "primeng/badge";
-import {NgIf} from "@angular/common";
+import {NgIf, NgOptimizedImage} from "@angular/common";
+import {DividerModule} from "primeng/divider";
+import {TieredMenuModule} from "primeng/tieredmenu";
+import {PanelMenuModule} from "primeng/panelmenu";
+import {MenubarModule} from "primeng/menubar";
 
 @Component({
   selector: 'app-sidebar',
@@ -17,21 +22,23 @@ import {NgIf} from "@angular/common";
     AvatarModule,
     Ripple,
     BadgeModule,
-    NgIf
+    NgIf,
+    DividerModule,
+    TieredMenuModule,
+    PanelMenuModule,
+    MenubarModule,
+    NgOptimizedImage
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
 
-  @Input()
-  public opened: boolean = false
-
   adminMenu?: MenuItem[] = [
     {
       label: 'Dashboard',
       icon: 'pi pi-fw pi-home',
-      routerLink: ['/dashboard/admin']
+      routerLink: ['/dashboard/admin'],
     },
     {
       label: 'Teachers',
@@ -46,13 +53,28 @@ export class SidebarComponent {
     {
       label: 'Classes',
       icon: 'pi pi-fw pi-list',
-      routerLink: ['/dashboard/admin/classes']
+      routerLink: ['/dashboard/admin/classes'],
     },
     {
       label: 'Subjects',
       icon: 'pi pi-fw pi-book',
       routerLink: ['/dashboard/admin/subjects']
     },
+    {
+      label: "Attendance",
+      icon: 'pi pi-fw pi-calendar',
+      routerLink: ['/dashboard/admin/attendance']
+    },
+    {
+      label: "Settings",
+      icon: 'pi pi-fw pi-cog',
+      routerLink: ['/dashboard/admin/settings']
+    },
+    {
+      label: "Reports",
+      icon: 'pi pi-fw pi-chart-bar',
+      routerLink: ['/dashboard/admin/reports']
+    }
   ]
 
   adminAvatarMenu?: MenuItem[] = [
@@ -73,8 +95,11 @@ export class SidebarComponent {
     {
       label: 'Logout',
       icon: 'pi pi-fw pi-power-off',
+      routerLink: ['/auth'],
       command: () => {
-        console.log('Logout')
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("role");
       }
     }
   ]
