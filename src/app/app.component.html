@@ -1,3 +1,10 @@
-<router-outlet>
+@if (this.authenticated) {
+  <app-topbar></app-topbar>
+  <app-sidebar>
+    <router-outlet>
 
-</router-outlet>
+    </router-outlet>
+  </app-sidebar>
+} @else {
+  <router-outlet></router-outlet>
+}

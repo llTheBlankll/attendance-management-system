@@ -1,0 +1,7 @@
+.gutter-1 [class*=col] {
+  padding: 1rem;
+}
+
+.gutter-right-1 [class*=col] {
+  padding-right: 1rem;
+}
