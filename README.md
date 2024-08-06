@@ -1,4 +1,10 @@
-# AttendanceManagementSystem
+<div style="text-align: center;">
+
+[![Angular Build](https://github.com/llTheBlankll/attendance-management-system/actions/workflows/node.js.yml/badge.svg)](https://github.com/llTheBlankll/attendance-management-system/actions/workflows/node.js.yml)
+
+</div>
+
+# Attendance Management System
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.1.
 
