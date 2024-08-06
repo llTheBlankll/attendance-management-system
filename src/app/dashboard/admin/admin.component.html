@@ -1,5 +1,3 @@
-<p-breadcrumb [model]="this.breadcrumbItems">
-</p-breadcrumb>
 <div class="grid mt-2 gutter-right-1">
   <div class="col-12 md:col-6 lg:col-4 xl:col-3">
     <app-total-students-card/>
@@ -10,7 +8,7 @@
   <div class="col-12 md:col-6 lg:col-4 xl:col-3">
     <app-late-students-card/>
   </div>
-  <div class="col-12 md:col-6 lg:col-4 xl:col-3">
+  <div class="col-12 md:col-6 lg:col-12 xl:col-3">
     <app-absent-students-card/>
   </div>
   <div class="sm:col-12 lg:col-12 xl:col-6">
@@ -21,5 +19,11 @@
   </div>
   <div class="sm:col-12 lg:col-6 xl:col-3">
     <app-today-activities-card/>
+  </div>
+  <div class="sm:col-12 lg:col-12 xl:col-6">
+    <app-daily-attendance-report-card [date]="this.dailyAttendanceReportDateRange"/>
+  </div>
+  <div class="sm:col-12 lg:col-12 xl:col-6">
+    <app-section-ranking-card/>
   </div>
 </div>

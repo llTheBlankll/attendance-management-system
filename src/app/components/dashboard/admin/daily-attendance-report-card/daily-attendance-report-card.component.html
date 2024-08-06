@@ -1,0 +1,10 @@
+<p-panel header="Daily Attendance Report">
+  <!-- add dropdown at the end of the header -->
+  <ng-template pTemplate="icons">
+    <button class="p-panel-header-icon p-link mr-2" (click)="menu.toggle($event)">
+      <span class="pi pi-cog"></span>
+    </button>
+    <p-menu #menu [popup]="true" [model]="this.chartDaysOptions"></p-menu>
+  </ng-template>
+  <p-chart type="line" [data]="this.data" [options]="this.options"></p-chart>
+</p-panel>

@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
+import {AttendanceService} from "../../../../services/attendance/attendance.service";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
   selector: 'app-absent-students-card',
@@ -7,7 +10,27 @@ import { Component } from '@angular/core';
   templateUrl: './absent-students-card.component.html',
   styleUrl: './absent-students-card.component.css'
 })
-export class AbsentStudentsCardComponent {
+export class AbsentStudentsCardComponent implements OnInit {
+
+  // Injections
+  private readonly attendanceService = inject(AttendanceService);
 
   absentStudents = 0;
+
+  @Input()
+  public date = new Date();
+
+  @Input()
+  public status = AttendanceStatus.ABSENT;
+
+  ngOnInit() {
+    this.attendanceService.getTotalAttendanceByStatus(this.status, this.date).subscribe(totalAbsentStudents => {
+      // log the total number of absent students
+      if (!environment.production) {
+        console.log(totalAbsentStudents);
+      }
+
+      this.absentStudents = totalAbsentStudents;
+    });
+  }
 }

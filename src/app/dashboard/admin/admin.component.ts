@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {SidebarComponent} from "../../components/sidebar/sidebar.component";
 import {BreadcrumbModule} from "primeng/breadcrumb";
 import {MenuItem} from "primeng/api";
@@ -24,6 +24,15 @@ import {
 import {
   TodayActivitiesCardComponent
 } from "../../components/dashboard/admin/today-activities-card/today-activities-card.component";
+import {
+  DailyAttendanceReportCardComponent
+} from "../../components/dashboard/admin/daily-attendance-report-card/daily-attendance-report-card.component";
+import {DateRange} from "../../interfaces/DateRange";
+import {UtilService} from "../../services/util/util.service";
+import {ChartDays} from "../../enums/ChartDays";
+import {
+  SectionRankingCardComponent
+} from "../../components/dashboard/admin/section-ranking-card/section-ranking-card.component";
 
 @Component({
   selector: 'app-admin',
@@ -38,25 +47,21 @@ import {
     AbsentStudentsCardComponent,
     TotalAttendanceReportCardComponent,
     TopStudentsListCardComponent,
-    TodayActivitiesCardComponent
+    TodayActivitiesCardComponent,
+    DailyAttendanceReportCardComponent,
+    SectionRankingCardComponent
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
 
-  public breadcrumbItems: MenuItem[] = [
-    {
-      label: 'Application',
-      icon: 'pi pi-fw pi-compass',
-    },
-    {
-      label: 'Admin',
-      icon: 'pi pi-fw pi-user',
-    },
-    {
-      label: 'Dashboard',
-      icon: 'pi pi-fw pi-home',
-    }
-  ]
+  // Injections
+  private readonly utiLService = inject(UtilService);
+
+
+  public dailyAttendanceReportDateRange = this.utiLService.chartDaysToDateRange(ChartDays.LAST_30_DAYS)
+
+  ngOnInit() {
+  }
 }

@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {StudentService} from "../../../../services/student/student.service";
+import {AttendanceService} from "../../../../services/attendance/attendance.service";
+import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
   selector: 'app-ontime-students-card',
@@ -7,7 +11,27 @@ import { Component } from '@angular/core';
   templateUrl: './ontime-students-card.component.html',
   styleUrl: './ontime-students-card.component.css'
 })
-export class OntimeStudentsCardComponent {
+export class OntimeStudentsCardComponent implements OnInit {
+
+  // Injections
+  private readonly attendanceService = inject(AttendanceService);
 
   onTimeStudents = 0;
+
+  @Input()
+  public date = new Date();
+
+  @Input()
+  public status = AttendanceStatus.ON_TIME;
+
+  ngOnInit() {
+    this.attendanceService.getTotalAttendanceByStatus(this.status, this.date).subscribe(onTimeStudents => {
+      // Log the total number of on time students
+      if (!environment.production) {
+        console.log(onTimeStudents);
+      }
+
+      this.onTimeStudents = onTimeStudents;
+    });
+  }
 }

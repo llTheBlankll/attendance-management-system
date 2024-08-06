@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {CardModule} from "primeng/card";
 import {TimelineModule} from "primeng/timeline";
-import {EventItem} from "../../../../interfaces/event-item";
+import {EventItem} from "../../../../interfaces/EventItem";
 
 @Component({
   selector: 'app-today-activities-card',

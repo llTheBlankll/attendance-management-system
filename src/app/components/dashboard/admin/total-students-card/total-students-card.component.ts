@@ -1,16 +1,25 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
+import {StudentService} from "../../../../services/student/student.service";
 
 @Component({
-  selector: 'app-total-students-card',
-  standalone: true,
-  imports: [
-    CardModule
-  ],
-  templateUrl: './total-students-card.component.html',
-  styleUrl: './total-students-card.component.css'
+	selector: 'app-total-students-card',
+	standalone: true,
+	imports: [
+		CardModule
+	],
+	templateUrl: './total-students-card.component.html',
+	styleUrl: './total-students-card.component.css'
 })
-export class TotalStudentsCardComponent {
+export class TotalStudentsCardComponent implements OnInit {
 
-  totalStudents = 0;
+  // Injections
+  private readonly studentService: StudentService = inject(StudentService);
+
+	totalStudents = 0;
+
+  ngOnInit(): void {
+    // Assign the total number of students
+    this.studentService.getTotalStudents().subscribe(totalStudents => this.totalStudents = totalStudents);
+  }
 }
