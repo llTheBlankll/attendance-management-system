@@ -1,7 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {provideAnimations} from "@angular/platform-browser/animations";
-import {PrimeNGConfig} from "primeng/api";
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
+import {MenuItem, PrimeNGConfig} from "primeng/api";
 import {BreadcrumbModule} from "primeng/breadcrumb";
 import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TopbarComponent} from "./components/topbar/topbar.component";
@@ -16,6 +15,25 @@ import {AuthComponent} from "./auth/auth.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
+
+  private readonly activatedRoute = inject(ActivatedRoute);
+
+  public adminBreadCrumbItems: MenuItem[] = [
+    {
+      label: 'Application',
+      icon: 'pi pi-fw pi-compass'
+    },
+    {
+      label: 'Admin',
+      icon: 'pi pi-fw pi-user',
+    },
+    {
+      label: 'Dashboard',
+      icon: 'pi pi-fw pi-home',
+      routerLink: ['/dashboard/admin'],
+    }
+  ]
+
   private primeNgConfig = inject(PrimeNGConfig);
 
   ngOnInit(): void {

@@ -1,6 +1,7 @@
 @if (this.authenticated) {
   <app-topbar></app-topbar>
   <app-sidebar>
+    <p-breadcrumb [model]="this.adminBreadCrumbItems"/>
     <router-outlet>
 
     </router-outlet>
