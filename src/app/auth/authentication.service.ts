@@ -18,10 +18,6 @@ export class AuthenticationService {
     // Get user
     return this.currentUser.pipe(
       map((response: User | null) => {
-        if (!environment.production) {
-          console.log("Firebase user: " + JSON.stringify(response));
-        }
-
         // Check if user is not null
         return response;
       })
