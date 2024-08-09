@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {ToolbarModule} from "primeng/toolbar";
 import {ImageModule} from "primeng/image";
 import {MenubarModule} from "primeng/menubar";
@@ -10,6 +10,8 @@ import {TieredMenuModule} from "primeng/tieredmenu";
 import {ChipsModule} from "primeng/chips";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
+import {Auth, signOut} from "@angular/fire/auth";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-topbar',
@@ -30,6 +32,10 @@ import {InputIconModule} from "primeng/inputicon";
   styleUrl: './topbar.component.css'
 })
 export class TopbarComponent {
+
+  // Injections
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
 
   adminMenu?: MenuItem[] = [
     {
@@ -78,6 +84,9 @@ export class TopbarComponent {
       label: 'Logout',
       icon: 'pi pi-fw pi-power-off',
       command: () => {
+        signOut(this.auth).then(() => {
+          this.router.navigate(['/auth']).then(() => console.log('Logout'));
+        });
         console.log('Logout')
       }
     }

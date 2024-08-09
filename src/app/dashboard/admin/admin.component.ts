@@ -1,7 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {SidebarComponent} from "../../components/sidebar/sidebar.component";
 import {BreadcrumbModule} from "primeng/breadcrumb";
-import {MenuItem} from "primeng/api";
 import {TopbarComponent} from "../../components/topbar/topbar.component";
 import {
   TotalStudentsCardComponent
@@ -57,10 +56,9 @@ import {
 export class AdminComponent implements OnInit {
 
   // Injections
-  private readonly utiLService = inject(UtilService);
+  private readonly utilService = inject(UtilService);
 
-
-  public dailyAttendanceReportDateRange = this.utiLService.chartDaysToDateRange(ChartDays.LAST_30_DAYS)
+  public dailyAttendanceReportDateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS)
 
   ngOnInit() {
   }
