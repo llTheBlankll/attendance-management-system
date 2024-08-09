@@ -1,3 +1,4 @@
+  <p-toast/>
 <div class="background-overlay">
   <div class="container">
     <div class="grid">
@@ -6,7 +7,7 @@
                 class="flex text-center">
           <ng-template pTemplate="header" class="justify-content-center">
             <div class="card-header-img">
-              <img ngSrc="/school-logo.png" alt="" width="256" height="256">
+              <img ngSrc="/school-logo.png" alt="" width="256" height="256" priority>
             </div>
           </ng-template>
           <ng-template pTemplate="content">
@@ -27,7 +28,7 @@
                   </p-iconField>
                 </div>
                 <div class="col-12">
-                  <p-button icon="pi pi-sign-in" label="Sign in" severity="success" [disabled]="!this.loginForm.valid" outlined raised></p-button>
+                  <p-button icon="pi pi-sign-in" label="Sign in" type="submit" severity="success" [disabled]="!this.loginForm.valid" outlined raised></p-button>
                 </div>
               </form>
             </div>
