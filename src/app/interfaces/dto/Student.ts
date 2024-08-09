@@ -10,7 +10,7 @@ export interface Student {
   prefix: string;
   sex: string;
   birthdate: string;
-  guardian: Guardian; // ! Can cause circular reference
-  section: Section; // ! Can cause circular reference
-  gradeLevel: GradeLevel;
+  guardian: string; // ! Can cause circular reference
+  section: string; // ! Can cause circular reference
+  gradeLevel: string;
 }

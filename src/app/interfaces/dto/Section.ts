@@ -7,8 +7,8 @@ export interface Section {
   id: number;
   room: string;
   sectionName: string;
-  strand: Strand;
-  gradeLevel: GradeLevel;
-  teacher: Teacher;
-  students?: Student[]; // ! Can cause circular reference
+  strand: string;
+  gradeLevel: string;
+  teacher: string;
+  students?: string[]; // ! Can cause circular reference
 }

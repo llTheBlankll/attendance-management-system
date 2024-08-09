@@ -7,5 +7,5 @@ export interface Attendance {
   date: Date;
   timeIn: Date;
   timeOut: Date;
-  student: Student;
+  student: string;
 }

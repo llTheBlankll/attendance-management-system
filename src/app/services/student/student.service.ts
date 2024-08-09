@@ -1,17 +1,22 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {environment} from "../../../environments/environment";
+import {collection, collectionCount, doc, Firestore, setDoc} from "@angular/fire/firestore";
+import {Student} from "../../interfaces/dto/Student";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
 
-  private readonly baseUrl = `${environment.apiUrl}/v1/students`;
-  private readonly _http = inject(HttpClient);
+  private readonly firebase = inject(Firestore);
 
-  public getTotalStudents(): Observable<number> {
-    return this._http.get<number>(`${this.baseUrl}/statistics/all`);
+  public createStudent(student: Student) {
+    const studentDoc = doc(this.firebase, 'students', student.id.toString());
+    return setDoc(studentDoc, student);
+  }
+
+  public getTotalStudents() {
+
+    const studentsCollection = collection(this.firebase, 'students');
+    return collectionCount(studentsCollection);
   }
 }
