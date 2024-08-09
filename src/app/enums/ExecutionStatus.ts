@@ -1,0 +1,8 @@
+export enum ExecutionStatus {
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED",
+  NOT_FOUND = "NOT_FOUND",
+  VALIDATION_ERROR = "VALIDATION_ERROR",
+  INVALID = "INVALID",
+  VALID = "VALID"
+}

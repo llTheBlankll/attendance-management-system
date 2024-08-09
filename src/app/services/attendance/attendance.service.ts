@@ -1,11 +1,12 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {AttendanceStatus} from "../../enums/AttendanceStatus";
 import {Observable} from "rxjs";
 import {UtilService} from "../util/util.service";
 import {DateRange} from "../../interfaces/DateRange";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
+import {MessageDTO} from "../../interfaces/MessageDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,13 @@ export class AttendanceService {
       params: {
         attendanceStatus: attendanceStatus
       }
+    });
+  }
+
+  public getLineChartOfTotalAttendance(dateRange: DateRange): Observable<HttpResponse<LineChartDTO>> {
+    return this._http.post<LineChartDTO>(`${this.BASE_URL}/graphic-organizers/total-attendance/line-chart`, dateRange, {
+      responseType: "json",
+      observe: "response"
     });
   }
 }
