@@ -24,13 +24,13 @@ export class AbsentStudentsCardComponent implements OnInit {
   public status = AttendanceStatus.ABSENT;
 
   ngOnInit() {
-    this.attendanceService.getTotalAttendanceByStatus(this.status, this.date).subscribe(totalAbsentStudents => {
-      // log the total number of absent students
+    this.attendanceService.getTotalAttendanceByStatus(this.status, this.date).subscribe((total: number) => {
+      // log the total number of absent student`s
       if (!environment.production) {
-        console.log(totalAbsentStudents);
+        console.log(`Total Absent Students: ${total}`);
       }
 
-      this.absentStudents = totalAbsentStudents;
+      this.absentStudents = total;
     });
   }
 }

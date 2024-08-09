@@ -1,6 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {StudentService} from "../../../../services/student/student.service";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
 	selector: 'app-total-students-card',
@@ -20,6 +21,11 @@ export class TotalStudentsCardComponent implements OnInit {
 
   ngOnInit(): void {
     // Assign the total number of students
-    this.studentService.getTotalStudents().subscribe(totalStudents => this.totalStudents = totalStudents);
+    this.studentService.getTotalStudents().subscribe((total: number) => {
+      if (!environment.production) {
+        console.log(`Total Students: ${total}`);
+      }
+      this.totalStudents = total;
+    });
   }
 }

@@ -154,48 +154,6 @@ export class DailyAttendanceReportCardComponent implements OnInit {
   public date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
 
   private updateDailyAttendanceReport() {
-    // Get the total number of on time students
-    const onTimeStudentsPromise = firstValueFrom(this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, AttendanceStatus.ON_TIME));
-    const lateStudentsPromise = firstValueFrom(this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, AttendanceStatus.LATE));
-    const absentStudentsPromise = firstValueFrom(this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, AttendanceStatus.ABSENT));
-
-    if (!environment.production) {
-      console.log("onTimeStudentsPromise", onTimeStudentsPromise);
-      console.log("lateStudentsPromise", lateStudentsPromise);
-      console.log("absentStudentsPromise", absentStudentsPromise);
-      console.log("Requested Days", this.date);
-    }
-
-    // Wait for all promises
-    Promise.all([onTimeStudentsPromise, lateStudentsPromise, absentStudentsPromise]).then(values => {
-      if (!environment.production) {
-        console.log("values", values);
-      }
-
-      this.data = {
-        ...this.data,
-        labels: values[0].labels,
-        datasets: [
-          {
-            ...this.data.datasets[0],
-            data: values[0].data
-          },
-          {
-            ...this.data.datasets[1],
-            data: values[1].data
-          },
-          {
-            ...this.data.datasets[2],
-            data: values[2].data
-          }
-        ]
-      }
-
-      this.data.labels = values[0].labels;
-      this.data.datasets[0].data = values[0].data;
-      this.data.datasets[1].data = values[1].data;
-      this.data.datasets[2].data = values[2].data;
-    });
   }
 
   ngOnInit() {

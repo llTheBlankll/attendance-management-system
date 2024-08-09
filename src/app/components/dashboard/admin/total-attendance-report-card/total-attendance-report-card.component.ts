@@ -111,30 +111,18 @@ export class TotalAttendanceReportCardComponent implements OnInit {
 
   public updateTotalAttendanceReport() {
     // Get the on time and late students and add together
-    this.attendanceService.getLineChartOfTotalAttendance(this.dateRange).pipe(
-      catchError(err => {
-        console.error(err);
-        return [];
-      })
-    ).subscribe((totalAttendance: HttpResponse<LineChartDTO>) => {
-      if (totalAttendance.ok || totalAttendance.body != null) {
-        // Check if we are not in production
-        if (!environment.production) {
-          console.log(totalAttendance.body);
-        }
+    const lineChartDTO: LineChartDTO = this.attendanceService.getLineChartOfTotalAttendance(this.dateRange);
 
-        this.data = {
-          ...this.data,
-          labels: totalAttendance.body?.labels ?? [],
-          datasets: [
-            {
-              ...this.data.datasets[0],
-              data: totalAttendance.body?.data ?? []
-            }
-          ]
+    this.data = {
+      ...this.data,
+      labels: lineChartDTO.labels,
+      datasets: [
+        {
+          ...this.data.datasets[0],
+          data: lineChartDTO.data
         }
-      }
-    })
+      ]
+    };
   }
 
   ngOnInit() {

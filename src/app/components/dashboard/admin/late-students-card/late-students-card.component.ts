@@ -24,13 +24,5 @@ export class LateStudentsCardComponent implements OnInit {
   public status = AttendanceStatus.LATE;
 
   ngOnInit() {
-    this.attendanceService.getTotalAttendanceByStatus(this.status, this.date).subscribe(lateStudents => {
-      // Log the total number of late students
-      if (!environment.production) {
-        console.log(lateStudents);
-      }
-
-      this.lateStudents = lateStudents;
-    });
   }
 }
