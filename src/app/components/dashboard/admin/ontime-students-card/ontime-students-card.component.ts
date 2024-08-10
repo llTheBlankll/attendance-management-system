@@ -1,5 +1,4 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {StudentService} from "../../../../services/student/student.service";
 import {AttendanceService} from "../../../../services/attendance/attendance.service";
 import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
 import {environment} from "../../../../../environments/environment";
@@ -25,5 +24,11 @@ export class OntimeStudentsCardComponent implements OnInit {
   public status = AttendanceStatus.ON_TIME;
 
   ngOnInit() {
+    this.attendanceService.getTotalAttendanceByStatus(AttendanceStatus.ON_TIME, this.date).subscribe((total: number) => {
+      if (!environment.production) {
+        console.log(`Total On Time Students: ${total}`);
+      }
+      this.onTimeStudents = total;
+    })
   }
 }

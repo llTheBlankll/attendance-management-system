@@ -154,6 +154,28 @@ export class DailyAttendanceReportCardComponent implements OnInit {
   public date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
 
   private updateDailyAttendanceReport() {
+    const onTime = this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, AttendanceStatus.ON_TIME);
+    const late = this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, AttendanceStatus.LATE);
+    const absent = this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, AttendanceStatus.ABSENT);
+
+    this.data = {
+      ...this.data,
+      labels: onTime.labels, // you can use onTime.labels and late.labels and absent.labels since the date range used is the same
+      datasets: [
+        {
+          ...this.data.datasets[0],
+          data: onTime.data
+        },
+        {
+          ...this.data.datasets[1],
+          data: late.data
+        },
+        {
+          ...this.data.datasets[2],
+          data: absent.data
+        }
+      ]
+    }
   }
 
   ngOnInit() {

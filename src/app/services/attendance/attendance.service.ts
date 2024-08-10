@@ -4,8 +4,8 @@ import {DateRange} from "../../interfaces/DateRange";
 import {collection, collectionCount, Firestore, query, where} from "@angular/fire/firestore";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
 import {CollectionReference} from "@angular/fire/compat/firestore";
-import {Observable} from "rxjs";
 import {environment} from "../../../environments/environment";
+import {Timestamp} from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,16 @@ export class AttendanceService {
 
   public getTotalAttendanceByStatus(attendanceStatus: AttendanceStatus, date: Date) {
     // Get the total number of on time students in attendances collection
-    const attendanceCollection = collection(this.firestore, "attendances");
+    const attendanceCollection = query(collection(this.firestore, "attendances"),
+      where("status", "==", attendanceStatus),
+      where("date", "==", Timestamp.fromDate(date))
+    );
+    console.log(
+      Timestamp.fromDate(date),
+      date
+    )
     return collectionCount(
-      attendanceCollection,
-      (ref: CollectionReference) => ref
-        .where("status", "==", attendanceStatus)
-        .where("date", "==", date.toISOString().split('T')[0])
+      attendanceCollection
     )
   }
 
@@ -31,21 +35,25 @@ export class AttendanceService {
       data: []
     };
 
-    const attendanceCollection = collection(this.firestore, "attendances");
+    const attendanceCollection = query(
+      collection(
+        this.firestore, "attendances"
+      ),
+      where("status", "==", attendanceStatus),
+      where("date", ">=", date.startDate.toISOString().split('T')[0]),
+      where("date", "<=", date.endDate.toISOString().split('T')[0])
+    );
 
     // Loop date range start date until date range end date
     let currentDate = date.startDate;
     while (currentDate <= date.endDate) {
       // Push the data to the line chart
-      lineChart.labels.push(currentDate.toISOString().split('T')[0]);
+      lineChart.labels.push(
+        Timestamp.fromDate(currentDate).toDate().toISOString().split('T')[0]
+      );
       // Save the data
       collectionCount(
-        attendanceCollection,
-        (ref: CollectionReference) => {
-          return ref
-            .where("status", "==", attendanceStatus)
-            .where("date", "==", currentDate.toISOString().split('T')[0])
-        }
+        attendanceCollection
       ).subscribe((total: number) => {
         lineChart.data.push(total);
       });
@@ -71,20 +79,17 @@ export class AttendanceService {
     let currentDate = dateRange.startDate;
     while (currentDate <= dateRange.endDate) {
       // Get the total number of on time students in attendances collection
-      const attendanceCollection = collection(this.firestore, "attendances");
+      const attendanceCollection = query(
+        collection(this.firestore, "attendances"),
+        where("date", "==", Timestamp.fromDate(currentDate)),
+        where("status", "==", AttendanceStatus.ON_TIME),
+        where("status", "==", AttendanceStatus.LATE)
+      );
 
       // Push the data to the line chart
       lineChart.labels.push(currentDate.toISOString().split('T')[0]);
       // Save the data
-      collectionCount(
-        attendanceCollection,
-        (ref: CollectionReference) => {
-          return ref
-            .where("status", "==", AttendanceStatus.ON_TIME)
-            .where("status", "==", AttendanceStatus.LATE)
-            .where("date", "==", currentDate.toISOString().split('T')[0])
-        }
-      ).subscribe((total: number) => {
+      collectionCount(attendanceCollection).subscribe((total: number) => {
         lineChart.data.push(total);
       });
 
