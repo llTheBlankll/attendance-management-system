@@ -4,10 +4,10 @@ import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideHttpClient} from "@angular/common/http";
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getStorage, provideStorage } from '@angular/fire/storage';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {getAuth, provideAuth} from '@angular/fire/auth';
+import {getFirestore, provideFirestore} from '@angular/fire/firestore';
+import {getStorage, provideStorage} from '@angular/fire/storage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +15,17 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
-    provideFirebaseApp(() => initializeApp({"projectId":"attendance-management-sy-4402a","appId":"1:869268882621:web:b78ebfa4410abba8a6a3d4","storageBucket":"attendance-management-sy-4402a.appspot.com","apiKey":"AIzaSyDOKpPJASMR8bxWGlRSYlCchn1iziGcRpA","authDomain":"attendance-management-sy-4402a.firebaseapp.com","messagingSenderId":"869268882621","measurementId":"G-CQ9594N8RL"})), provideAuth(() => getAuth()), provideFirestore(() => getFirestore()), provideStorage(() => getStorage()),
+    provideFirebaseApp(() => initializeApp({
+      "projectId": "attendance-management-sy-4402a",
+      "appId": "1:869268882621:web:b78ebfa4410abba8a6a3d4",
+      "storageBucket": "attendance-management-sy-4402a.appspot.com",
+      "apiKey": "AIzaSyDOKpPJASMR8bxWGlRSYlCchn1iziGcRpA",
+      "authDomain": "attendance-management-sy-4402a.firebaseapp.com",
+      "messagingSenderId": "869268882621",
+      "measurementId": "G-CQ9594N8RL"
+    })),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
   ]
 };

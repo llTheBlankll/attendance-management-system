@@ -1,11 +1,12 @@
 import {Student} from "./Student";
 import {AttendanceStatus} from "../../enums/AttendanceStatus";
+import {Timestamp} from "@angular/fire/firestore";
 
 export interface Attendance {
   id: number;
   attendanceStatus: AttendanceStatus;
-  date: Date;
-  timeIn: Date;
-  timeOut: Date;
+  date: Timestamp;
+  timeIn: string;
+  timeOut: string;
   student: string;
 }
