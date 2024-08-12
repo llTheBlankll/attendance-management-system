@@ -4,14 +4,10 @@ import {ChartModule} from "primeng/chart";
 import {AttendanceService} from "../../../../services/attendance/attendance.service";
 import {UtilService} from "../../../../services/util/util.service";
 import {ChartDays} from "../../../../enums/ChartDays";
-import {catchError} from "rxjs";
-import {HttpResponse} from "@angular/common/http";
 import {LineChartDTO} from "../../../../interfaces/LineChartDTO";
-import {environment} from "../../../../../environments/environment";
 import {PanelModule} from "primeng/panel";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
-import {DateRange} from "../../../../interfaces/DateRange";
 
 @Component({
   selector: 'app-total-attendance-report-card',
@@ -62,8 +58,6 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     tension: 0.4
   }
 
-  public totalAttendance = 0;
-
   @Input()
   public dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
 
@@ -109,9 +103,9 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     }
   ]
 
-  public updateTotalAttendanceReport() {
+  public async updateTotalAttendanceReport() {
     // Get the on time and late students and add together
-    const lineChartDTO: LineChartDTO = this.attendanceService.getLineChartOfTotalAttendance(this.dateRange);
+    const lineChartDTO: LineChartDTO = await this.attendanceService.getLineChartOfTotalAttendance(this.dateRange);
 
     this.data = {
       ...this.data,
@@ -126,6 +120,6 @@ export class TotalAttendanceReportCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateTotalAttendanceReport();
+    this.updateTotalAttendanceReport().then(_ => console.log("Total Attendance Report Chart was reloaded."));
   }
 }

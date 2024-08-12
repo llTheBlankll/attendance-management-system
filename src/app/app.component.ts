@@ -6,7 +6,6 @@ import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TopbarComponent} from "./components/topbar/topbar.component";
 import {NgIf, NgTemplateOutlet} from "@angular/common";
 import {AuthComponent} from "./auth/auth.component";
-import {AngularFireModule} from "@angular/fire/compat";
 import {AuthenticationService} from "./auth/authentication.service";
 import {ToastModule} from "primeng/toast";
 
@@ -39,13 +38,19 @@ export class AppComponent implements OnInit {
   ]
 
   private primeNgConfig = inject(PrimeNGConfig);
-  public authenticated = false;
+  public authenticated = {
+    authenticated: false,
+    role: sessionStorage.getItem("role") ?? "GUEST"
+  };
 
   ngOnInit(): void {
     this.primeNgConfig.ripple = true;
 
     // Check if authenticated
-    this.authenticated = this.authService.isAuthenticated();
+    this.authenticated = {
+      authenticated: this.authService.isAuthenticated(),
+      role: sessionStorage.getItem("role") ?? "GUEST"
+    };
   }
 
   title = 'attendance-management-system';

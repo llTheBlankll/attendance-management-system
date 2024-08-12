@@ -24,7 +24,7 @@ export class OntimeStudentsCardComponent implements OnInit {
   public status = AttendanceStatus.ON_TIME;
 
   ngOnInit() {
-    this.attendanceService.getTotalAttendanceByStatus(AttendanceStatus.ON_TIME, this.date).subscribe((total: number) => {
+    this.attendanceService.countTotalByAttendanceByStatus([AttendanceStatus.ON_TIME], this.date).subscribe((total: number) => {
       if (!environment.production) {
         console.log(`Total On Time Students: ${total}`);
       }
