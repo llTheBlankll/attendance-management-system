@@ -1,27 +1,28 @@
 import {inject, Injectable} from '@angular/core';
 import {AttendanceStatus} from "../../enums/AttendanceStatus";
 import {DateRange} from "../../interfaces/DateRange";
-import {and, collection, collectionCount, Firestore, getDocs, query, Timestamp, where} from "@angular/fire/firestore";
+import {collection, collectionCount, collectionData, Firestore, query, where} from "@angular/fire/firestore";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
-import {environment} from "../../../environments/environment";
 import {UtilService} from "../util/util.service";
-import {DocumentData, QueryDocumentSnapshot} from "@angular/fire/compat/firestore";
+import {firstValueFrom} from "rxjs";
 import {Attendance} from "../../interfaces/dto/Attendance";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AttendanceService {
 
   private readonly firestore = inject(Firestore);
   private readonly utilService = inject(UtilService);
 
-  public getTotalAttendanceByStatus(attendanceStatus: AttendanceStatus, date: Date) {
+
+  public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date) {
     const [startDate, endDate] = this.utilService.dateToDateRange(date);
 
     // Get the total number of on time students in attendances collection
     const attendanceCollection = query(collection(this.firestore, "attendances"),
-      where("status", "==", attendanceStatus),
+      where("status", "in", attendanceStatus),
       where("date", ">=", startDate),
       where("date", "<=", endDate)
     );
@@ -29,84 +30,65 @@ export class AttendanceService {
     return collectionCount(attendanceCollection);
   }
 
-  public async getLineChartByAttendanceStatusAndDate(dateRange: DateRange, attendanceStatus: AttendanceStatus) {
+  public getAllAttendanceByStatusAndDateRange(attendanceStatus: AttendanceStatus[], dateRange: DateRange) {
+    const [startDate, endDate] = this.utilService.dateRangeToDateRange(dateRange);
+    if (!environment.production) {
+      console.log(`Getting all attendance by status ${attendanceStatus} from ${startDate.toDate().toISOString()} to ${endDate.toDate().toISOString()}`);
+    }
+
+    // Get the total number of on time students in attendances collection
+    const attendanceCollection = query(collection(this.firestore, "attendances"),
+      where("status", "in", attendanceStatus),
+      where("date", ">=", startDate),
+      where("date", "<=", endDate)
+    );
+
+    return collectionData(attendanceCollection, {idField: "id"});
+  }
+
+  public async getLineChartByAttendanceStatusAndDate(dateRange: DateRange, attendanceStatus: AttendanceStatus[]) {
+    // If not in production mode, verbose
+    if (!environment.production) {
+      console.log("getLineChartByAttendanceStatusAndDate", dateRange, attendanceStatus);
+    }
+
     const lineChart: LineChartDTO = {
       labels: [],
       data: []
-    };
-
-    // Loop date range start date until date range end date
-    // Set the dateRange.startDate to 00:00:00
-    const currentDate = new Date(dateRange.startDate);
-    currentDate.setHours(0, 0, 0, 0);
-
-    // Get the total number of on time students in attendances collection
-    // Loop date range until date range end date
-    while (currentDate <= dateRange.endDate) {
-      const [dateRangeStart, dateRangeEnd] = this.utilService.dateToDateRange(currentDate);
-
-      // Set the label and data of the line chart
-      lineChart.labels.push(currentDate.toISOString().split('T')[0]);
-      console.log("\nStart Date: " + dateRangeStart.toDate() + "\nEnd Date: " + dateRangeEnd.toDate());
-
-      // Get the total number of on time students in attendances collection
-      const attendanceCollection = query(
-        collection(this.firestore, "attendances"),
-        where("status", "==", attendanceStatus),
-        where("date", ">=", dateRangeStart),
-        where("date", "<=", dateRangeEnd)
-      );
-
-      // Save the data
-      collectionCount(attendanceCollection).subscribe((total: number) => {
-        lineChart.data.push(total);
-      });
-      currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // If not in production, show line chart data.
-    if (!environment.production) {
-      console.log(lineChart);
-    }
+    // Looping through the date range
+    const attendances: Attendance[] = await firstValueFrom(this.getAllAttendanceByStatusAndDateRange(attendanceStatus, dateRange));
+    const dailyCounts: { [date: string]: number } = {};
+    attendances.forEach(attendance => {
+      const dateString = attendance.date.toDate().toISOString().split("T")[0];
+      if (!dailyCounts[dateString]) {
+        dailyCounts[dateString] = 0;
+      }
+
+      dailyCounts[dateString]++;
+    });
+
+    Object.keys(dailyCounts).forEach((dateString) => {
+      lineChart.labels.push(dateString);
+      lineChart.data.push(dailyCounts[dateString]);
+    });
 
     return lineChart;
   }
 
-  public getLineChartOfTotalAttendance(dateRange: DateRange) {
-    const lineChart: LineChartDTO = {
-      labels: [],
-      data: []
-    };
+  public async getLineChartOfTotalAttendance(dateRange: DateRange) {
+    return this.getLineChartByAttendanceStatusAndDate(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]).then((lineChartDTO: LineChartDTO) => {
+      // Checks if line chart is null
+      if (lineChartDTO === null) {
+        console.error("Line Chart was not retrieved properly, Total Attendance Chart was not loaded.");
+        return {
+          labels: [],
+          data: []
+        } as LineChartDTO;
+      }
 
-    // Loop date range start date until date range end date
-    let currentDate = dateRange.startDate;
-    while (currentDate <= dateRange.endDate) {
-      const [startDate, endDate] = this.utilService.dateToDateRange(currentDate);
-
-      // Get the total number of on time students in attendances collection
-      const attendanceCollection = query(
-        collection(this.firestore, "attendances"),
-        where("date", ">=", startDate),
-        where("date", "<=", endDate),
-        where("status", "in", Array.of(AttendanceStatus.ON_TIME, AttendanceStatus.LATE)),
-      );
-
-      // Push the data to the line chart
-      lineChart.labels.push(currentDate.toISOString().split('T')[0]);
-      // Save the data
-      collectionCount(attendanceCollection).subscribe((total: number) => {
-        lineChart.data.push(total);
-      });
-
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    // If not in production, show line chart data.
-    if (!environment.production) {
-      console.log(`Line Chart for Total Attendance: `);
-      console.log(lineChart);
-    }
-
-    return lineChart;
+      return lineChartDTO;
+    });
   }
 }

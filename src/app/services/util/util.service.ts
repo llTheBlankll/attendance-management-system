@@ -31,7 +31,7 @@ export class UtilService {
 
     // Ensure the date is in UTC to avoid timezone issues
     const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-    const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+    const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
     return [Timestamp.fromDate(start), Timestamp.fromDate(end)];
   }
 
@@ -41,9 +41,11 @@ export class UtilService {
     }
 
     // Set the date of the startDate from dateRange variable to 00:00:00
-    const start = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth(), dateRange.startDate.getDate(), 0, 0, 0);
+    const start = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth(), dateRange.startDate.getDate());
+    start.setUTCHours(0, 0, 0, 999);
     // Set the date of the endDate from dateRange variable to 23:59:59
-    const end = new Date(dateRange.endDate.getFullYear(), dateRange.endDate.getMonth(), dateRange.endDate.getDate(), 23, 59, 59);
+    const end = new Date(dateRange.endDate.getFullYear(), dateRange.endDate.getMonth(), dateRange.endDate.getDate());
+    end.setUTCHours(23, 59, 59, 999);
 
     return [Timestamp.fromDate(start), Timestamp.fromDate(end)];
   }
