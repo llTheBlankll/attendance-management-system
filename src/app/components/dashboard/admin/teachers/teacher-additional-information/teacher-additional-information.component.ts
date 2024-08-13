@@ -18,5 +18,5 @@ import {Teacher} from "../../../../../interfaces/dto/Teacher";
 export class TeacherAdditionalInformationComponent {
 
   @Input()
-  public teacher: Teacher = {} as Teacher;
+  public teacher: Teacher | undefined = {} as Teacher;
 }

@@ -2,8 +2,8 @@
   <div class="flex flex-column w-full text-center justify-content-center mb-2">
     <p-image width="256" height="256" src="/school-logo.png"/>
     <h2>
-      @if (this.teacher !== null) {
-        {{ teacher.firstName }}&nbsp;{{ teacher.lastName }}
+      @if (this.teacher !== undefined) {
+        {{ this.teacher.firstName }}&nbsp;{{ this.teacher.lastName }}
       }
     </h2>
   </div>
@@ -14,7 +14,7 @@
         <input
           pInputText
           id="sex"
-          [value]="this.teacher.sex ?? 'Not Specified'"
+          [value]="this.teacher?.sex ?? 'Not Specified'"
           readonly
         />
       </div>
@@ -25,7 +25,7 @@
         <input
           pInputText
           id="middleInitial"
-          [value]="this.teacher.middleInitial ?? 'None'"
+          [value]="this.teacher?.middleInitial ?? 'None'"
           readonly
         />
       </div>
@@ -36,7 +36,7 @@
         <input
           pInputText
           id="age"
-          [value]="this.teacher.age ?? 'Not Specified'"
+          [value]="this.teacher?.age ?? 'Not Specified'"
           readonly
         />
       </div>
@@ -47,7 +47,7 @@
         <input
           pInputText
           id="position"
-          [value]="this.teacher.position ?? 'Not Specified'"
+          [value]="this.teacher?.position ?? 'Not Specified'"
           readonly
         />
       </div>
@@ -58,7 +58,7 @@
         <input
           pInputText
           id="contactNumber"
-          [value]="this.teacher.contactNumber ?? 'Not Specified'"
+          [value]="this.teacher?.contactNumber ?? 'Not Specified'"
           readonly
         />
       </div>
@@ -69,7 +69,7 @@
         <input
           pInputText
           id="emergencyContact"
-          [value]="this.teacher.emergencyContact ?? 'Not Specified'"
+          [value]="this.teacher?.emergencyContact ?? 'Not Specified'"
           readonly
         />
       </div>
