@@ -10,9 +10,9 @@ import {TieredMenuModule} from "primeng/tieredmenu";
 import {ChipsModule} from "primeng/chips";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
-import {Auth, signOut, User, user} from "@angular/fire/auth";
+import {Auth, signOut, User} from "@angular/fire/auth";
 import {Router} from "@angular/router";
-import {map} from "rxjs";
+import {AuthenticationService} from "../../auth/authentication.service";
 
 @Component({
   selector: 'app-topbar',
@@ -32,12 +32,12 @@ import {map} from "rxjs";
   templateUrl: './topbar.component.html',
   styleUrl: './topbar.component.css'
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnInit {
 
   // Injections
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
-  private readonly currentUser = user(this.auth.currentUser);
+  private readonly authService = inject(AuthenticationService);
 
   // Profile picture
   protected PROFILE_PICTURE_URL = "https://picsum.photos/id/1/256/256";
@@ -97,16 +97,14 @@ export class TopbarComponent {
     }
   ]
 
-  constructor() {
-    this.currentUser.pipe(map(
-      (userRetrieved: User | null) => {
-        if (userRetrieved === null) {
-          console.log(`No Profile URL found`);
-          this.PROFILE_PICTURE_URL = "https://picsum.photos/id/1/200/300";
-        } else {
-          this.PROFILE_PICTURE_URL = userRetrieved.photoURL ?? "https://picsum.photos/id/1/200/300";
-        }
+  ngOnInit() {
+    this.authService.isAuthenticated().subscribe((user: User | null) => {
+      if (user === null) {
+        console.error("Not Logged!")
+        return;
       }
-    )).subscribe();
+
+      this.PROFILE_PICTURE_URL = user.photoURL ?? '/school-logo.png';
+    })
   }
 }

@@ -1,9 +1,6 @@
 import {inject, Injectable} from '@angular/core';
-import {Auth, getAuth, User, user} from "@angular/fire/auth";
-import {map, of, Subscription} from "rxjs";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {environment} from "../../environments/environment";
-import {Firestore} from "@angular/fire/firestore";
+import {Auth, User, user} from "@angular/fire/auth";
+import {map} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +19,7 @@ export class AuthenticationService {
       map((user: User | null) => {
         if (user === null) {
           console.error("User is null");
-          return false;
+          return null;
         }
 
         // TODO: Get the custom claims
@@ -37,7 +34,6 @@ export class AuthenticationService {
             sessionStorage.setItem("role", "GUEST");
           }
         })
-
 
         // Check if user is not null
         return user;

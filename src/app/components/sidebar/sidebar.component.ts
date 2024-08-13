@@ -48,12 +48,12 @@ export class SidebarComponent {
     {
       label: 'Students',
       icon: 'pi pi-fw pi-user',
-      routerLink: ['/dashboard/admin/students']
+      routerLink: ['/dashboard/students']
     },
     {
       label: 'Classes',
       icon: 'pi pi-fw pi-list',
-      routerLink: ['/dashboard/admin/classes'],
+      routerLink: ['/dashboard/classes'],
     },
     {
       label: 'Subjects',
@@ -63,7 +63,7 @@ export class SidebarComponent {
     {
       label: "Attendance",
       icon: 'pi pi-fw pi-calendar',
-      routerLink: ['/dashboard/admin/attendance']
+      routerLink: ['/dashboard/attendance']
     },
     {
       label: "Settings",

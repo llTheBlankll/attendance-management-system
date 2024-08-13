@@ -1,0 +1,78 @@
+<p-card subheader="Additional Information" styleClass="h-full">
+  <div class="flex flex-column w-full text-center justify-content-center mb-2">
+    <p-image width="256" height="256" src="/school-logo.png"/>
+    <h2>
+      @if (this.teacher !== null) {
+        {{ teacher.firstName }}&nbsp;{{ teacher.lastName }}
+      }
+    </h2>
+  </div>
+  <div class="grid">
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="sex">Sex</label>
+        <input
+          pInputText
+          id="sex"
+          [value]="this.teacher.sex ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="middleInitial">Middle Initial:</label>
+        <input
+          pInputText
+          id="middleInitial"
+          [value]="this.teacher.middleInitial ?? 'None'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="age">Age:</label>
+        <input
+          pInputText
+          id="age"
+          [value]="this.teacher.age ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="position">Position:</label>
+        <input
+          pInputText
+          id="position"
+          [value]="this.teacher.position ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="contactNumber">Contact Number:</label>
+        <input
+          pInputText
+          id="contactNumber"
+          [value]="this.teacher.contactNumber ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="emergencyContact">Emergency Contact:</label>
+        <input
+          pInputText
+          id="emergencyContact"
+          [value]="this.teacher.emergencyContact ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+</p-card>
