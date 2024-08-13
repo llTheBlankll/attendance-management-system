@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {PanelModule} from "primeng/panel";
 import {MenuModule} from "primeng/menu";
@@ -11,6 +11,13 @@ import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
 import {Button} from "primeng/button";
 import {ImageModule} from "primeng/image";
+import {
+  ListOfTeachersComponent
+} from "../../../../components/dashboard/admin/teachers/list-of-teachers/list-of-teachers.component";
+import {
+  TeacherAdditionalInformationComponent
+} from "../../../../components/dashboard/admin/teachers/teacher-additional-information/teacher-additional-information.component";
+import {BreadcrumbsService} from "../../../../services/breadcrumbs/breadcrumbs.service";
 
 @Component({
   selector: 'app-admin-teachers',
@@ -24,42 +31,21 @@ import {ImageModule} from "primeng/image";
     InputIconModule,
     InputTextModule,
     Button,
-    ImageModule
+    ImageModule,
+    ListOfTeachersComponent,
+    TeacherAdditionalInformationComponent
   ],
   templateUrl: './admin-teachers.component.html',
   styleUrl: './admin-teachers.component.css'
 })
 export class AdminTeachersComponent implements OnInit {
+
   // Injections
   private readonly firestore = inject(Firestore);
-
-  // Options
-  protected readonly teachersMenu: MenuItem[] = [
-    {
-      label: "Add Teacher",
-      icon: "pi pi-fw pi-plus"
-    },
-    {
-      label: "Remove Teacher",
-      icon: "pi pi-fw pi-times"
-    }
-  ]
+  private readonly breadcrumbsService = inject(BreadcrumbsService);
 
   public teachers: Teacher[] = [];
 
   ngOnInit() {
-    this.teachers = [
-      {
-        id: 1,
-        firstName: "John",
-        lastName: "Doe",
-        middleInitial: "M",
-        age: 18,
-        sex: "Male",
-        position: "Teacher",
-        contactNumber: "1234567890",
-        emergencyContact: "0987654321"
-      }
-    ]
   }
 }

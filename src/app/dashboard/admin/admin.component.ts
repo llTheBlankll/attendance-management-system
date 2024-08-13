@@ -26,12 +26,12 @@ import {
 import {
   DailyAttendanceReportCardComponent
 } from "../../components/dashboard/admin/daily-attendance-report-card/daily-attendance-report-card.component";
-import {DateRange} from "../../interfaces/DateRange";
 import {UtilService} from "../../services/util/util.service";
 import {ChartDays} from "../../enums/ChartDays";
 import {
   SectionRankingCardComponent
 } from "../../components/dashboard/admin/section-ranking-card/section-ranking-card.component";
+import {BreadcrumbsService} from "../../services/breadcrumbs/breadcrumbs.service";
 
 @Component({
   selector: 'app-admin',
@@ -57,6 +57,7 @@ export class AdminComponent implements OnInit {
 
   // Injections
   private readonly utilService = inject(UtilService);
+  private readonly breadcrumbService = inject(BreadcrumbsService);
 
   public dailyAttendanceReportDateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS)
 
