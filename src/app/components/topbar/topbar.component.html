@@ -11,7 +11,7 @@
         <p-inputIcon styleClass="pi pi-search"></p-inputIcon>
         <input type="text" pInputText placeholder="Search" class="w-15rem" style="height: 2.2rem" />
       </p-iconField>
-      <p-avatar image="/school-logo.png" (click)="menu.toggle($event)" shape="circle">
+      <p-avatar [image]="this.PROFILE_PICTURE_URL" (click)="menu.toggle($event)" shape="circle">
       </p-avatar>
     </div>    <!-- PrimeNG Dropdown Avatar -->
     <p-tieredMenu #menu [popup]="true" [model]="adminAvatarMenu">

@@ -9,8 +9,14 @@ import {environment} from "../../../environments/environment";
 })
 export class UtilService {
 
+  /**
+   * Formatting Date into YYYY-MM-DD
+   *
+   * @param date Date that will be formatted
+   * @returns {string} that is in format YYYY-MM-DD
+   */
   public formatDateToLocalDate(date: Date) {
-    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    return date.toISOString().split("T")[0];
   }
 
   /**
@@ -50,6 +56,12 @@ export class UtilService {
     return [Timestamp.fromDate(start), Timestamp.fromDate(end)];
   }
 
+  /**
+   * Converting chart days to date range, they could be today, last 7 days, last 30 days, last 90 days, last 365 days.
+   * And it will return the date range based on the chart days
+   *
+   * @param chartDays
+   */
   public chartDaysToDateRange(chartDays: ChartDays) {
     const currentDate = new Date();
 
