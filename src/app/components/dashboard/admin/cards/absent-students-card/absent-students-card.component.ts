@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
-import {AttendanceService} from "../../../../services/attendance/attendance.service";
-import {environment} from "../../../../../environments/environment";
+import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
+import {AttendanceService} from "../../../../../services/attendance/attendance.service";
+import {environment} from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-absent-students-card',

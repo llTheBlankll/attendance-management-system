@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {AttendanceService} from "../../../../services/attendance/attendance.service";
-import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
-import {environment} from "../../../../../environments/environment";
+import {AttendanceService} from "../../../../../services/attendance/attendance.service";
+import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
+import {environment} from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-ontime-students-card',

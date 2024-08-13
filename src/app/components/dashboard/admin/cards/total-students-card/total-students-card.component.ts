@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
-import {StudentService} from "../../../../services/student/student.service";
-import {environment} from "../../../../../environments/environment";
+import {StudentService} from "../../../../../services/student/student.service";
+import {environment} from "../../../../../../environments/environment";
 
 @Component({
 	selector: 'app-total-students-card',

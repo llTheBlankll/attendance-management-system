@@ -1,12 +1,12 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {ChartModule} from "primeng/chart";
-import {AttendanceService} from "../../../../services/attendance/attendance.service";
-import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
+import {AttendanceService} from "../../../../../services/attendance/attendance.service";
+import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
 import {firstValueFrom} from "rxjs";
-import {environment} from "../../../../../environments/environment";
-import {UtilService} from "../../../../services/util/util.service";
-import {ChartDays} from "../../../../enums/ChartDays";
+import {environment} from "../../../../../../environments/environment";
+import {UtilService} from "../../../../../services/util/util.service";
+import {ChartDays} from "../../../../../enums/ChartDays";
 import {DropdownModule} from "primeng/dropdown";
 import {MenuModule} from "primeng/menu";
 import {PanelModule} from "primeng/panel";

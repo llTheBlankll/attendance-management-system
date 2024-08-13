@@ -1,10 +1,10 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {ChartModule} from "primeng/chart";
-import {AttendanceService} from "../../../../services/attendance/attendance.service";
-import {UtilService} from "../../../../services/util/util.service";
-import {ChartDays} from "../../../../enums/ChartDays";
-import {LineChartDTO} from "../../../../interfaces/LineChartDTO";
+import {AttendanceService} from "../../../../../services/attendance/attendance.service";
+import {UtilService} from "../../../../../services/util/util.service";
+import {ChartDays} from "../../../../../enums/ChartDays";
+import {LineChartDTO} from "../../../../../interfaces/LineChartDTO";
 import {PanelModule} from "primeng/panel";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
