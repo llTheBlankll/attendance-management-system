@@ -1,5 +1,3 @@
-import {Student} from "./Student";
-
 export interface Guardian {
   id: number;
   fullName: string;

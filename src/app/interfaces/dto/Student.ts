@@ -1,15 +1,13 @@
-import {Guardian} from "./Guardian";
-import {Section} from "./Section";
-import {GradeLevel} from "./GradeLevel";
+import {Timestamp} from "@angular/fire/firestore";
 
 export interface Student {
   id: number;
   firstName: string;
-  middleInitial: string;
+  middleInitial?: string;
   lastName: string;
-  prefix: string;
+  prefix?: string;
   sex: string;
-  birthdate: string;
+  birthdate: Timestamp;
   guardian: string; // ! Can cause circular reference
   section: string; // ! Can cause circular reference
   gradeLevel: string;
