@@ -8,6 +8,7 @@ import {PrimeTemplate} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {TooltipModule} from "primeng/tooltip";
 import {Teacher} from "../../../../../interfaces/dto/Teacher";
+import {DialogModule} from "primeng/dialog";
 
 @Component({
   selector: 'app-list-of-teachers',
@@ -20,7 +21,8 @@ import {Teacher} from "../../../../../interfaces/dto/Teacher";
     InputTextModule,
     PrimeTemplate,
     TableModule,
-    TooltipModule
+    TooltipModule,
+    DialogModule
   ],
   templateUrl: './list-of-teachers.component.html',
   styleUrl: './list-of-teachers.component.css'
