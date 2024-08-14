@@ -13,10 +13,10 @@ import {Button} from "primeng/button";
 import {ImageModule} from "primeng/image";
 import {
   ListOfTeachersComponent
-} from "../../../../components/dashboard/admin/teachers/list-of-teachers/list-of-teachers.component";
+} from "../../../../components/admin/teachers/cards/list-of-teachers/list-of-teachers.component";
 import {
   TeacherAdditionalInformationComponent
-} from "../../../../components/dashboard/admin/teachers/teacher-additional-information/teacher-additional-information.component";
+} from "../../../../components/admin/teachers/cards/teacher-additional-information/teacher-additional-information.component";
 import {BreadcrumbsService} from "../../../../services/breadcrumbs/breadcrumbs.service";
 
 @Component({
