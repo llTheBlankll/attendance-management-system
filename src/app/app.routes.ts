@@ -4,10 +4,10 @@ import {AdminComponent} from "./dashboard/admin/admin.component";
 import {TeacherComponent} from "./dashboard/teacher/teacher.component";
 import {authGuard} from "./auth.guard";
 import {AdminTeachersComponent} from "./dashboard/admin/teachers/admin-teachers/admin-teachers.component";
-import {StudentsPageComponent} from "./dashboard/students/students-page/students-page.component";
-import {ClassesComponent} from "./dashboard/classes/classes/classes.component";
-import {AdminSubjectsComponent} from "./dashboard/admin/subjects/admin-subjects/admin-subjects.component";
-import {AttendanceComponent} from "./dashboard/attendances/attendance/attendance.component";
+import {StudentsPageComponent} from "./dashboard/global/students/students-page/students-page.component";
+import {ClassesComponent} from "./dashboard/global/classes/classes/classes.component";
+import {AdminSubjectsComponent} from "./dashboard/admin/subjects/admin-subjects.component";
+import {AttendanceComponent} from "./dashboard/global/attendances/attendance/attendance.component";
 
 export const routes: Routes = [
   {
