@@ -32,8 +32,7 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     datasets: [
       {
         data: [0],
-        borderColor: '#42A5F5',
-        tension: .4
+        borderColor: '#42A5F5'
       }
     ]
   };

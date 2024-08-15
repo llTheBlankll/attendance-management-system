@@ -3,8 +3,6 @@ import {CardModule} from "primeng/card";
 import {ChartModule} from "primeng/chart";
 import {AttendanceService} from "../../../../../services/attendance/attendance.service";
 import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
-import {firstValueFrom} from "rxjs";
-import {environment} from "../../../../../../environments/environment";
 import {UtilService} from "../../../../../services/util/util.service";
 import {ChartDays} from "../../../../../enums/ChartDays";
 import {DropdownModule} from "primeng/dropdown";

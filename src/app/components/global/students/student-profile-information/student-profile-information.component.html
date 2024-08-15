@@ -1,0 +1,77 @@
+<p-card subheader="Student Profile Information" styleClass="h-full">
+  <div class="flex align-items-center justify-content-center mb-4">
+    <p-image src="/school-logo.png" width="156" height="156">
+    </p-image>
+    @if (this.studentInformation) {
+      {{ this.studentInformation.prefix }}. {{ this.studentInformation.firstName }}&nbsp;{{ this.studentInformation.lastName }}
+    }
+  </div>
+  <div class="grid">
+    <div class="col-12 w-full">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="sex">Sex</label>
+        <input
+          pInputText
+          id="sex"
+          [value]="this.studentInformation?.sex ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="birthDate">Birth Date</label>
+        <input
+          pInputText
+          id="birthDate"
+          [value]="this.studentInformation?.sex ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="guardianName">Guardian Name</label>
+        <input
+          pInputText
+          id="guardianName"
+          [value]="this.studentInformation?.guardian?.fullName ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="guardianContactNumber">Contact Number</label>
+        <input
+          pInputText
+          id="guardianContactNumber"
+          [value]="this.studentInformation?.guardian?.contactNumber ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="guardianContactNumber">Section Name</label>
+        <input
+          pInputText
+          id="sectionName"
+          [value]="this.studentInformation?.section?.sectionName ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="gradeLevel">Grade Level</label>
+        <input
+          pInputText
+          id="gradeLevel"
+          [value]="this.studentInformation?.gradeLevel?.name ?? 'Not Specified'"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+</p-card>
