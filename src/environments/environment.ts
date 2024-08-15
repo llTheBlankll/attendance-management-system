@@ -10,6 +10,8 @@ export const environment = {
     "messagingSenderId": "869268882621",
     "measurementId": "G-CQ9594N8RL"
   },
-  badOverAllAttendance: 80,
-  goodOverAllAttendance: 90
+  attendance: {
+    badOverAllAttendance: 80,
+    goodOverAllAttendance: 90
+  }
 };
