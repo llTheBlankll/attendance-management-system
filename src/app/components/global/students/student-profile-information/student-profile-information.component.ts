@@ -6,7 +6,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {Student} from "../../../../interfaces/dto/Student";
 
 @Component({
-  selector: 'student-profile-information',
+  selector: 'students-profile-information',
   standalone: true,
   imports: [
     CardModule,

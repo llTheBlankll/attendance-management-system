@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {environment} from "../../../../../environments/environment";
 
 @Component({
-  selector: 'student-overall-attendance-card',
+  selector: 'students-overall-attendance-card',
   standalone: true,
   imports: [],
   templateUrl: './student-overall-attendance-card.component.html',

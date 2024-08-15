@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  selector: 'student-on-time-card',
+  selector: 'students-on-time-card',
   standalone: true,
   imports: [],
   templateUrl: './student-on-time-card.component.html',

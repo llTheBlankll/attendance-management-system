@@ -6,7 +6,7 @@ import {MenuItem} from "primeng/api";
 import {ChartModule} from "primeng/chart";
 
 @Component({
-  selector: 'student-attendance-distribution',
+  selector: 'students-attendance-distribution',
   standalone: true,
   imports: [PanelModule,
     Button,
