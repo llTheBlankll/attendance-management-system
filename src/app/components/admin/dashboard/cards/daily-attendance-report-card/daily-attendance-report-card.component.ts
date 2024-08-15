@@ -31,7 +31,6 @@ export class DailyAttendanceReportCardComponent implements OnInit {
   private readonly utilService = inject(UtilService);
 
   data = {
-    type: "line",
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
       {

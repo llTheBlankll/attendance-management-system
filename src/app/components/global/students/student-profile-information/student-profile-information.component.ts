@@ -20,5 +20,5 @@ import {Student} from "../../../../interfaces/dto/Student";
 export class StudentProfileInformationComponent {
 
   @Input()
-  public studentInformation: Student | undefined = {} as Student;
+  public studentInformation: Student | undefined = undefined;
 }
