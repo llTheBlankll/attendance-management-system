@@ -9,5 +9,7 @@ export const environment = {
     "authDomain": "attendance-management-sy-4402a.firebaseapp.com",
     "messagingSenderId": "869268882621",
     "measurementId": "G-CQ9594N8RL"
-  }
+  },
+  badOverAllAttendance: 80,
+  goodOverAllAttendance: 90
 };
