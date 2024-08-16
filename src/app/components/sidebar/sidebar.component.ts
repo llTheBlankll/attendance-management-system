@@ -56,51 +56,14 @@ export class SidebarComponent {
       routerLink: ['/dashboard/classes'],
     },
     {
-      label: 'Subjects',
-      icon: 'pi pi-fw pi-book',
-      routerLink: ['/dashboard/admin/subjects']
-    },
-    {
       label: "Attendance",
       icon: 'pi pi-fw pi-calendar',
       routerLink: ['/dashboard/attendance']
     },
     {
-      label: "Settings",
-      icon: 'pi pi-fw pi-cog',
-      routerLink: ['/dashboard/admin/settings']
-    },
-    {
       label: "Reports",
       icon: 'pi pi-fw pi-chart-bar',
       routerLink: ['/dashboard/admin/reports']
-    }
-  ]
-
-  adminAvatarMenu?: MenuItem[] = [
-    {
-      label: 'Profile',
-      icon: 'pi pi-fw pi-user',
-      command: () => {
-        console.log('Profile')
-      }
-    },
-    {
-      label: 'Settings',
-      icon: 'pi pi-fw pi-cog',
-      command: () => {
-        console.log('Settings')
-      }
-    },
-    {
-      label: 'Logout',
-      icon: 'pi pi-fw pi-power-off',
-      routerLink: ['/auth'],
-      command: () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("role");
-      }
     }
   ]
 }

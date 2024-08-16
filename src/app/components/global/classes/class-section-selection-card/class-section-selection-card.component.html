@@ -1,0 +1,39 @@
+<p-card styleClass="shadow-3">
+  <div class="grid">
+    <div class="col-12 xl:col-6">
+
+      <div class="grid h-full">
+        <div class="col-12 xl:col-3 flex align-items-center justify-content-center">
+          <p-avatar [image]="this.sectionSelected?.photoUrl" size="xlarge" styleClass="h-10rem w-10rem" shape="circle"/>
+        </div>
+        <div class="col-12 xl:col-9 flex-column align-self-center">
+          <h2>
+            @if (this.sectionSelected === null && this.currentUser !== null) {
+              <span class="text-3xl">
+                Hello {{ this.currentUser.displayName ?? this.currentUser.email }}!
+              </span>
+            } @else {
+              <span class="text-3xl">
+                You have selected {{ this.sectionSelected?.sectionName }}
+              </span>
+            }
+          </h2>
+          <!-- USER FULL NAME -->
+          <span>We hope you are having a good day! 👋</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 xl:col-6 flex align-self-center justify-content-center">
+      <div class="flex mr-3">
+        <p-dropdown styleClass="w-20rem" placeholder="Select Section...">
+
+        </p-dropdown>
+      </div>
+      <div class="flex mr-3">
+        <p-button label="Select" styleClass="w-10rem">
+
+        </p-button>
+      </div>
+    </div>
+  </div>
+</p-card>
