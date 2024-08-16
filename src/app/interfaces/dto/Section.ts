@@ -7,6 +7,7 @@ export interface Section {
   id: number;
   room: string;
   sectionName: string;
+  photoUrl: string;
   strand: Strand;
   gradeLevel: GradeLevel;
   teacher: Teacher;

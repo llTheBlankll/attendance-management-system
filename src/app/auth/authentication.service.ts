@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Auth, User, user} from "@angular/fire/auth";
-import {map} from "rxjs";
+import {map, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +39,9 @@ export class AuthenticationService {
         return user;
       })
     );
+  }
+
+  public getCurrentUser(): Observable<User | null> {
+    return user(this.auth);
   }
 }

@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {ActivatedRouteSnapshot, NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {MenuItem, PrimeNGConfig} from "primeng/api";
 import {BreadcrumbModule} from "primeng/breadcrumb";
@@ -9,7 +9,7 @@ import {AuthComponent} from "./auth/auth.component";
 import {AuthenticationService} from "./auth/authentication.service";
 import {ToastModule} from "primeng/toast";
 import {BreadcrumbsService} from "./services/breadcrumbs/breadcrumbs.service";
-import {filter, Subject, takeUntil} from "rxjs";
+import {filter, Subject} from "rxjs";
 
 @Component({
   selector: 'app-root',

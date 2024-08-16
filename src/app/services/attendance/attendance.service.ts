@@ -16,7 +16,6 @@ export class AttendanceService {
   private readonly firestore = inject(Firestore);
   private readonly utilService = inject(UtilService);
 
-
   public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date) {
     const [startDate, endDate] = this.utilService.dateToDateRange(date);
 
@@ -30,8 +29,29 @@ export class AttendanceService {
     return collectionCount(attendanceCollection);
   }
 
+  /**
+   * This function is used to get all attendances by their status and date range.
+   * This function is demanding in reads of Firebase, it is best to use sparingly.
+   *
+   * @note This function is demanding in reads of Firebase, it is best to use sparingly.
+   *       Firebase has a limit of 50,000 document reads per day, if you have a large number of
+   *       students and you call this function too frequently, you might quickly reach this limit.
+   *       If you need to frequently call this function, consider implementing caching or
+   *       other optimizations.
+   *
+   * @param attendanceStatus - The status of the attendance that you want to get.
+   * @param dateRange - The date range that you want to get.
+   * @returns A promise that resolves to an array of attendance objects.
+   * @throws When there is an error with the Firebase Firestore.
+   */
   public getAllAttendanceByStatusAndDateRange(attendanceStatus: AttendanceStatus[], dateRange: DateRange) {
+    // Checks
+    if (dateRange == null) {
+      throw new Error("Date Range cannot be null");
+    }
+
     const [startDate, endDate] = this.utilService.dateRangeToDateRange(dateRange);
+    // If not in production mode, verbose
     if (!environment.production) {
       console.log(`Getting all attendance by status ${attendanceStatus} from ${startDate.toDate().toISOString()} to ${endDate.toDate().toISOString()}`);
     }

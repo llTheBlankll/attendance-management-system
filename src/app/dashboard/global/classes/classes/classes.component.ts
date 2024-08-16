@@ -12,6 +12,24 @@ import {
 import {
   ClassAbsentStudentCardComponent
 } from "../../../../components/global/classes/class-absent-student-card/class-absent-student-card.component";
+import {
+  ClassMonthlyAttendanceCardComponent
+} from "../../../../components/global/classes/class-monthly-attendance-card/class-monthly-attendance-card.component";
+import {
+  ClassAttendanceDemographicsCardComponent
+} from "../../../../components/global/classes/class-attendance-demographics-card/class-attendance-demographics-card.component";
+import {
+  ClassAbsentStudentsListCardComponent
+} from "../../../../components/global/classes/class-absent-students-list-card/class-absent-students-list-card.component";
+import {
+  ClassStudentsListCardComponent
+} from "../../../../components/global/classes/class-students-list-card/class-students-list-card.component";
+import {
+  ClassTodaysActivitiesCardComponent
+} from "../../../../components/global/classes/class-todays-activities-card/class-todays-activities-card.component";
+import {
+  ClassSectionSelectionCardComponent
+} from "../../../../components/global/classes/class-section-selection-card/class-section-selection-card.component";
 
 @Component({
   selector: 'app-classes',
@@ -21,7 +39,13 @@ import {
     ClassTotalStudentCardComponent,
     ClassOnTimeStudentCardComponent,
     ClassLateStudentCardComponent,
-    ClassAbsentStudentCardComponent
+    ClassAbsentStudentCardComponent,
+    ClassMonthlyAttendanceCardComponent,
+    ClassAttendanceDemographicsCardComponent,
+    ClassAbsentStudentsListCardComponent,
+    ClassStudentsListCardComponent,
+    ClassTodaysActivitiesCardComponent,
+    ClassSectionSelectionCardComponent
   ],
   templateUrl: './classes.component.html',
   styleUrl: './classes.component.css'
