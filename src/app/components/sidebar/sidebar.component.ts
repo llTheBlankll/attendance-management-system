@@ -58,7 +58,7 @@ export class SidebarComponent {
     {
       label: "Attendance",
       icon: 'pi pi-fw pi-calendar',
-      routerLink: ['/dashboard/attendance']
+      routerLink: ['/dashboard/attendances']
     },
     {
       label: "Reports",
