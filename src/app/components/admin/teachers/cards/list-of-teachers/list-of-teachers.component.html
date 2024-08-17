@@ -1,16 +1,20 @@
-<p-card subheader="List of Teachers" styleClass="h-full">
+<p-toast/>
+<p-confirmPopup/>
+<p-card subheader="List of Teachers" styleClass="h-full shadow-3">
   <div class="mb-3 flex justify-content-between align-items-center">
     <div class="flex">
-      <p-iconField iconPosition="left" class="mr-3">
-        <p-inputIcon styleClass="pi pi-search"/>
-        <input type="text" pInputText placeholder="Search"/>
-      </p-iconField>
-      <p-button label="Filter" styleClass="w-8rem">
-      </p-button>
+      <form action="" (ngSubmit)="this.filterTeacher(filterInput.value)">
+        <p-iconField iconPosition="left" class="mr-3">
+          <p-inputIcon styleClass="pi pi-search"/>
+          <input type="text" pInputText placeholder="Search" #filterInput/>
+        </p-iconField>
+        <p-button label="Filter" styleClass="w-8rem">
+        </p-button>
+      </form>
     </div>
     <div class="flex">
       <p-button icon="pi pi-fw pi-refresh" [severity]="'success'" size="small"
-                pTooltip="Refresh the list of teachers" rounded/>
+                pTooltip="Refresh the list of teachers" (onClick)="this.retrieveListOfTeachers()" rounded/>
     </div>
   </div>
   <div>
@@ -18,25 +22,28 @@
       <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
           Teachers
-          <p-button icon="pi pi-plus" rounded [text]="true"/>
+          <p-button icon="pi pi-plus" rounded [text]="true"
+                    (onClick)="createTeacherDialogComponent.showDialog = !createTeacherDialogComponent.showDialog"/>
         </div>
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th>ID</th>
           <th>Full Name</th>
+          <th>Position</th>
           <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body">
         @for (teacher of this.teachers; track $index) {
           <tr>
-            <td>{{ teacher.id }}</td>
             <td>{{ teacher.firstName }} {{ teacher.lastName }}</td>
+            <td>{{ teacher.position }}</td>
             <td class="">
               <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warning"/>
-              <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="success"/>
-              <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger"/>
+              <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="success"
+                        (onClick)="this.teacherSelected.emit(teacher)"/>
+              <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger"
+                        (onClick)="this.deleteTeacher(teacher, $event)"/>
             </td>
           </tr>
         }
@@ -51,8 +58,4 @@
     </p-table>
   </div>
 </p-card>
-
-<!-- ! Create Teacher Dialog -->
-<p-dialog>
-
-</p-dialog>
+<admin-teachers-create-teacher-dialog (refreshTeachers)="this.retrieveListOfTeachers()" #createTeacherDialogComponent/>

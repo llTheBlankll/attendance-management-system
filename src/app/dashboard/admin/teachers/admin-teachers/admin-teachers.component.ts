@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {PanelModule} from "primeng/panel";
 import {MenuModule} from "primeng/menu";
 import {Firestore} from "@angular/fire/firestore";
-import {MenuItem} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {Teacher} from "../../../../interfaces/dto/Teacher";
 import {IconFieldModule} from "primeng/iconfield";
@@ -45,7 +44,12 @@ export class AdminTeachersComponent implements OnInit {
   private readonly breadcrumbsService = inject(BreadcrumbsService);
 
   public teachers: Teacher[] = [];
+  public teacherSelected?: Teacher;
 
   ngOnInit() {
+  }
+
+  public onTeacherSelect(teacher: Teacher) {
+    this.teacherSelected = teacher;
   }
 }
