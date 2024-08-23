@@ -1,9 +1,13 @@
+from random import random
+
 import firebase_admin
 import json
 import util
-import dtos
+import numpy
 from datetime import datetime, timedelta
 from firebase_admin import firestore
+
+rng = numpy.random.default_rng()
 
 
 def get_firebase_app() -> object:
@@ -20,6 +24,18 @@ app = get_firebase_app()
 db = firestore.client(app)
 
 
+def get_gradelevels():
+    return db.collection(u'grade-levels').stream()
+
+
+def get_strands():
+    return db.collection(u'strands').stream()
+
+
+def get_classes():
+    return db.collection(u'classes').stream()
+
+
 def main():
     print("Acquiring credentials...")
     print("Acquiring database reference...")
@@ -31,13 +47,38 @@ def main():
         return
     print("Opening JSON file...")
     student_id_list: list[int] = []
+    grade_level_list: list[int] = []
+    strand_list: list[int] = []
+    class_list: list[int] = []
+    # Get the list of grade levels
+    for grade_level in get_gradelevels():
+        grade_level_list.append(grade_level.id)
+
+    # Get the list of classes
+    for class_ in get_classes():
+        class_list.append(class_.id)
+
+    # Get strand list
+    for strand in get_strands():
+        strand_list.append(strand.id)
+
     with open("Students.json", "r") as f:
         print("Importing...")
         student = json.load(f)
         for s in student:
             student_id_list.append(s['id'])
+            s["gradeLevel"] = get_grade_level_ref(rng.choice(grade_level_list))
+            s["class"] = get_class_ref(rng.choice(class_list))
             doc_ref.document(str(s['id'])).set(s)
         print("Done!")
+
+
+def get_class_ref(class_id):
+    return db.collection(u'classes').document(class_id)
+
+
+def get_grade_level_ref(grade_level_id):
+    return db.collection(u'grade-levels').document(grade_level_id)
 
 
 def get_existing_students():
@@ -52,8 +93,8 @@ def get_existing_students():
 def import_students_attendance(students: list[int]):
     print("Importing attendance...")
     # Loop date range, from start date to end date
-    start_date = datetime.strptime("2024-08-01", "%Y-%m-%d").date()
-    end_date = datetime.strptime("2024-08-31", "%Y-%m-%d").date()
+    start_date = datetime.strptime("2024-09-01", "%Y-%m-%d").date()
+    end_date = datetime.strptime("2024-10-31", "%Y-%m-%d").date()
 
     current_date = start_date
     while current_date <= end_date:
@@ -64,6 +105,9 @@ def import_students_attendance(students: list[int]):
 
         # Add attendance for each student
         for student_id in students:
+            # Get Student Reference
+            studentRef = db.collection(u'students').document(str(student_id))
+
             # Select attendance status randomly
             status = util.randomize_attendance_status()
 
@@ -76,26 +120,17 @@ def import_students_attendance(students: list[int]):
             elif status == "LATE":
                 time_in = util.generate_time("07:01", "08:00")
                 time_out = util.generate_time("13:00", "16:00")
-            # Create attendance data class
-            attendance: dtos.Attendance = dtos.Attendance(
-                student=student_id,
-                status=status,
-                date=current_date,
-                timeIn=time_in,
-                timeOut=time_out,
-                notes="",
-            )
 
             # Add attendance
             doc_ref = db.collection(u'attendances').document()
             doc_ref.set(
                 {
-                    "student": f"/students/{attendance.student}",
-                    "status": attendance.status,
-                    "date":  datetime.strptime(str(attendance.date), "%Y-%m-%d"),
+                    "student": studentRef,
+                    "status": status,
+                    "date": datetime.strptime(str(current_date), "%Y-%m-%d"),
                     "timeIn": time_in,
                     "timeOut": time_out,
-                    "notes": attendance.notes
+                    "notes": ""
                 }
             )
 

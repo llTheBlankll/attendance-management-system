@@ -6,7 +6,6 @@ import {authGuard} from "./auth.guard";
 import {AdminTeachersComponent} from "./dashboard/admin/teachers/admin-teachers/admin-teachers.component";
 import {StudentsPageComponent} from "./dashboard/global/students/students-page/students-page.component";
 import {ClassesComponent} from "./dashboard/global/classes/classes/classes.component";
-import {AdminSubjectsComponent} from "./dashboard/admin/subjects/admin-subjects.component";
 import {AttendanceComponent} from "./dashboard/global/attendances/attendance/attendance.component";
 
 export const routes: Routes = [
@@ -30,16 +29,6 @@ export const routes: Routes = [
         {label: "Admin", url: "/dashboard/admin", icon: "pi pi-fw pi-user"},
         {label: "Dashboard", url: "/dashboard/admin", icon: "pi pi-fw pi-home"},
         {label: "Teachers", url: "/dashboard/admin/teachers", icon: "pi pi-fw pi-users"},
-      ]
-    }
-  },
-  {
-    path: "dashboard/admin/subjects", component: AdminSubjectsComponent, canActivate: [authGuard], data: {
-      breadcrumb: [
-        {label: "Application", url: "/", icon: "pi pi-fw pi-compass"},
-        {label: "Admin", url: "/dashboard/admin", icon: "pi pi-fw pi-user"},
-        {label: "Dashboard", url: "/dashboard/admin", icon: "pi pi-fw pi-home"},
-        {label: "Subjects", url: "/dashboard/admin/subjects", icon: "pi pi-fw pi-book"},
       ]
     }
   },
