@@ -7,13 +7,13 @@ import {InputTextModule} from "primeng/inputtext";
 import {PaginatorModule} from "primeng/paginator";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TooltipModule} from "primeng/tooltip";
-import {AddTeacherDTO} from "../../../../interfaces/dto/forms/AddTeacher";
-import {Teacher} from "../../../../interfaces/dto/Teacher";
+import {AddTeacherDTO} from "../../../../../interfaces/dto/forms/AddTeacher";
+import {Teacher} from "../../../../../interfaces/dto/Teacher";
 import {UploadResult} from "@angular/fire/storage";
-import {LoggingService} from "../../../../services/logging/logging.service";
-import {TeacherService} from "../../../../services/teacher/teacher.service";
+import {LoggingService} from "../../../../../services/logging/logging.service";
+import {TeacherService} from "../../../../../services/teacher/teacher.service";
 import {MessageService} from "primeng/api";
-import {FirebaseStorageService} from "../../../../services/storage/firebase-storage.service";
+import {FirebaseStorageService} from "../../../../../services/storage/firebase-storage.service";
 import {ToastModule} from "primeng/toast";
 
 @Component({
@@ -87,7 +87,7 @@ export class CreateTeacherDialogComponent {
   public showDialog = false;
 
   @Output()
-  public refreshTeachers: EventEmitter<void> = new EventEmitter<void>();
+  public refreshTeachersEmitter: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * Adds a new teacher to the Firestore.
@@ -149,9 +149,11 @@ export class CreateTeacherDialogComponent {
       detail: 'Teacher added successfully'
     });
     this.showDialog = false;
+    this.refreshTeachersSignal();
   }
 
   protected onProfilePictureChange(event: FileSelectEvent) {
+    // Check if the user selected a file
     if (event.currentFiles.length === 0) {
       this.loggingService.info("Profile Picture not provided, continuing...");
       return;
@@ -167,6 +169,6 @@ export class CreateTeacherDialogComponent {
   }
 
   private refreshTeachersSignal() {
-    this.refreshTeachers.emit();
+    this.refreshTeachersEmitter.emit();
   }
 }

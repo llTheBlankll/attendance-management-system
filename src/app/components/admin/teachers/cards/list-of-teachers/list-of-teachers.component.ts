@@ -9,17 +9,15 @@ import {TableModule} from "primeng/table";
 import {TooltipModule} from "primeng/tooltip";
 import {Teacher} from "../../../../../interfaces/dto/Teacher";
 import {DialogModule} from "primeng/dialog";
-import {FileSelectEvent, FileUploadModule} from "primeng/fileupload";
+import {FileUploadModule} from "primeng/fileupload";
 import {DropdownModule} from "primeng/dropdown";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ToastModule} from "primeng/toast";
 import {FirebaseStorageService} from "../../../../../services/storage/firebase-storage.service";
-import {AddTeacherDTO} from "../../../../../interfaces/dto/forms/AddTeacher";
 import {LoggingService} from "../../../../../services/logging/logging.service";
-import {UploadResult} from "@angular/fire/storage";
 import {TeacherService} from "../../../../../services/teacher/teacher.service";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
-import {CreateTeacherDialogComponent} from "../../create-teacher-dialog/create-teacher-dialog.component";
+import {CreateTeacherDialogComponent} from "../../dialogs/create-teacher-dialog/create-teacher-dialog.component";
 
 @Component({
   selector: 'app-list-of-teachers',
@@ -123,7 +121,23 @@ export class ListOfTeachersComponent implements OnInit {
 
     this.teacherService.searchTeacherByLastName(value).subscribe((teachers: Teacher[]) => {
       this.loggingService.info("Found " + teachers.length + " teacher(s)");
-
-    })
+      // * Show a warning if no teachers are found
+      if (teachers.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Warning',
+          icon: 'pi pi-exclamation-triangle',
+          detail: 'No teachers found'
+        });
+      } else {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          icon: 'pi pi-check',
+          detail: 'Found ' + teachers.length + ' teacher(s)'
+        });
+        this.teachers = teachers;
+      }
+    });
   }
 }

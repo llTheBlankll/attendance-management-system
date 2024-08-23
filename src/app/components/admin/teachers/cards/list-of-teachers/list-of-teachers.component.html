@@ -28,9 +28,9 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th>Full Name</th>
-          <th>Position</th>
-          <th>Actions</th>
+          <th scope="col">Full Name</th>
+          <th scope="col">Position</th>
+          <th scope="col">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body">
@@ -58,4 +58,5 @@
     </p-table>
   </div>
 </p-card>
-<admin-teachers-create-teacher-dialog (refreshTeachers)="this.retrieveListOfTeachers()" #createTeacherDialogComponent/>
+<admin-teachers-create-teacher-dialog #createTeacherDialogComponent
+                                      (refreshTeachersEmitter)="this.retrieveListOfTeachers()"/>

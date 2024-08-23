@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {SidebarModule} from "primeng/sidebar";
 import {ImageModule} from "primeng/image";
 import {MenuModule} from "primeng/menu";
@@ -59,6 +59,16 @@ export class SidebarComponent {
       label: "Attendance",
       icon: 'pi pi-fw pi-calendar',
       routerLink: ['/dashboard/attendances']
+    },
+    {
+      label: "Strands",
+      icon: "pi pi-fw pi-book",
+      routerLink: ['/dashboard/admin/strands']
+    },
+    {
+      label: "Grade Levels",
+      icon: 'pi pi-fw pi-list',
+      routerLink: ['/dashboard/admin/grade-levels']
     },
     {
       label: "Reports",
