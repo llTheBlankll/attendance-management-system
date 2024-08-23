@@ -30,7 +30,7 @@ export class TeacherService {
    */
   public getAllTeachers(): Observable<Teacher[]> {
     const teachersCollection = collection(this.firestore, "teachers");
-    return collectionData(teachersCollection);
+    return collectionData(teachersCollection, {idField: 'id'});
   }
 
   public addTeacher(teacher: Teacher): void {
@@ -71,5 +71,13 @@ export class TeacherService {
     }
 
     return false;
+  }
+
+  public getTeacherReferenceById(id: string | undefined) {
+    if (id === undefined) {
+      return null;
+    }
+
+    return doc(this.firestore, "teachers", id);
   }
 }
