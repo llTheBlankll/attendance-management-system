@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {CardModule} from "primeng/card";
+import {Student} from "../../../../../interfaces/dto/Student";
 
 @Component({
   selector: 'classes-absent-students-list-card',
@@ -12,4 +13,6 @@ import {CardModule} from "primeng/card";
 })
 export class ClassAbsentStudentsListCardComponent {
 
+  @Input()
+  public absentStudents?: Student[];
 }

@@ -1,0 +1,58 @@
+<p-toast/>
+<p-confirmPopup/>
+<p-card styleClass="shadow-3">
+  <div class="grid">
+    <div class="col-12 xl:col-6">
+
+      <div class="grid h-full">
+        <div class="col-12 xl:col-3 flex align-items-center justify-content-center">
+          <p-avatar [image]="this._class?.photoUrl ?? '/school-logo.png'" shape="circle" size="xlarge"
+                    styleClass="h-10rem w-10rem"/>
+        </div>
+        <div class="col-12 xl:col-9 flex-column align-self-center">
+          <h2>
+            @if (this._class === undefined && this.currentUser !== null) {
+              <span class="text-3xl">
+                Hello {{ this.currentUser.displayName ?? this.currentUser.email }}!
+              </span>
+            } @else {
+              <span class="text-3xl">
+                You have selected {{ this._class?.className }}
+              </span>
+            }
+          </h2>
+          <!-- USER FULL NAME -->
+          <span>We hope you are having a good day! 👋</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 xl:col-6 flex align-self-center justify-content-center">
+      <div class="flex mr-2">
+        <p-dropdown (onChange)="this.onClassSelect($event)" [options]="this.classes" [required]="true"
+                    filter filterBy="clasName" filterPlaceholder="Class Name" placeholder="Select Section..."
+                    styleClass="w-20rem" z>
+          <ng-template let-items pTemplate="item">
+            {{ items.className }}
+          </ng-template>
+          <ng-template let-classItem pTemplate="selectedItem">
+            {{ classItem.className }}
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="flex mr-2">
+        <p-button (onClick)="createDialogComponent.isVisible = true" icon="pi pi-plus" pTooltip="Add Class" rounded
+                  severity="success" tooltipPosition="bottom"/>
+        <classes-create-dialog #createDialogComponent/>
+      </div>
+      <div class="flex mr-2">
+        <p-button [disabled]="this._class === undefined" icon="pi pi-pencil" pTooltip="Edit class" rounded
+                  severity="info" tooltipPosition="top"/>
+      </div>
+      <div class="flex mr-2">
+        <p-button (onClick)="onDeleteClass($event)" [disabled]="this._class === undefined" icon="pi pi-trash"
+                  pTooltip="Delete the selected class" rounded severity="danger"
+                  tooltipPosition="bottom"/>
+      </div>
+    </div>
+  </div>
+</p-card>

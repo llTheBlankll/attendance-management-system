@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ClassTotalStudentCardComponent} from './class-total-student-card.component';
+import {ClassOverAllAttendanceComponent} from './class-over-all-attendance.component';
 
 describe('ClassTotalStudentCardComponent', () => {
-  let component: ClassTotalStudentCardComponent;
-  let fixture: ComponentFixture<ClassTotalStudentCardComponent>;
+  let component: ClassOverAllAttendanceComponent;
+  let fixture: ComponentFixture<ClassOverAllAttendanceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ClassTotalStudentCardComponent]
+      imports: [ClassOverAllAttendanceComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(ClassTotalStudentCardComponent);
+    fixture = TestBed.createComponent(ClassOverAllAttendanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

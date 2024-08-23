@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {PrimeTemplate} from "primeng/api";
 import {TimelineModule} from "primeng/timeline";
-import {EventItem} from "../../../../interfaces/EventItem";
+import {EventItem} from "../../../../../interfaces/EventItem";
 
 @Component({
   selector: 'classes-today-activities-card',
