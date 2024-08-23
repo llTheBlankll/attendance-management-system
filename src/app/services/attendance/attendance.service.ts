@@ -1,12 +1,15 @@
 import {inject, Injectable} from '@angular/core';
 import {AttendanceStatus} from "../../enums/AttendanceStatus";
 import {DateRange} from "../../interfaces/DateRange";
-import {collection, collectionCount, collectionData, Firestore, query, where} from "@angular/fire/firestore";
+import {collection, collectionCount, collectionData, Firestore, getDocs, query, where} from "@angular/fire/firestore";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
 import {UtilService} from "../util/util.service";
 import {firstValueFrom} from "rxjs";
 import {Attendance} from "../../interfaces/dto/Attendance";
 import {environment} from "../../../environments/environment";
+import {Sex} from "../../enums/Sex";
+import {Class} from "../../interfaces/dto/Class";
+import {ClassService} from "../class/class.service";
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +17,7 @@ import {environment} from "../../../environments/environment";
 export class AttendanceService {
 
   private readonly firestore = inject(Firestore);
+  private readonly classService = inject(ClassService);
   private readonly utilService = inject(UtilService);
 
   public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date) {
@@ -110,5 +114,66 @@ export class AttendanceService {
 
       return lineChartDTO;
     });
+  }
+
+  /**
+   * This function is used to get the total number of attendances by their status on a specific date.
+   *
+   * @param attendanceStatus - The status of the attendance to count.
+   * @param date - The date to get the attendance count for.
+   * @param sex - The sex of the students to count. This is an optional parameter, if not provided, all students will be counted.
+   * @returns A promise that resolves to the total number of attendances by their status on the specific date.
+   * @throws When there is an error with the Firebase Firestore.
+   */
+  public async countTotalAttendance(attendanceStatus: AttendanceStatus[], date: Date, sex: Sex | undefined = undefined): Promise<number> {
+    const [startDate, endDate] = this.utilService.dateToDateRange(date);
+
+    // * Get the total number of on time students by sex, if provided.
+    if (sex !== undefined) {
+      const attendanceCollection = query(collection(this.firestore, "attendances"),
+        where("status", "in", attendanceStatus),
+        where("date", ">=", startDate),
+        where("date", "<=", endDate),
+        where("student", "array-contains", {sex: sex})
+      );
+      return firstValueFrom(collectionCount(attendanceCollection));
+    }
+
+    // * Get the total number of on time students by default
+    const attendanceCollection = query(collection(this.firestore, "attendances"),
+      where("status", "in", attendanceStatus),
+      where("date", ">=", startDate),
+      where("date", "<=", endDate)
+    );
+    return firstValueFrom(collectionCount(attendanceCollection));
+  }
+
+  public async countClassAttendances(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex | undefined = undefined): Promise<number> {
+    const [startDate, endDate] = this.utilService.dateToDateRange(date);
+
+    const classRef = this.classService.getClassroom(classroom.id);
+    const studentsCollection = query(collection(this.firestore, "students"),
+      where("class", "==", classRef),
+      ...(sex ? [where("sex", "==", sex)] : [])
+    );
+
+    const studentsSnapshot = await getDocs(studentsCollection);
+    const studentRefs = studentsSnapshot.docs.map(doc => doc.ref);
+    let count = 0;
+
+    for (const references of studentRefs) {
+      const attendanceCollection = query(collection(this.firestore, "attendances"),
+        where("status", "in", attendanceStatus),
+        where("date", ">=", startDate),
+        where("date", "<=", endDate),
+        where("student", "==", references)
+      );
+
+      const attendanceCount = await collectionCount(attendanceCollection).toPromise();
+      console.log(attendanceCount)
+      count += attendanceCount;
+    }
+
+    return count;
   }
 }
