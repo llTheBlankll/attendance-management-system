@@ -1,5 +1,5 @@
 export interface Strand {
-  id: number;
+  id?: string;
   name: string;
   description?: string;
 }

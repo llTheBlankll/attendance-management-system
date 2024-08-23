@@ -21,9 +21,6 @@ import {
   TopStudentsListCardComponent
 } from "../../components/admin/dashboard/cards/top-students-list-card/top-students-list-card.component";
 import {
-  TodayActivitiesCardComponent
-} from "../../components/admin/dashboard/cards/today-activities-card/today-activities-card.component";
-import {
   DailyAttendanceReportCardComponent
 } from "../../components/admin/dashboard/cards/daily-attendance-report-card/daily-attendance-report-card.component";
 import {UtilService} from "../../services/util/util.service";
@@ -31,7 +28,9 @@ import {ChartDays} from "../../enums/ChartDays";
 import {
   SectionRankingCardComponent
 } from "../../components/admin/dashboard/cards/section-ranking-card/section-ranking-card.component";
-import {BreadcrumbsService} from "../../services/breadcrumbs/breadcrumbs.service";
+import {
+  AdminAnnouncementsCardComponent
+} from "../../components/admin/dashboard/cards/admin-announcements-card/admin-announcements-card.component";
 
 @Component({
   selector: 'app-admin',
@@ -46,9 +45,9 @@ import {BreadcrumbsService} from "../../services/breadcrumbs/breadcrumbs.service
     AbsentStudentsCardComponent,
     TotalAttendanceReportCardComponent,
     TopStudentsListCardComponent,
-    TodayActivitiesCardComponent,
     DailyAttendanceReportCardComponent,
-    SectionRankingCardComponent
+    SectionRankingCardComponent,
+    AdminAnnouncementsCardComponent
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
@@ -57,7 +56,6 @@ export class AdminComponent implements OnInit {
 
   // Injections
   private readonly utilService = inject(UtilService);
-  private readonly breadcrumbService = inject(BreadcrumbsService);
 
   public dailyAttendanceReportDateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS)
 

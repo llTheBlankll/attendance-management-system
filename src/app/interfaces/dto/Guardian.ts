@@ -1,5 +1,5 @@
 export interface Guardian {
-  id: number;
+  id: string;
   fullName: string;
   contactNumber: string;
 }
