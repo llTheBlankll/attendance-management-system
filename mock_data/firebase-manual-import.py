@@ -69,6 +69,7 @@ def main():
             student_id_list.append(s['id'])
             s["gradeLevel"] = get_grade_level_ref(rng.choice(grade_level_list))
             s["class"] = get_class_ref(rng.choice(class_list))
+            s["sex"] = s["sex"].upper()
             doc_ref.document(str(s['id'])).set(s)
         print("Done!")
 
@@ -94,9 +95,10 @@ def import_students_attendance(students: list[int]):
     print("Importing attendance...")
     # Loop date range, from start date to end date
     start_date = datetime.strptime("2024-09-01", "%Y-%m-%d").date()
-    end_date = datetime.strptime("2024-10-31", "%Y-%m-%d").date()
+    end_date = datetime.strptime("2024-09-30", "%Y-%m-%d").date()
 
     current_date = start_date
+    batch = db.batch()
     while current_date <= end_date:
         print(f"Importing attendance for {current_date}...")
         # Generate random time
@@ -106,7 +108,9 @@ def import_students_attendance(students: list[int]):
         # Add attendance for each student
         for student_id in students:
             # Get Student Reference
-            studentRef = db.collection(u'students').document(str(student_id))
+            student_ref = db.collection(u'students').document(str(student_id))
+            student_obj = student_ref.get().to_dict()
+            class_ref = student_obj["class"]
 
             # Select attendance status randomly
             status = util.randomize_attendance_status()
@@ -122,19 +126,24 @@ def import_students_attendance(students: list[int]):
                 time_out = util.generate_time("13:00", "16:00")
 
             # Add attendance
-            doc_ref = db.collection(u'attendances').document()
-            doc_ref.set(
+            batch.set(
+                db.collection(u'attendances').document(),
                 {
-                    "student": studentRef,
+                    "studentObj": student_obj,
+                    "student": student_ref,
                     "status": status,
                     "date": datetime.strptime(str(current_date), "%Y-%m-%d"),
                     "timeIn": time_in,
                     "timeOut": time_out,
+                    "class": class_ref,
                     "notes": ""
                 }
             )
 
+        print(f"Done for {current_date}.")
         current_date += timedelta(days=1)
+    # Save all changes
+    batch.commit()
     print("Done!")
 
 
