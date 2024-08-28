@@ -151,9 +151,9 @@ export class DailyAttendanceReportCardComponent implements OnInit {
   public date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
 
   private async updateDailyAttendanceReport(): Promise<void> {
-    const onTime = await this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, [AttendanceStatus.ON_TIME]);
-    const late = await this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, [AttendanceStatus.LATE]);
-    const absent = await this.attendanceService.getLineChartByAttendanceStatusAndDate(this.date, [AttendanceStatus.ABSENT]);
+    const onTime = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME]);
+    const late = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE]);
+    const absent = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT]);
 
     this.data = {
       ...this.data,

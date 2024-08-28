@@ -15,18 +15,18 @@
     <classes-absent-student-card [classAbsentStudents]="this.totalCards.absent"/>
   </div>
   <div class="col-12 xl:col-8">
-    <classes-monthly-attendance-card/>
+    <classes-monthly-attendance-card [data]="this.monthlyAttendance"/>
   </div>
   <div class="col-12 xl:col-4">
     <classes-attendance-demographics-card [sex]="this.attendanceDemographics"/>
   </div>
-  <div class="col-12 xl:col-4">
-    <classes-absent-students-list-card/>
+  <div class="col-12 xl:col-6">
+    <classes-students-list-card [students]="this.students"/>
   </div>
-  <div class="col-12 xl:col-4">
-    <classes-students-list-card/>
+  <div class="col-12 xl:col-3">
+    <classes-absent-students-list-card [absentStudents]="this.absentStudents"/>
   </div>
-  <div class="col-12 xl:col-4">
+  <div class="col-12 xl:col-3">
     <classes-today-activities-card/>
   </div>
 </div>

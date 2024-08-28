@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {ChartModule} from "primeng/chart";
 
@@ -14,23 +14,8 @@ import {ChartModule} from "primeng/chart";
 })
 export class ClassMonthlyAttendanceCardComponent {
 
-  data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "Late",
-        data: [65, 59, 80, 81, 56, 55, 40]
-      },
-      {
-        label: "On Time",
-        data: [28, 48, 40, 19, 86, 27, 90]
-      },
-      {
-        label: "Absent",
-        data: [28, 48, 40, 19, 86, 27, 90]
-      }
-    ]
-  };
+  @Input()
+  data = {};
 
   options = {
     responsive: true,
@@ -38,4 +23,6 @@ export class ClassMonthlyAttendanceCardComponent {
     aspectRatio: 1,
     tension: 0.4
   };
+
+
 }

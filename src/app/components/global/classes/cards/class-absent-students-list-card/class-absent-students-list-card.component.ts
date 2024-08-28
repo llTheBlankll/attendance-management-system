@@ -1,6 +1,8 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {Student} from "../../../../../interfaces/dto/Student";
+import {of} from "rxjs";
+import {Sex} from "../../../../../enums/Sex";
 
 @Component({
   selector: 'classes-absent-students-list-card',
@@ -14,5 +16,7 @@ import {Student} from "../../../../../interfaces/dto/Student";
 export class ClassAbsentStudentsListCardComponent {
 
   @Input()
-  public absentStudents?: Student[];
+  public absentStudents?: Student[] = undefined;
+  protected readonly of = of;
+  protected readonly Sex = Sex;
 }
