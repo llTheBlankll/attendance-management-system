@@ -1,12 +1,11 @@
 import {inject, Injectable} from '@angular/core';
 import {AttendanceStatus} from "../../enums/AttendanceStatus";
 import {DateRange} from "../../interfaces/DateRange";
-import {collection, collectionCount, collectionData, Firestore, getDocs, query, where} from "@angular/fire/firestore";
+import {collection, collectionCount, collectionData, Firestore, query, where} from "@angular/fire/firestore";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
 import {UtilService} from "../util/util.service";
 import {firstValueFrom} from "rxjs";
 import {Attendance} from "../../interfaces/dto/Attendance";
-import {environment} from "../../../environments/environment";
 import {Sex} from "../../enums/Sex";
 import {Class} from "../../interfaces/dto/Class";
 import {ClassService} from "../class/class.service";
@@ -21,7 +20,7 @@ export class AttendanceService {
   private readonly utilService = inject(UtilService);
 
   public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date) {
-    const [startDate, endDate] = this.utilService.dateToDateRange(date);
+    const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
     // Get the total number of on time students in attendances collection
     const attendanceCollection = query(collection(this.firestore, "attendances"),
@@ -44,45 +43,35 @@ export class AttendanceService {
    *       other optimizations.
    *
    * @param attendanceStatus - The status of the attendance that you want to get.
-   * @param dateRange - The date range that you want to get.
+   * @param date
+   * @param classroom - The classroom that you want to get.
    * @returns A promise that resolves to an array of attendance objects.
    * @throws When there is an error with the Firebase Firestore.
    */
-  public getAllAttendanceByStatusAndDateRange(attendanceStatus: AttendanceStatus[], dateRange: DateRange) {
+  public getAllAttendanceByStatusAndDateRange(attendanceStatus: AttendanceStatus[], date: DateRange | Date, classroom: Class | undefined = undefined) {
     // Checks
-    if (dateRange == null) {
-      throw new Error("Date Range cannot be null");
-    }
-
-    const [startDate, endDate] = this.utilService.dateRangeToDateRange(dateRange);
-    // If not in production mode, verbose
-    if (!environment.production) {
-      console.log(`Getting all attendance by status ${attendanceStatus} from ${startDate.toDate().toISOString()} to ${endDate.toDate().toISOString()}`);
-    }
-
+    const [startDate, endDate] = this.utilService.dateToTimestamp(date);
+    let attendanceCollection: any;
     // Get the total number of on time students in attendances collection
-    const attendanceCollection = query(collection(this.firestore, "attendances"),
+    attendanceCollection = query(collection(this.firestore, "attendances"),
       where("status", "in", attendanceStatus),
       where("date", ">=", startDate),
-      where("date", "<=", endDate)
+      where("date", "<=", endDate),
+      ...(classroom === undefined ? [] : [where("studentObj.class", "==", this.classService.getClassroom(classroom.id))])
     );
 
     return collectionData(attendanceCollection, {idField: "id"});
   }
 
-  public async getLineChartByAttendanceStatusAndDate(dateRange: DateRange, attendanceStatus: AttendanceStatus[]) {
+  public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined) {
     // If not in production mode, verbose
-    if (!environment.production) {
-      console.log("getLineChartByAttendanceStatusAndDate", dateRange, attendanceStatus);
-    }
-
     const lineChart: LineChartDTO = {
       labels: [],
       data: []
     }
 
     // Looping through the date range
-    const attendances: Attendance[] = await firstValueFrom(this.getAllAttendanceByStatusAndDateRange(attendanceStatus, dateRange));
+    const attendances: Attendance[] = await firstValueFrom(this.getAllAttendanceByStatusAndDateRange(attendanceStatus, dateRange, classroom));
     const dailyCounts: { [date: string]: number } = {};
     attendances.forEach(attendance => {
       const dateString = attendance.date.toDate().toISOString().split("T")[0];
@@ -102,7 +91,7 @@ export class AttendanceService {
   }
 
   public async getLineChartOfTotalAttendance(dateRange: DateRange) {
-    return this.getLineChartByAttendanceStatusAndDate(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]).then((lineChartDTO: LineChartDTO) => {
+    return this.getLineChart(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]).then((lineChartDTO: LineChartDTO) => {
       // Checks if line chart is null
       if (lineChartDTO === null) {
         console.error("Line Chart was not retrieved properly, Total Attendance Chart was not loaded.");
@@ -116,64 +105,33 @@ export class AttendanceService {
     });
   }
 
-  /**
-   * This function is used to get the total number of attendances by their status on a specific date.
-   *
-   * @param attendanceStatus - The status of the attendance to count.
-   * @param date - The date to get the attendance count for.
-   * @param sex - The sex of the students to count. This is an optional parameter, if not provided, all students will be counted.
-   * @returns A promise that resolves to the total number of attendances by their status on the specific date.
-   * @throws When there is an error with the Firebase Firestore.
-   */
-  public async countTotalAttendance(attendanceStatus: AttendanceStatus[], date: Date, sex: Sex | undefined = undefined): Promise<number> {
-    const [startDate, endDate] = this.utilService.dateToDateRange(date);
+  public async countAttendances(date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]): Promise<number> {
+    const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
-    // * Get the total number of on time students by sex, if provided.
-    if (sex !== undefined) {
-      const attendanceCollection = query(collection(this.firestore, "attendances"),
-        where("status", "in", attendanceStatus),
-        where("date", ">=", startDate),
-        where("date", "<=", endDate),
-        where("student", "array-contains", {sex: sex})
-      );
-      return firstValueFrom(collectionCount(attendanceCollection));
-    }
-
-    // * Get the total number of on time students by default
-    const attendanceCollection = query(collection(this.firestore, "attendances"),
-      where("status", "in", attendanceStatus),
+    const attendanceCollection = query(
+      collection(this.firestore, "attendances"),
       where("date", ">=", startDate),
-      where("date", "<=", endDate)
-    );
+      where("date", "<=", endDate),
+      where("status", "in", attendanceStatus),
+      where("studentObj.sex", "in", sex)
+    )
+
     return firstValueFrom(collectionCount(attendanceCollection));
   }
 
-  public async countClassAttendances(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex | undefined = undefined): Promise<number> {
-    const [startDate, endDate] = this.utilService.dateToDateRange(date);
+  public async countAttendancesInClass(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]): Promise<number> {
+    const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
     const classRef = this.classService.getClassroom(classroom.id);
-    const studentsCollection = query(collection(this.firestore, "students"),
-      where("class", "==", classRef),
-      ...(sex ? [where("sex", "==", sex)] : [])
+    const attendanceCollection = query(
+      collection(this.firestore, "attendances"),
+      where("date", ">=", startDate),
+      where("date", "<=", endDate),
+      where("status", "in", attendanceStatus),
+      where("studentObj.sex", "in", sex),
+      where("studentObj.class", "==", classRef)
     );
 
-    const studentsSnapshot = await getDocs(studentsCollection);
-    const studentRefs = studentsSnapshot.docs.map(doc => doc.ref);
-    let count = 0;
-
-    for (const references of studentRefs) {
-      const attendanceCollection = query(collection(this.firestore, "attendances"),
-        where("status", "in", attendanceStatus),
-        where("date", ">=", startDate),
-        where("date", "<=", endDate),
-        where("student", "==", references)
-      );
-
-      const attendanceCount = await collectionCount(attendanceCollection).toPromise();
-      console.log(attendanceCount)
-      count += attendanceCount;
-    }
-
-    return count;
+    return firstValueFrom(collectionCount(attendanceCollection));
   }
 }

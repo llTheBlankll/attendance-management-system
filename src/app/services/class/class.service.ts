@@ -40,6 +40,7 @@ export class ClassService {
 
   public getClassroom(id: string) {
     const classCollection = collection(this.firestore, 'classes');
+    this.loggingService.info(`Classroom reference sending: ${id}`);
     return doc(classCollection, id);
   }
 }

@@ -1,6 +1,17 @@
 import {inject, Injectable} from '@angular/core';
-import {collection, collectionCount, doc, Firestore, setDoc} from "@angular/fire/firestore";
+import {
+  collection,
+  collectionCount,
+  collectionData,
+  doc,
+  Firestore,
+  query,
+  setDoc,
+  where
+} from "@angular/fire/firestore";
 import {Student} from "../../interfaces/dto/Student";
+import {Class} from "../../interfaces/dto/Class";
+import {ClassService} from "../class/class.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +19,7 @@ import {Student} from "../../interfaces/dto/Student";
 export class StudentService {
 
   private readonly firebase = inject(Firestore);
+  private readonly classService = inject(ClassService);
 
   /**
    * Create a new student.
@@ -26,5 +38,11 @@ export class StudentService {
   public getTotalStudents() {
     const studentsCollection = collection(this.firebase, 'students');
     return collectionCount(studentsCollection);
+  }
+
+  public getClassStudents(classroom: Class) {
+    const classRef = this.classService.getClassroom(classroom.id);
+    const studentsCollection = query(collection(this.firebase, 'students'), where('class', '==', classRef));
+    return collectionData(studentsCollection);
   }
 }
