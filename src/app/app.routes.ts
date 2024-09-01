@@ -7,6 +7,7 @@ import {AdminTeachersComponent} from "./dashboard/admin/teachers/admin-teachers/
 import {StudentsPageComponent} from "./dashboard/global/students/students-page/students-page.component";
 import {ClassesComponent} from "./dashboard/global/classes/classes/classes.component";
 import {AttendanceComponent} from "./dashboard/global/attendances/attendance/attendance.component";
+import {StrandsComponent} from "./dashboard/admin/strands/strands.component";
 
 export const routes: Routes = [
   {
@@ -69,6 +70,15 @@ export const routes: Routes = [
         {label: "Application", url: "/", icon: "pi pi-fw pi-compass"},
         {label: "Attendances", url: "/dashboard/attendances", icon: "pi pi-fw pi-list"},
         {label: "Dashboard", url: "/dashboard/attendances", icon: "pi pi-fw pi-home"},
+      ]
+    }
+  },
+  {
+    path: "dashboard/strands", component: StrandsComponent, canActivate: [authGuard], data: {
+      breadcrumb: [
+        {label: "Application", url: "/", icon: "pi pi-fw pi-compass"},
+        {label: "Strands", url: "/dashboard/strands", icon: "pi pi-fw pi-list"},
+        {label: "Dashboard", url: "/dashboard/strands", icon: "pi pi-fw pi-home"},
       ]
     }
   },
