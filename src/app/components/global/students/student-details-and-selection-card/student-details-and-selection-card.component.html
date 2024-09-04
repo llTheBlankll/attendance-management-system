@@ -1,0 +1,57 @@
+<p-toast/>
+<p-confirmPopup/>
+<p-card styleClass="shadow-3">
+  <div class="grid">
+    <div class="col-12 xl:col-6">
+      <div class="grid h-full">
+        <div class="col-12 xl:col-3 md:col-12 flex align-items-center justify-content-center">
+          <p-avatar [image]="'/school-logo.png'" shape="circle" size="xlarge"
+                    styleClass="h-10rem w-10rem"/>
+        </div>
+        <div class="col-12 xl:col-9 md:col-12 flex-column align-self-center text-center xl:text-left">
+          <h2>
+            @if (this._studentSelected !== undefined) {
+              <span class="text-3xl">
+                Hello {{ this._studentSelected.lastName }}, {{ this._studentSelected.firstName }}!
+              </span>
+            } @else {
+              <span class="text-3xl">
+                Welcome!
+              </span>
+            }
+          </h2>
+          <!-- USER FULL NAME -->
+          <span>We hope you are having a good day! 👋</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 xl:col-6 flex align-self-center justify-content-center">
+      <div class="flex mr-2">
+        <p-dropdown (onChange)="this.onStudentSelect($event)" [options]="this._students" [required]="true"
+                    filter filterBy="lastName" filterPlaceholder="Student Last Name" placeholder="Select Student..."
+                    styleClass="w-20rem" (onShow)="this.onStudentSelectionShow($event)">
+          <ng-template let-items pTemplate="item">
+            {{ items.lastName }}, {{ items.firstName }}
+          </ng-template>
+          <ng-template let-studentItem pTemplate="selectedItem">
+            {{ studentItem.lastName }}, {{ studentItem.firstName }}
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="flex mr-2">
+        <p-button icon="pi pi-plus" pTooltip="Add Student"
+                  severity="success" tooltipPosition="bottom" rounded/>
+      </div>
+      <div class="flex mr-2">
+        <p-button [disabled]="this._studentSelected === undefined" icon="pi pi-pencil" pTooltip="Edit class" rounded
+                  severity="info" tooltipPosition="top"/>
+      </div>
+      <div class="flex mr-2">
+        <p-button (onClick)="onDeleteStudent($event)" [disabled]="this._studentSelected === undefined"
+                  icon="pi pi-trash"
+                  pTooltip="Delete the selected class" rounded severity="danger"
+                  tooltipPosition="bottom"/>
+      </div>
+    </div>
+  </div>
+</p-card>
