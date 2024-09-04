@@ -1,5 +1,14 @@
 import {inject, Injectable} from '@angular/core';
-import {collection, collectionData, deleteDoc, doc, Firestore, setDoc} from "@angular/fire/firestore";
+import {
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  Firestore,
+  getDoc,
+  setDoc
+} from "@angular/fire/firestore";
 import {Class} from "../../interfaces/dto/Class";
 import {Observable} from "rxjs";
 import {LoggingService} from "../logging/logging.service";
@@ -42,5 +51,13 @@ export class ClassService {
     const classCollection = collection(this.firestore, 'classes');
     this.loggingService.info(`Classroom reference sending: ${id}`);
     return doc(classCollection, id);
+  }
+
+  public getClassroomReferenceByReference(classroom: DocumentReference) {
+    return doc(this.firestore, 'classes', classroom.id)
+  }
+
+  public getClassroomDocByReference(classroom: DocumentReference) {
+    return getDoc(doc(this.firestore, 'classes', classroom.id));
   }
 }

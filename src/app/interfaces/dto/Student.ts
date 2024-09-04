@@ -9,7 +9,8 @@ export interface Student {
   prefix?: string;
   sex: Sex;
   birthdate: Timestamp;
+  strand?: any;
   guardian?: any; // ! Can cause circular reference
-  class?: any; // ! Can cause circular reference
+  classroom?: any; // ! Can cause circular reference
   gradeLevel?: any;
 }

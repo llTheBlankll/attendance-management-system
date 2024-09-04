@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {AttendanceStatus} from "../../enums/AttendanceStatus";
 import {DateRange} from "../../interfaces/DateRange";
-import {collection, collectionCount, collectionData, Firestore, query, where} from "@angular/fire/firestore";
+import {collection, collectionCount, collectionData, doc, Firestore, query, where} from "@angular/fire/firestore";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
 import {UtilService} from "../util/util.service";
 import {firstValueFrom} from "rxjs";
@@ -9,6 +9,8 @@ import {Attendance} from "../../interfaces/dto/Attendance";
 import {Sex} from "../../enums/Sex";
 import {Class} from "../../interfaces/dto/Class";
 import {ClassService} from "../class/class.service";
+import {Student} from "../../interfaces/dto/Student";
+import {StudentService} from "../student/student.service";
 
 @Injectable({
   providedIn: 'root',
@@ -17,16 +19,18 @@ export class AttendanceService {
 
   private readonly firestore = inject(Firestore);
   private readonly classService = inject(ClassService);
+  private readonly studentService = inject(StudentService);
   private readonly utilService = inject(UtilService);
 
-  public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date) {
+  public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date | DateRange, classroom?: Class) {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
     // Get the total number of on time students in attendances collection
     const attendanceCollection = query(collection(this.firestore, "attendances"),
       where("status", "in", attendanceStatus),
       where("date", ">=", startDate),
-      where("date", "<=", endDate)
+      where("date", "<=", endDate),
+      ...(classroom ? [where("studentObj.class", "==", this.classService.getClassroom(classroom.id))] : [])
     );
 
     return collectionCount(attendanceCollection);
@@ -45,10 +49,11 @@ export class AttendanceService {
    * @param attendanceStatus - The status of the attendance that you want to get.
    * @param date
    * @param classroom - The classroom that you want to get.
+   * @param student - The student that you want to get.
    * @returns A promise that resolves to an array of attendance objects.
    * @throws When there is an error with the Firebase Firestore.
    */
-  public getAllAttendanceByStatusAndDateRange(attendanceStatus: AttendanceStatus[], date: DateRange | Date, classroom: Class | undefined = undefined) {
+  public getAllAttendanceByStatusAndDateRange(attendanceStatus: AttendanceStatus[], date: DateRange | Date, classroom: Class | undefined = undefined, student: Student | undefined = undefined) {
     // Checks
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
     let attendanceCollection: any;
@@ -57,13 +62,14 @@ export class AttendanceService {
       where("status", "in", attendanceStatus),
       where("date", ">=", startDate),
       where("date", "<=", endDate),
-      ...(classroom === undefined ? [] : [where("studentObj.class", "==", this.classService.getClassroom(classroom.id))])
+      ...(classroom === undefined ? [] : [where("studentObj.class", "==", this.classService.getClassroom(classroom.id))]),
+      ...(student === undefined ? [] : [where("student", "==", this.studentService.getStudent(student))])
     );
 
     return collectionData(attendanceCollection, {idField: "id"});
   }
 
-  public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined) {
+  public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "day") {
     // If not in production mode, verbose
     const lineChart: LineChartDTO = {
       labels: [],
@@ -89,6 +95,7 @@ export class AttendanceService {
 
     return lineChart;
   }
+
 
   public async getLineChartOfTotalAttendance(dateRange: DateRange) {
     return this.getLineChart(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]).then((lineChartDTO: LineChartDTO) => {
@@ -119,7 +126,7 @@ export class AttendanceService {
     return firstValueFrom(collectionCount(attendanceCollection));
   }
 
-  public async countAttendancesInClass(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]): Promise<number> {
+  public countAttendancesInClass(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]) {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
     const classRef = this.classService.getClassroom(classroom.id);
@@ -132,6 +139,36 @@ export class AttendanceService {
       where("studentObj.class", "==", classRef)
     );
 
-    return firstValueFrom(collectionCount(attendanceCollection));
+    return collectionCount(attendanceCollection);
+  }
+
+  public getAllStudentAttendance(student: Student, date: Date | DateRange, attendanceStatus: AttendanceStatus[] = [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]) {
+    const [startDate, endDate] = this.utilService.dateToTimestamp(date);
+    const studentRef = doc(this.firestore, "students", student.id.toString());
+
+    const attendanceCollection = query(
+      collection(this.firestore, "attendances"),
+      where("student", "==", studentRef),
+      where("date", ">=", startDate),
+      where("date", "<=", endDate),
+      where("status", "in", attendanceStatus)
+    );
+
+    return collectionData(attendanceCollection, {idField: "id"});
+  }
+
+  public totalStudentAttendance(student: Student, date: Date | DateRange, attendanceStatus: AttendanceStatus[] = [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]) {
+    const [startDate, endDate] = this.utilService.dateToTimestamp(date);
+    const studentRef = doc(this.firestore, "students", student.id.toString());
+
+    const attendanceCollection = query(
+      collection(this.firestore, "attendances"),
+      where("student", "==", studentRef),
+      where("date", ">=", startDate),
+      where("date", "<=", endDate),
+      where("status", "in", attendanceStatus)
+    );
+
+    return collectionCount(attendanceCollection);
   }
 }

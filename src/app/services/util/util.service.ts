@@ -19,6 +19,7 @@ export class UtilService {
     return date.toISOString().split("T")[0];
   }
 
+
   public dateToTimestamp(date: DateRange | Date): [Timestamp, Timestamp] {
     if (date == null) {
       return [Timestamp.fromDate(new Date()), Timestamp.fromDate(new Date())];
@@ -37,6 +38,15 @@ export class UtilService {
       return [Timestamp.fromDate(start), Timestamp.fromDate(end)];
 
     }
+  }
+
+  /**
+   * Returns the number of days between two dates
+   * @param dateRange Date range
+   * @returns The number of days between the start and end dates
+   */
+  public getDaysCount(dateRange: DateRange) {
+    return Math.ceil(Math.abs(dateRange.endDate.getTime() - dateRange.startDate.getTime()) / (1000 * 60 * 60 * 24));
   }
 
   /**

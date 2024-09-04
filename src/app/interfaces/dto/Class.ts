@@ -20,7 +20,6 @@ export interface Class {
   photoUrl: string | null;
   description: string;
   schoolYear: string;
-  strand: any; // See Strand Interface
   gradeLevel: any; // See GradeLevel Interface
   teacher: any; // See Teacher Interface
   students?: any[]; // ! Can cause circular reference

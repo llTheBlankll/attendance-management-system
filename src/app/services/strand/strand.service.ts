@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {collection, collectionData, doc, Firestore} from "@angular/fire/firestore";
+import {collection, collectionData, doc, DocumentReference, Firestore, getDoc} from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -21,4 +21,11 @@ export class StrandService {
     return doc(strandCollection, id)
   }
 
+  public getStrandReferenceByReference(reference: DocumentReference) {
+    return doc(this.fireStore, 'strands', reference.id)
+  }
+
+  public getStrandDocByReference(reference: DocumentReference) {
+    return getDoc(doc(this.fireStore, 'strands', reference.id))
+  }
 }
