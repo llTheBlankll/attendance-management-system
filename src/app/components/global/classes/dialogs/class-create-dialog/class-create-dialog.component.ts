@@ -6,10 +6,8 @@ import {DropdownModule} from "primeng/dropdown";
 import {FileSelectEvent, FileUploadModule} from "primeng/fileupload";
 import {TooltipModule} from "primeng/tooltip";
 import {GradeLevel} from "../../../../../interfaces/dto/GradeLevel";
-import {Strand} from "../../../../../interfaces/dto/Strand";
 import {Teacher} from "../../../../../interfaces/dto/Teacher";
 import {TeacherService} from "../../../../../services/teacher/teacher.service";
-import {StrandService} from "../../../../../services/strand/strand.service";
 import {GradeLevelService} from "../../../../../services/grade-level/grade-level.service";
 import {ClassService} from "../../../../../services/class/class.service";
 import {AvatarModule} from "primeng/avatar";
@@ -48,15 +46,12 @@ export class ClassCreateDialogComponent implements OnInit {
     description: new FormControl(""),
     schoolYear: new FormControl(""),
     teacher: new FormControl({} as Teacher),
-    strand: new FormControl({} as Strand),
     gradeLevel: new FormControl({} as GradeLevel)
   });
   protected teachers: Teacher[] = [];
-  protected strands: Strand[] = [];
   protected gradeLevels: GradeLevel[] = [];
   // Region: Injections
   private readonly teacherService = inject(TeacherService);
-  private readonly strandService = inject(StrandService);
   // End: Injections
   private readonly gradeLevelService = inject(GradeLevelService);
   private readonly classService = inject(ClassService);
@@ -68,7 +63,6 @@ export class ClassCreateDialogComponent implements OnInit {
 
   ngOnInit() {
     this.loadTeachers();
-    this.loadStrands();
     this.loadGradeLevels();
   }
 
@@ -90,22 +84,19 @@ export class ClassCreateDialogComponent implements OnInit {
     classroom.schoolYear = <string>this.classFormGroup.value.schoolYear;
     classroom.students = [];
     const teacher = this.classFormGroup.value.teacher;
-    const strand = this.classFormGroup.value.strand;
     const gradeLevel = this.classFormGroup.value.gradeLevel;
 
     // ! Validation
-    if (!this.validateTeacher() || !this.validateStrand() || !this.validateGradeLevel()) {
+    if (!this.validateTeacher() || !this.validateGradeLevel()) {
       return;
     }
 
     // * Assign the values
     classroom.teacher = teacher;
-    classroom.strand = strand;
     classroom.gradeLevel = gradeLevel;
 
     // * Assign Document References
     classroom.teacher = this.teacherService.getTeacherReferenceById(this.classFormGroup.value.teacher?.id?.toString());
-    classroom.strand = this.strandService.getStrandReferenceById(this.classFormGroup.value.strand?.id?.toString());
     classroom.gradeLevel = this.gradeLevelService.getGradeLevelReferenceById(this.classFormGroup.value.gradeLevel?.id?.toString());
 
     // ! If the class has a photo
@@ -169,12 +160,6 @@ export class ClassCreateDialogComponent implements OnInit {
 
   // End: Helper Functions
 
-  public loadStrands() {
-    this.strandService.getAllStrands().subscribe((strands: Strand[]) => {
-      this.strands = strands
-    });
-  }
-
   public loadGradeLevels() {
     this.gradeLevelService.getAllGradeLevels().subscribe((gradeLevels: GradeLevel[]) => {
       this.gradeLevels = gradeLevels;
@@ -193,19 +178,6 @@ export class ClassCreateDialogComponent implements OnInit {
       });
       return false;
     }
-    return true;
-  }
-
-  private validateStrand() {
-    if (!this.classFormGroup.value.strand) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Please select a strand.'
-      });
-      return false;
-    }
-
     return true;
   }
 

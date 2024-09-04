@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {environment} from "../../../../../environments/environment";
 
 @Component({
@@ -10,6 +10,7 @@ import {environment} from "../../../../../environments/environment";
 })
 export class StudentOverallAttendanceCardComponent {
 
-  protected overAllAttendance = 0;
+  @Input()
+  public overAllAttendance = 0;
   protected readonly environment = environment;
 }

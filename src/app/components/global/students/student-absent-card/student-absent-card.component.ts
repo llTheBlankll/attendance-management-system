@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'students-absent-card',
@@ -9,5 +9,6 @@ import {Component} from '@angular/core';
 })
 export class StudentAbsentCardComponent {
 
-  protected totalAbsent = 0;
+  @Input()
+  public totalAbsent = 0;
 }

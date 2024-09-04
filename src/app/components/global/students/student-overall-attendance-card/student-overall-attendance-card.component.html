@@ -7,6 +7,14 @@
           <span class="text-red-500">
             {{ this.overAllAttendance }}%
           </span>
+        } @else if (this.overAllAttendance > environment.attendance.badOverAllAttendance && this.overAllAttendance <= environment.attendance.goodOverAllAttendance) {
+          <span class="text-yellow-500">
+            {{ this.overAllAttendance }}%
+          </span>
+        } @else {
+          <span class="text-green-500">
+            {{ this.overAllAttendance }}%
+          </span>
         }
       </div>
     </div>

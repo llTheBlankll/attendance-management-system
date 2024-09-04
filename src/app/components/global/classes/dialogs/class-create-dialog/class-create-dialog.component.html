@@ -74,25 +74,6 @@
         </div>
         <div class="col-12">
           <div class="flex flex-column gap-2 mb-2">
-            <label for="strand">Strand</label>
-            <p-dropdown
-              [options]="this.strands"
-              formControlName="strand"
-              id="strand"
-              placeholder="Classroom Strand"
-              required
-              styleClass="w-full">
-              <ng-template let-strand pTemplate="item">
-                {{ strand.name }}
-              </ng-template>
-              <ng-template let-selectedOption pTemplate="selectedItem">
-                {{ selectedOption.name }}
-              </ng-template>
-            </p-dropdown>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="flex flex-column gap-2 mb-2">
             <label for="gradeLevel">Grade Level</label>
             <p-dropdown
               [options]="this.gradeLevels"

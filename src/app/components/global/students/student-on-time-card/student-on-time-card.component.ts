@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'students-on-time-card',
@@ -9,5 +9,7 @@ import {Component} from '@angular/core';
 })
 export class StudentOnTimeCardComponent {
 
-  protected totalOnTime = 0;
+  @Input()
+  public totalOnTime = 0;
+  
 }

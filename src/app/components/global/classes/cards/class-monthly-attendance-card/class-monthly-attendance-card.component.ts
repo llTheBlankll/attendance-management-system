@@ -21,7 +21,34 @@ export class ClassMonthlyAttendanceCardComponent {
     responsive: true,
     maintainAspectRatio: false,
     aspectRatio: 1,
-    tension: 0.4
+    tension: 0.4,
+    // Show 0 values
+    elements: {
+      line: {
+        tension: 0.4,
+        fill: false,
+        pointHitRadius: 0
+      }
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'Monthly Attendance'
+      },
+      layout: {
+        padding: 10
+      },
+      tooltip: {
+        enabled: true
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false
+        }
+      },
+    }
   };
 
 

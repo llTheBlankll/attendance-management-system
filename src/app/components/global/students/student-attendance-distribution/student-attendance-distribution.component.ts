@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {PanelModule} from "primeng/panel";
 import {Button} from "primeng/button";
 import {MenuModule} from "primeng/menu";
@@ -16,8 +16,9 @@ import {ChartModule} from "primeng/chart";
   templateUrl: './student-attendance-distribution.component.html',
   styleUrl: './student-attendance-distribution.component.css'
 })
-export class StudentAttendanceDistributionComponent implements OnInit {
+export class StudentAttendanceDistributionComponent {
 
+  @Input()
   data = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
@@ -29,13 +30,10 @@ export class StudentAttendanceDistributionComponent implements OnInit {
         label: "Late",
         data: [65, 59, 80, 81, 56, 55, 40]
       },
-      {
-        label: "Absent",
-        data: [55, 59, 90, 81, 2, 25, 40]
-      }
     ]
   }
 
+  @Input()
   options = {
     plugins: {
       legend: {
@@ -85,7 +83,4 @@ export class StudentAttendanceDistributionComponent implements OnInit {
       icon: "pi pi-fw pi-calendar",
     }
   ]
-
-  ngOnInit() {
-  }
 }

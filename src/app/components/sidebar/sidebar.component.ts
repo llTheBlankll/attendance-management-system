@@ -63,7 +63,7 @@ export class SidebarComponent {
     {
       label: "Strands",
       icon: "pi pi-fw pi-book",
-      routerLink: ['/dashboard/admin/strands']
+      routerLink: ['/dashboard/strands']
     },
     {
       label: "Grade Levels",

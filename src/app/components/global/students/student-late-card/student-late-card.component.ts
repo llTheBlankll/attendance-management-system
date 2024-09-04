@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'students-late-card',
@@ -9,5 +9,6 @@ import {Component} from '@angular/core';
 })
 export class StudentLateCardComponent {
 
-  protected totalLate = 0;
+  @Input()
+  public totalLate = 0;
 }
