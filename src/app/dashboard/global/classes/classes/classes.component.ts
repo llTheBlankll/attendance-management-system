@@ -40,6 +40,7 @@ import {ChartDays} from "../../../../enums/ChartDays";
 import {Sex} from "../../../../enums/Sex";
 import {StudentService} from "../../../../services/student/student.service";
 import {Attendance} from "../../../../interfaces/dto/Attendance";
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-classes',
@@ -113,14 +114,43 @@ export class ClassesComponent implements OnInit {
   public async onClassSelected(classSelected: Class) {
     this._classSelected = classSelected;
 
-    // Get the class details
-    this.totalCards.late = await this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.LATE], [Sex.MALE, Sex.FEMALE]);
-    this.totalCards.absent = await this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.ABSENT], [Sex.MALE, Sex.FEMALE]);
-    this.totalCards.onTime = await this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.ON_TIME], [Sex.MALE, Sex.FEMALE]);
+    // * Update the components
     this.updateAbsentStudents(classSelected);
     this.updateStudents(classSelected);
     this.updateMonthlyAttendance(classSelected);
     this.updateAttendanceDemographics(classSelected);
+
+    // * Get the class details
+    const late = firstValueFrom<number>(this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.LATE], [Sex.MALE, Sex.FEMALE]));
+    const absent = firstValueFrom<number>(this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.ABSENT], [Sex.MALE, Sex.FEMALE]));
+    const onTime = firstValueFrom<number>(this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.ON_TIME], [Sex.MALE, Sex.FEMALE]));
+    const totalStudents = firstValueFrom<number>(this.studentService.getTotalStudents(classSelected));
+    const classDetails = Promise.all([late, absent, onTime, totalStudents]);
+    classDetails.then((values) => {
+      console.log(values)
+      this.totalCards = {
+        ...this.totalCards,
+        late: values[0],
+        absent: values[1],
+        onTime: values[2],
+        totalStudents: values[3]
+      }
+    });
+
+    // * Over all attendance
+    const dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
+    this.attendanceService.countTotalByAttendanceByStatus(
+      [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
+      dateRange,
+      classSelected
+    ).subscribe((totalAttendance: number) => {
+      const daysCount = this.utilService.getDaysCount(dateRange);
+      console.log(
+        totalAttendance
+      )
+      // Get overall attendance by percentage using daysCount, totalAttendance, and totalStudents
+      this.totalCards.overAllAttendance = Math.round(totalAttendance / (daysCount * this.totalCards.totalStudents) * 100) / 100;
+    });
   }
 
   private updateAbsentStudents(classroom: Class) {

@@ -1,20 +1,23 @@
 <div class="grid mt-2">
-  <div class="col-12 xl:col-3">
-    <students-overall-attendance-card/>
+  <div class="col-12">
+    <student-details-and-selection-card (studentSelected)="this.onStudentSelect($event)"/>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <students-overall-attendance-card [overAllAttendance]="this.attendanceCard.overAllAttendance"/>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <students-on-time-card [totalOnTime]="this.attendanceCard.onTime"/>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <students-late-card [totalLate]="this.attendanceCard.late"/>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <students-absent-card [totalAbsent]="this.attendanceCard.absent"/>
+  </div>
+  <div class="col-12 xl:col-9">
+    <students-attendance-distribution [data]="this.monthlyAttendanceChartData"/>
   </div>
   <div class="col-12 xl:col-3">
-    <students-on-time-card/>
-  </div>
-  <div class="col-12 xl:col-3">
-    <students-late-card/>
-  </div>
-  <div class="col-12 xl:col-3">
-    <students-absent-card/>
-  </div>
-  <div class="col-12 xl:col-8">
-    <students-attendance-distribution/>
-  </div>
-  <div class="col-12 xl:col-4">
-    <students-profile-information/>
+    <students-profile-information [studentInformation]="this.selectedStudent"/>
   </div>
 </div>
