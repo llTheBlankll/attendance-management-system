@@ -106,7 +106,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
             }
           }
         }
-        this.updateDailyAttendanceReport();
+        this.updateDailyAttendanceReport("month");
       },
       tooltip: "This will show data for the last 365 days.",
       icon: 'pi pi-chart-line'
@@ -130,7 +130,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
           }
         }
         this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_90_DAYS);
-        this.updateDailyAttendanceReport();
+        this.updateDailyAttendanceReport("week");
       },
       tooltip: "This will show data for the last 90 days.",
       icon: 'pi pi-chart-line'
@@ -139,7 +139,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
       label: 'Last 30 Days',
       command: () => {
         this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
-        this.updateDailyAttendanceReport();
+        this.updateDailyAttendanceReport("week");
       },
       tooltip: "This will show data for the last 30 days.",
       icon: 'pi pi-chart-line'
@@ -148,7 +148,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
       label: 'Last 7 Days',
       command: () => {
         this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_7_DAYS);
-        this.updateDailyAttendanceReport();
+        this.updateDailyAttendanceReport("day");
       },
       tooltip: "This will show data for the last 7 days.",
       icon: 'pi pi-chart-line'
@@ -159,10 +159,10 @@ export class DailyAttendanceReportCardComponent implements OnInit {
   @Input()
   public date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
 
-  private async updateDailyAttendanceReport(): Promise<void> {
-    const onTime = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME]);
-    const late = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE]);
-    const absent = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT]);
+  private async updateDailyAttendanceReport(timeStack: "day" | "week" | "month" = "week"): Promise<void> {
+    const onTime = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME], undefined, undefined, timeStack);
+    const late = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE], undefined, undefined, timeStack);
+    const absent = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT], undefined, undefined, timeStack);
 
     this.data = {
       ...this.data,

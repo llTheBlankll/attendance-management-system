@@ -69,6 +69,44 @@ export class AttendanceService {
     return collectionData(attendanceCollection, {idField: "id"});
   }
 
+  public async getLineChartTest(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "day") {
+    const lineChart: LineChartDTO = {
+      labels: [],
+      data: []
+    }
+
+    const dailyCounts: { [date: string]: number } = {};
+
+    // Looping through the date range
+    const date = new Date(dateRange.startDate);
+    const endDate = new Date(dateRange.endDate);
+    while (date <= endDate) {
+      let dateString;
+      switch (timeStack) {
+        case "week":
+          dateString = "Week of " + this.utilService.getCurrentWeekOfMonth(date).toString() + ", " + date.getFullYear().toString();
+          date.setDate(date.getDate() + 7);
+          break;
+        case "month":
+          dateString = `Month ${this.utilService.getCurrentMonth(date).toString()} of ${date.getFullYear().toString()}`;
+          date.setMonth(date.getMonth() + 1);
+          break;
+        default:
+          dateString = date.toISOString().split("T")[0];
+          date.setDate(date.getDate() + 1);
+          break;
+      }
+      if (!dailyCounts[dateString]) {
+        dailyCounts[dateString] = 0;
+      }
+      dailyCounts[dateString]++;
+    }
+
+    lineChart.labels = Object.keys(dailyCounts);
+    lineChart.data = Object.values(dailyCounts);
+    return lineChart;
+  }
+
   public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "day") {
     // If not in production mode, verbose
     const lineChart: LineChartDTO = {
@@ -76,13 +114,38 @@ export class AttendanceService {
       data: []
     }
 
+    // TODO: We can also loop the date range each and don't have to take everything in the firestore attendances document to make it more efficient save read usage.
+    return this.getLineChartTest(dateRange, attendanceStatus, classroom, student, timeStack);
+
     // Looping through the date range
     const attendances: Attendance[] = await firstValueFrom(this.getAllAttendanceByStatusAndDateRange(attendanceStatus, dateRange, classroom));
     const dailyCounts: { [date: string]: number } = {};
     attendances.forEach(attendance => {
-      const dateString = attendance.date.toDate().toISOString().split("T")[0];
-      if (!dailyCounts[dateString]) {
-        dailyCounts[dateString] = 0;
+      let dateString = attendance.date.toDate().toISOString().split("T")[0];
+      switch (timeStack) {
+        case "week": {
+          dateString = "Week of " + "month" +
+            +this.utilService.getCurrentWeekOfMonth(attendance.date.toDate()).toString() + ", " + attendance.date.toDate().getFullYear().toString();
+          console.log(dateString);
+          if (!dailyCounts[dateString]) {
+            dailyCounts[dateString] = 0;
+          }
+          break;
+        }
+        case "month": {
+          dateString = this.utilService.getCurrentMonth(attendance.date.toDate()).toString();
+          if (!dailyCounts[dateString]) {
+            dailyCounts[dateString] = 0;
+          }
+          break;
+        }
+        default: {
+          dateString = attendance.date.toDate().toISOString().split("T")[0];
+          if (!dailyCounts[dateString]) {
+            dailyCounts[dateString] = 0;
+          }
+          break;
+        }
       }
 
       dailyCounts[dateString]++;
@@ -95,7 +158,6 @@ export class AttendanceService {
 
     return lineChart;
   }
-
 
   public async getLineChartOfTotalAttendance(dateRange: DateRange) {
     return this.getLineChart(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]).then((lineChartDTO: LineChartDTO) => {

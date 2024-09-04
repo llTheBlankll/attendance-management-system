@@ -19,6 +19,14 @@ export class UtilService {
     return date.toISOString().split("T")[0];
   }
 
+  public getCurrentWeekOfMonth(date: Date) {
+    const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    return Math.ceil((date.getDate() + firstDayOfMonth.getDay() - 1) / 7);
+  }
+
+  public getCurrentMonth(date: Date) {
+    return date.getMonth() + 1;
+  }
 
   public dateToTimestamp(date: DateRange | Date): [Timestamp, Timestamp] {
     if (date == null) {
