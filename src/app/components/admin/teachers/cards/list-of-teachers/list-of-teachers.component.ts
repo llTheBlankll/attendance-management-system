@@ -51,7 +51,6 @@ export class ListOfTeachersComponent implements OnInit {
 
   // Injections
   private readonly messageService = inject(MessageService);
-  private readonly storageService = inject(FirebaseStorageService);
   private readonly loggingService = inject(LoggingService);
   private readonly teacherService = inject(TeacherService);
   private readonly confirmationService = inject(ConfirmationService);
@@ -72,12 +71,13 @@ export class ListOfTeachersComponent implements OnInit {
    * @summary Retrieve list of teachers from Firestore.
    */
   protected retrieveListOfTeachers() {
+    this.loggingService.log("Retrieving list of teachers...");
+    this.teachers = [];
     this.teacherService.getAllTeachers().subscribe((teachers: Teacher[]) => {
       this.teachers = teachers;
       this.loggingService.log("List of teachers retrieved.");
-    });
+    }).unsubscribe();
   }
-
 
   protected async deleteTeacher(teacher: Teacher, event: Event | null) {
     if (event) {

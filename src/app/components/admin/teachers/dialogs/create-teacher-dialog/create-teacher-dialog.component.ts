@@ -109,7 +109,7 @@ export class CreateTeacherDialogComponent {
       middleInitial: formTeacher.middleInitial,
       firstName: formTeacher.firstName,
       position: formTeacher.position,
-      sex: formTeacher.sex,
+      sex: formTeacher.sex.toUpperCase(),
     };
     let uploadResult: UploadResult | null = null;
 
@@ -150,6 +150,7 @@ export class CreateTeacherDialogComponent {
     });
     this.showDialog = false;
     this.refreshTeachersSignal();
+    this.addTeacherFormGroup.reset();
   }
 
   protected onProfilePictureChange(event: FileSelectEvent) {

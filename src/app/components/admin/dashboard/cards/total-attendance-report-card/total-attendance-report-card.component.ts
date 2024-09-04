@@ -62,19 +62,22 @@ export class TotalAttendanceReportCardComponent implements OnInit {
 
   public chartDaysOptions: MenuItem[] = [
     {
+      label: 'Last 365 Days',
+      command: () => {
+        this.options = {
+          ...this.options,
+        }
+        this.dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_365_DAYS);
+        this.updateTotalAttendanceReport();
+      },
+      tooltip: "This will show data for the last 365 days.",
+      icon: 'pi pi-chart-line'
+    },
+    {
       label: 'Last 90 Days',
       command: () => {
         this.options = {
           ...this.options,
-          // Set scales x type to Time
-          scales: {
-            x: {
-              type: 'time',
-              time: {
-                unit: 'month'
-              }
-            }
-          }
         }
         this.dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_90_DAYS);
         this.updateTotalAttendanceReport();

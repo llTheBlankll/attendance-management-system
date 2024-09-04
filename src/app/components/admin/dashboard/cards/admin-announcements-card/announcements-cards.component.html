@@ -1,0 +1,10 @@
+<p-panel header="Announcements" styleClass="h-full">
+  <ng-template pTemplate="icons">
+    <!-- cog icon button -->
+    <button class="p-panel-header-icon p-link mr-2"
+            (click)="announcementOptions.visible = !announcementOptions.visible">
+      <span class="pi pi-list"></span>
+    </button>
+    <p-menu #announcementOptions [popup]="true" [model]="this.options"></p-menu>
+  </ng-template>
+</p-panel>

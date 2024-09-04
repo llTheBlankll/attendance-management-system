@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {AdminAnnouncementsCardComponent} from './admin-announcements-card.component';
+import {AnnouncementsCardsComponent} from './announcements-cards.component';
 
 describe('AdminAnnouncementsCardComponent', () => {
-  let component: AdminAnnouncementsCardComponent;
-  let fixture: ComponentFixture<AdminAnnouncementsCardComponent>;
+  let component: AnnouncementsCardsComponent;
+  let fixture: ComponentFixture<AnnouncementsCardsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminAnnouncementsCardComponent]
+      imports: [AnnouncementsCardsComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(AdminAnnouncementsCardComponent);
+    fixture = TestBed.createComponent(AnnouncementsCardsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

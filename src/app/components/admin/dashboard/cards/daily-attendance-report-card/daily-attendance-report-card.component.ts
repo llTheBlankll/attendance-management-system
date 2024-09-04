@@ -67,7 +67,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
       hover: {
         mode: 'nearest',
         intersect: true
-      }
+      },
     },
     responsive: true,
     maintainAspectRatio: false,
@@ -78,6 +78,9 @@ export class DailyAttendanceReportCardComponent implements OnInit {
         type: 'time',
         time: {
           unit: 'day'
+        },
+        grid: {
+          display: false
         }
       }
     }
@@ -96,6 +99,9 @@ export class DailyAttendanceReportCardComponent implements OnInit {
               type: 'time',
               time: {
                 unit: 'month'
+              },
+              grid: {
+                display: false
               }
             }
           }
@@ -116,6 +122,9 @@ export class DailyAttendanceReportCardComponent implements OnInit {
               type: 'time',
               time: {
                 unit: 'day'
+              },
+              grid: {
+                display: false
               }
             }
           }
