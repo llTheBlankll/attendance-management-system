@@ -47,7 +47,7 @@ export class StudentService {
 
   public getClassStudents(classroom: Class) {
     const classRef = this.classService.getClassroom(classroom.id);
-    const studentsCollection = query(collection(this.firebase, 'students'), where('class', '==', classRef));
+    const studentsCollection = query(collection(this.firebase, 'students'), where('classroom', '==', classRef));
     return collectionData(studentsCollection);
   }
 

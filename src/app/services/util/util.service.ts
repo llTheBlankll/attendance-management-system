@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ChartDays} from "../../enums/ChartDays";
+import {TimeRange} from "../../enums/TimeRange";
 import {DateRange} from "../../interfaces/DateRange";
 import {Timestamp} from "@angular/fire/firestore";
 import {environment} from "../../../environments/environment";
@@ -26,6 +26,13 @@ export class UtilService {
 
   public getCurrentMonth(date: Date) {
     return date.getMonth() + 1;
+  }
+
+  public getMonthName(monthNumber: number): string {
+    const date = new Date();
+    date.setMonth(monthNumber - 1); // Adjust for 0-indexing
+
+    return date.toLocaleString('en-US', { month: 'long' });
   }
 
   public dateToTimestamp(date: DateRange | Date): [Timestamp, Timestamp] {
@@ -61,35 +68,41 @@ export class UtilService {
    * Converting chart days to date range, they could be today, last 7 days, last 30 days, last 90 days, last 365 days.
    * And it will return the date range based on the chart days
    *
-   * @param chartDays
+   * @param timeRange
    */
-  public chartDaysToDateRange(chartDays: ChartDays) {
+  public timeRangeToDateRange(timeRange: TimeRange) {
     const currentDate = new Date();
 
     // Get the date range based on the chart days.
-    switch (chartDays) {
-      case ChartDays.TODAY: {
+    switch (timeRange) {
+      case TimeRange.TODAY: {
         return new DateRange(currentDate, currentDate);
       }
-      case ChartDays.LAST_7_DAYS: {
+      case TimeRange.LAST_7_DAYS: {
         // Subtract 7 days from the current date
         const last7Days = new Date(currentDate);
         last7Days.setDate(currentDate.getDate() - 7);
         return new DateRange(last7Days, currentDate);
       }
-      case ChartDays.LAST_30_DAYS: {
+      case TimeRange.LAST_30_DAYS: {
         // Subtract 30 days from the current date
         const last30Days = new Date(currentDate);
         last30Days.setDate(currentDate.getDate() - 30);
         return new DateRange(last30Days, currentDate);
       }
-      case ChartDays.LAST_90_DAYS: {
+      case TimeRange.LAST_90_DAYS: {
         // Subtract 90 days from the current date
         const last90Days = new Date(currentDate);
         last90Days.setDate(currentDate.getDate() - 90);
         return new DateRange(last90Days, currentDate);
       }
-      case ChartDays.LAST_365_DAYS: {
+      case TimeRange.LAST_180_DAYS: {
+        // Subtract 180 days from the current date
+        const last180Days = new Date(currentDate);
+        last180Days.setDate(currentDate.getDate() - 180);
+        return new DateRange(last180Days, currentDate);
+      }
+      case TimeRange.LAST_365_DAYS: {
         // Subtract 365 days from the current date
         const last365Days = new Date(currentDate);
         last365Days.setDate(currentDate.getDate() - 365);

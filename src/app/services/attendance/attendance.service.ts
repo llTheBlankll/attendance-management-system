@@ -4,8 +4,7 @@ import {DateRange} from "../../interfaces/DateRange";
 import {collection, collectionCount, collectionData, doc, Firestore, query, where} from "@angular/fire/firestore";
 import {LineChartDTO} from "../../interfaces/LineChartDTO";
 import {UtilService} from "../util/util.service";
-import {firstValueFrom} from "rxjs";
-import {Attendance} from "../../interfaces/dto/Attendance";
+import {firstValueFrom, Observable} from "rxjs";
 import {Sex} from "../../enums/Sex";
 import {Class} from "../../interfaces/dto/Class";
 import {ClassService} from "../class/class.service";
@@ -22,7 +21,7 @@ export class AttendanceService {
   private readonly studentService = inject(StudentService);
   private readonly utilService = inject(UtilService);
 
-  public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date | DateRange, classroom?: Class) {
+  public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date | DateRange, classroom?: Class, student?: Student): Observable<number> {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
     // Get the total number of on time students in attendances collection
@@ -30,7 +29,8 @@ export class AttendanceService {
       where("status", "in", attendanceStatus),
       where("date", ">=", startDate),
       where("date", "<=", endDate),
-      ...(classroom ? [where("studentObj.class", "==", this.classService.getClassroom(classroom.id))] : [])
+      ...(classroom ? [where("studentObj.classroom", "==", this.classService.getClassroom(classroom.id))] : []),
+      ...(student ? [where("student", "==", this.studentService.getStudent(student))] : [])
     );
 
     return collectionCount(attendanceCollection);
@@ -62,14 +62,15 @@ export class AttendanceService {
       where("status", "in", attendanceStatus),
       where("date", ">=", startDate),
       where("date", "<=", endDate),
-      ...(classroom === undefined ? [] : [where("studentObj.class", "==", this.classService.getClassroom(classroom.id))]),
+      ...(classroom === undefined ? [] : [where("studentObj.classroom", "==", this.classService.getClassroom(classroom.id))]),
       ...(student === undefined ? [] : [where("student", "==", this.studentService.getStudent(student))])
     );
 
     return collectionData(attendanceCollection, {idField: "id"});
   }
 
-  public async getLineChartTest(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "day") {
+  public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "week") {
+    console.log(timeStack);
     const lineChart: LineChartDTO = {
       labels: [],
       data: []
@@ -82,13 +83,14 @@ export class AttendanceService {
     const endDate = new Date(dateRange.endDate);
     while (date <= endDate) {
       let dateString;
+      const currentDate = new Date(date);
       switch (timeStack) {
         case "week":
-          dateString = "Week of " + this.utilService.getCurrentWeekOfMonth(date).toString() + ", " + date.getFullYear().toString();
+          dateString = "Week " + this.utilService.getCurrentWeekOfMonth(date).toString() + " of " + this.utilService.getMonthName(date.getMonth() + 1)   + "/" + date.getFullYear().toString();
           date.setDate(date.getDate() + 7);
           break;
         case "month":
-          dateString = `Month ${this.utilService.getCurrentMonth(date).toString()} of ${date.getFullYear().toString()}`;
+          dateString = `${this.utilService.getMonthName(date.getMonth() + 1)}, ${date.getFullYear().toString()}`;
           date.setMonth(date.getMonth() + 1);
           break;
         default:
@@ -99,68 +101,23 @@ export class AttendanceService {
       if (!dailyCounts[dateString]) {
         dailyCounts[dateString] = 0;
       }
-      dailyCounts[dateString]++;
+
+      const attendances = await firstValueFrom(this.countTotalByAttendanceByStatus(attendanceStatus, new DateRange(currentDate, date), classroom, student));
+      dailyCounts[dateString] += attendances;
     }
 
-    lineChart.labels = Object.keys(dailyCounts);
-    lineChart.data = Object.values(dailyCounts);
-    return lineChart;
-  }
+    console.log(dailyCounts);
 
-  public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "day") {
-    // If not in production mode, verbose
-    const lineChart: LineChartDTO = {
-      labels: [],
-      data: []
+    for (const [key, value] of Object.entries(dailyCounts)) {
+      lineChart.labels.push(key);
+      lineChart.data.push(value);
     }
-
-    // TODO: We can also loop the date range each and don't have to take everything in the firestore attendances document to make it more efficient save read usage.
-    return this.getLineChartTest(dateRange, attendanceStatus, classroom, student, timeStack);
-
-    // Looping through the date range
-    const attendances: Attendance[] = await firstValueFrom(this.getAllAttendanceByStatusAndDateRange(attendanceStatus, dateRange, classroom));
-    const dailyCounts: { [date: string]: number } = {};
-    attendances.forEach(attendance => {
-      let dateString = attendance.date.toDate().toISOString().split("T")[0];
-      switch (timeStack) {
-        case "week": {
-          dateString = "Week of " + "month" +
-            +this.utilService.getCurrentWeekOfMonth(attendance.date.toDate()).toString() + ", " + attendance.date.toDate().getFullYear().toString();
-          console.log(dateString);
-          if (!dailyCounts[dateString]) {
-            dailyCounts[dateString] = 0;
-          }
-          break;
-        }
-        case "month": {
-          dateString = this.utilService.getCurrentMonth(attendance.date.toDate()).toString();
-          if (!dailyCounts[dateString]) {
-            dailyCounts[dateString] = 0;
-          }
-          break;
-        }
-        default: {
-          dateString = attendance.date.toDate().toISOString().split("T")[0];
-          if (!dailyCounts[dateString]) {
-            dailyCounts[dateString] = 0;
-          }
-          break;
-        }
-      }
-
-      dailyCounts[dateString]++;
-    });
-
-    Object.keys(dailyCounts).forEach((dateString) => {
-      lineChart.labels.push(dateString);
-      lineChart.data.push(dailyCounts[dateString]);
-    });
 
     return lineChart;
   }
 
-  public async getLineChartOfTotalAttendance(dateRange: DateRange) {
-    return this.getLineChart(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]).then((lineChartDTO: LineChartDTO) => {
+  public async getLineChartOfTotalAttendance(dateRange: DateRange, timeStack: string) {
+    return this.getLineChart(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], undefined, undefined, timeStack).then((lineChartDTO: LineChartDTO) => {
       // Checks if line chart is null
       if (lineChartDTO === null) {
         console.error("Line Chart was not retrieved properly, Total Attendance Chart was not loaded.");
@@ -198,7 +155,7 @@ export class AttendanceService {
       where("date", "<=", endDate),
       where("status", "in", attendanceStatus),
       where("studentObj.sex", "in", sex),
-      where("studentObj.class", "==", classRef)
+      where("studentObj.classroom", "==", classRef)
     );
 
     return collectionCount(attendanceCollection);

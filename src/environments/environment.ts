@@ -11,7 +11,7 @@ export const environment = {
     "measurementId": "G-CQ9594N8RL"
   },
   attendance: {
-    badOverAllAttendance: 80,
+    badOverAllAttendance: 85,
     goodOverAllAttendance: 90
   }
 };
