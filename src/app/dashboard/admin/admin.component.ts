@@ -21,7 +21,7 @@ import {
   DailyAttendanceReportCardComponent
 } from "../../components/admin/dashboard/cards/daily-attendance-report-card/daily-attendance-report-card.component";
 import {UtilService} from "../../services/util/util.service";
-import {ChartDays} from "../../enums/ChartDays";
+import {TimeRange} from "../../enums/TimeRange";
 import {
   SectionRankingCardComponent
 } from "../../components/admin/dashboard/cards/section-ranking-card/section-ranking-card.component";
@@ -53,5 +53,5 @@ export class AdminComponent {
   // Injections
   private readonly utilService = inject(UtilService);
 
-  public dailyAttendanceReportDateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS)
+  public dailyAttendanceReportDateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS)
 }

@@ -15,7 +15,7 @@
     <students-absent-card [totalAbsent]="this.attendanceCard.absent"/>
   </div>
   <div class="col-12 xl:col-9">
-    <students-attendance-distribution [data]="this.monthlyAttendanceChartData"/>
+    <students-attendance-distribution [data]="this.monthlyAttendanceChartData" (timeRange)="this.onTimeRangeChange($event)"/>
   </div>
   <div class="col-12 xl:col-3">
     <students-profile-information [studentInformation]="this.selectedStudent"/>

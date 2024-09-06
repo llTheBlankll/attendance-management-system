@@ -36,7 +36,7 @@ import {AttendanceService} from "../../../../services/attendance/attendance.serv
 import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
 import {Student} from "../../../../interfaces/dto/Student";
 import {UtilService} from "../../../../services/util/util.service";
-import {ChartDays} from "../../../../enums/ChartDays";
+import {TimeRange} from "../../../../enums/TimeRange";
 import {Sex} from "../../../../enums/Sex";
 import {StudentService} from "../../../../services/student/student.service";
 import {Attendance} from "../../../../interfaces/dto/Attendance";
@@ -105,6 +105,7 @@ export class ClassesComponent implements OnInit {
     male: 0,
     female: 0
   }
+  protected classAttendanceToday: Attendance[] = [];
   protected absentStudents: Student[] = [];
 
   ngOnInit() {
@@ -137,19 +138,20 @@ export class ClassesComponent implements OnInit {
       }
     });
 
+    this.updateOverAllAttendance(classSelected);
+  }
+
+  private updateOverAllAttendance(classroom: Class) {
     // * Over all attendance
-    const dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
+    const dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
     this.attendanceService.countTotalByAttendanceByStatus(
       [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
       dateRange,
-      classSelected
+      classroom
     ).subscribe((totalAttendance: number) => {
       const daysCount = this.utilService.getDaysCount(dateRange);
-      console.log(
-        totalAttendance
-      )
       // Get overall attendance by percentage using daysCount, totalAttendance, and totalStudents
-      this.totalCards.overAllAttendance = Math.round(totalAttendance / (daysCount * this.totalCards.totalStudents) * 100) / 100;
+      this.totalCards.overAllAttendance = Number(Number((totalAttendance / (daysCount * this.totalCards.totalStudents) * 100) / 100).toFixed(2));
     });
   }
 
@@ -162,9 +164,9 @@ export class ClassesComponent implements OnInit {
 
   private updateMonthlyAttendance(classroom: Class) {
     // ! Get Monthly Attendance and Attendance demographics, load them asynchronously
-    const lateChart = this.attendanceService.getLineChart(this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS), [AttendanceStatus.LATE], classroom);
-    const onTimeChart = this.attendanceService.getLineChart(this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS), [AttendanceStatus.ON_TIME], classroom);
-    const absentChart = this.attendanceService.getLineChart(this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS), [AttendanceStatus.ABSENT], classroom);
+    const lateChart = this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.LATE], classroom);
+    const onTimeChart = this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.ON_TIME], classroom);
+    const absentChart = this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.ABSENT], classroom);
     const chart = Promise.all([lateChart, onTimeChart, absentChart]);
     chart.then((value) => {
       const late = value[0];

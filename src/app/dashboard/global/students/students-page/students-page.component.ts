@@ -23,7 +23,7 @@ import {
 import {Student} from "../../../../interfaces/dto/Student";
 import {AttendanceService} from "../../../../services/attendance/attendance.service";
 import {UtilService} from "../../../../services/util/util.service";
-import {ChartDays} from "../../../../enums/ChartDays";
+import {TimeRange} from "../../../../enums/TimeRange";
 import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
 import {firstValueFrom} from "rxjs";
 import {DateRange} from "../../../../interfaces/DateRange";
@@ -55,8 +55,8 @@ export class StudentsPageComponent {
     absent: 0,
     overAllAttendance: 0
   }
-  protected monthDateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_90_DAYS);
-  protected attendanceCardDateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
+  protected monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
+  protected attendanceCardDateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
 
   public monthlyAttendanceChartData = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -80,7 +80,31 @@ export class StudentsPageComponent {
     this.updateMonthlyAttendanceChart(event);
   }
 
-  public updateMonthlyAttendanceChart(student: Student, date: DateRange = this.monthDateRange) {
+  public onTimeRangeChange(event: TimeRange) {
+    switch (event) {
+      case TimeRange.LAST_90_DAYS: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
+        break;
+      }
+      case TimeRange.LAST_30_DAYS: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
+        break;
+      }
+      case TimeRange.LAST_180_DAYS: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_180_DAYS);
+        break;
+      }
+      default: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
+      }
+    }
+
+    if (this.selectedStudent !== undefined) {
+      this.updateMonthlyAttendanceChart(this.selectedStudent, this.monthlyAttendanceTimeRange);
+    }
+  }
+
+  public updateMonthlyAttendanceChart(student: Student, date: DateRange = this.monthlyAttendanceTimeRange) {
     if (this.selectedStudent) {
       const onTimeLineChart = this.attendanceService.getLineChart(date, [AttendanceStatus.ON_TIME], undefined, student, "month");
       const lateLineChart = this.attendanceService.getLineChart(date, [AttendanceStatus.LATE], undefined, student, "month");
