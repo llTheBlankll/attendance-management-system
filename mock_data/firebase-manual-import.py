@@ -4,8 +4,11 @@ import firebase_admin
 import json
 import util
 import numpy
+import faker
 from datetime import datetime, timedelta
 from firebase_admin import firestore
+
+from dtos import Guardian
 
 rng = numpy.random.default_rng()
 
@@ -24,7 +27,7 @@ app = get_firebase_app()
 db = firestore.client(app)
 
 
-def get_gradelevels():
+def get_grade_levels():
     return db.collection(u'grade-levels').stream()
 
 
@@ -51,7 +54,7 @@ def main():
     strand_list: list[int] = []
     class_list: list[int] = []
     # Get the list of grade levels
-    for grade_level in get_gradelevels():
+    for grade_level in get_grade_levels():
         grade_level_list.append(grade_level.id)
 
     # Get the list of classes
@@ -65,14 +68,22 @@ def main():
     with open("Students.json", "r") as f:
         print("Importing...")
         student = json.load(f)
+
         for s in student:
+            # Generate a random guardian for the student
+            db.collection(u'guardians').document(str(s['id'])).set(generate_random_guardian().dict())
             student_id_list.append(s['id'])
+            s["guardian"] = get_guardian_ref(s["id"])
             s["gradeLevel"] = get_grade_level_ref(rng.choice(grade_level_list))
-            s["class"] = get_class_ref(rng.choice(class_list))
+            s["classroom"] = get_class_ref(rng.choice(class_list))
+            s["strand"] = get_class_ref(rng.choice(strand_list))
             s["sex"] = s["sex"].upper()
             doc_ref.document(str(s['id'])).set(s)
         print("Done!")
 
+
+def get_guardian_ref(guardian_id):
+    return db.collection(u'guardians').document(str(guardian_id))
 
 def get_class_ref(class_id):
     return db.collection(u'classes').document(class_id)
@@ -91,26 +102,38 @@ def get_existing_students():
     return existing_students
 
 
+def generate_random_guardian() -> Guardian:
+    generator = faker.Faker()
+    return Guardian(
+        fullName=generator.name(),
+        contactNumber=generator.phone_number(),
+    )
+
+
 def import_students_attendance(students: list[int]):
     print("Importing attendance...")
     # Loop date range, from start date to end date
-    start_date = datetime.strptime("2024-09-01", "%Y-%m-%d").date()
-    end_date = datetime.strptime("2024-09-30", "%Y-%m-%d").date()
+    start_date = datetime.strptime("2024-09-1", "%Y-%m-%d").date()
+    end_date = datetime.strptime("2024-12-31", "%Y-%m-%d").date()
 
     current_date = start_date
     batch = db.batch()
+    count = 0
     while current_date <= end_date:
+        if count <= 100:
+            batch.commit()
+            count = 0
         print(f"Importing attendance for {current_date}...")
         # Generate random time
         time_in = util.generate_time("06:00", "07:00")
-        time_out = util.generate_time("13:00", "20:00")
+        time_out = util.generate_time("12:30", "16:00")
 
         # Add attendance for each student
         for student_id in students:
             # Get Student Reference
             student_ref = db.collection(u'students').document(str(student_id))
             student_obj = student_ref.get().to_dict()
-            class_ref = student_obj["class"]
+            class_ref = student_obj["classroom"]
 
             # Select attendance status randomly
             status = util.randomize_attendance_status()
@@ -136,7 +159,7 @@ def import_students_attendance(students: list[int]):
                     "timeIn": time_in,
                     "timeOut": time_out,
                     "class": class_ref,
-                    "notes": ""
+                    "notes": faker.Faker().text()
                 }
             )
 

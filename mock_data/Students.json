@@ -7,7 +7,7 @@
     "prefix": null,
     "gradeLevel": 1,
     "sex": "Female",
-    "class": 9,
+    "classroom": 9,
     "address": "7 Jana Park",
     "birthdate": "2008-02-01"
   },
@@ -19,7 +19,7 @@
     "prefix": null,
     "gradeLevel": 4,
     "sex": "Male",
-    "class": 10,
+    "classroom": 10,
     "address": "5527 Hazelcrest Way",
     "birthdate": "1991-09-15"
   },
@@ -31,7 +31,7 @@
     "prefix": "Ms.",
     "gradeLevel": 9,
     "sex": "Male",
-    "class": 5,
+    "classroom": 5,
     "address": "21840 Brickson Park Trail",
     "birthdate": "1997-04-10"
   },
@@ -43,7 +43,7 @@
     "prefix": "Mr.",
     "gradeLevel": 5,
     "sex": "Female",
-    "class": 10,
+    "classroom": 10,
     "address": "60 Butternut Road",
     "birthdate": "1993-02-24"
   },
@@ -55,7 +55,7 @@
     "prefix": "Mr.",
     "gradeLevel": 8,
     "sex": "Male",
-    "class": 25,
+    "classroom": 25,
     "address": "09 Rigney Parkway",
     "birthdate": "1998-11-03"
   },
@@ -67,7 +67,7 @@
     "prefix": null,
     "gradeLevel": 9,
     "sex": "Male",
-    "class": 25,
+    "classroom": 25,
     "address": "5873 Badeau Alley",
     "birthdate": "1993-05-05"
   },
@@ -79,7 +79,7 @@
     "prefix": null,
     "gradeLevel": 8,
     "sex": "Female",
-    "class": 5,
+    "classroom": 5,
     "address": "017 Petterle Junction",
     "birthdate": "1992-01-15"
   },
@@ -91,7 +91,7 @@
     "prefix": "Jr.",
     "gradeLevel": 11,
     "sex": "Female",
-    "class": 17,
+    "classroom": 17,
     "address": "02 Dayton Place",
     "birthdate": "1997-05-14"
   },
@@ -103,7 +103,7 @@
     "prefix": "Mrs.",
     "gradeLevel": 7,
     "sex": "Male",
-    "class": 2,
+    "classroom": 2,
     "address": "4814 Farmco Way",
     "birthdate": "2000-03-05"
   },
@@ -115,7 +115,7 @@
     "prefix": "Mr.",
     "gradeLevel": 5,
     "sex": "Bigender",
-    "class": 4,
+    "classroom": 4,
     "address": "2 Bultman Street",
     "birthdate": "1995-09-21"
   },
@@ -127,7 +127,7 @@
     "prefix": "Jr.",
     "gradeLevel": 9,
     "sex": "Male",
-    "class": 14,
+    "classroom": 14,
     "address": "053 Nevada Park",
     "birthdate": "2009-05-04"
   },
@@ -139,7 +139,7 @@
     "prefix": null,
     "gradeLevel": 1,
     "sex": "Male",
-    "class": 12,
+    "classroom": 12,
     "address": "8 Blackbird Court",
     "birthdate": "1994-10-24"
   },
@@ -151,7 +151,7 @@
     "prefix": "Jr.",
     "gradeLevel": 1,
     "sex": "Female",
-    "class": 11,
+    "classroom": 11,
     "address": "548 Heffernan Court",
     "birthdate": "2008-01-13"
   },
@@ -163,7 +163,7 @@
     "prefix": "Mrs.",
     "gradeLevel": 8,
     "sex": "Female",
-    "class": 11,
+    "classroom": 11,
     "address": "513 Sunbrook Street",
     "birthdate": "2002-08-13"
   },
@@ -175,7 +175,7 @@
     "prefix": "Jr.",
     "gradeLevel": 4,
     "sex": "Female",
-    "class": 18,
+    "classroom": 18,
     "address": "305 Summerview Terrace",
     "birthdate": "2007-04-22"
   },
@@ -187,7 +187,7 @@
     "prefix": null,
     "gradeLevel": 11,
     "sex": "Genderfluid",
-    "class": 6,
+    "classroom": 6,
     "address": "7008 Birchwood Park",
     "birthdate": "2007-10-05"
   },
@@ -199,7 +199,7 @@
     "prefix": null,
     "gradeLevel": 3,
     "sex": "Male",
-    "class": 5,
+    "classroom": 5,
     "address": "97164 Elgar Circle",
     "birthdate": "1994-08-25"
   },
@@ -211,7 +211,7 @@
     "prefix": "Mrs.",
     "gradeLevel": 5,
     "sex": "Female",
-    "class": 19,
+    "classroom": 19,
     "address": "85869 Erie Trail",
     "birthdate": "1994-01-10"
   },
@@ -223,7 +223,7 @@
     "prefix": "Mr.",
     "gradeLevel": 8,
     "sex": "Female",
-    "class": 25,
+    "classroom": 25,
     "address": "1911 Porter Court",
     "birthdate": "2001-05-03"
   },
@@ -235,7 +235,7 @@
     "prefix": null,
     "gradeLevel": 12,
     "sex": "Female",
-    "class": 17,
+    "classroom": 17,
     "address": "3 Farwell Parkway",
     "birthdate": "1998-03-19"
   },
@@ -247,7 +247,7 @@
     "prefix": "Jr.",
     "gradeLevel": 11,
     "sex": "Male",
-    "class": 17,
+    "classroom": 17,
     "address": "5354 Pankratz Point",
     "birthdate": "2009-01-04"
   },
@@ -259,7 +259,7 @@
     "prefix": null,
     "gradeLevel": 8,
     "sex": "Male",
-    "class": 10,
+    "classroom": 10,
     "address": "25 Marcy Junction",
     "birthdate": "2001-12-14"
   },
@@ -271,7 +271,7 @@
     "prefix": null,
     "gradeLevel": 5,
     "sex": "Male",
-    "class": 14,
+    "classroom": 14,
     "address": "2 Moulton Place",
     "birthdate": "2002-04-25"
   },
@@ -283,7 +283,7 @@
     "prefix": "Ms.",
     "gradeLevel": 1,
     "sex": "Female",
-    "class": 5,
+    "classroom": 5,
     "address": "2711 Warbler Junction",
     "birthdate": "2007-11-30"
   },
@@ -295,7 +295,7 @@
     "prefix": "Jr.",
     "gradeLevel": 5,
     "sex": "Male",
-    "class": 14,
+    "classroom": 14,
     "address": "3 Carberry Court",
     "birthdate": "1998-09-10"
   },
@@ -307,7 +307,7 @@
     "prefix": "Jr.",
     "gradeLevel": 7,
     "sex": "Male",
-    "class": 12,
+    "classroom": 12,
     "address": "3 Mallard Avenue",
     "birthdate": "1997-11-13"
   },
@@ -319,7 +319,7 @@
     "prefix": "Ms.",
     "gradeLevel": 7,
     "sex": "Female",
-    "class": 14,
+    "classroom": 14,
     "address": "7 Union Junction",
     "birthdate": "1996-05-09"
   },
@@ -331,7 +331,7 @@
     "prefix": null,
     "gradeLevel": 5,
     "sex": "Male",
-    "class": 16,
+    "classroom": 16,
     "address": "3286 Briar Crest Junction",
     "birthdate": "2008-06-19"
   },
@@ -343,7 +343,7 @@
     "prefix": "Ms.",
     "gradeLevel": 5,
     "sex": "Male",
-    "class": 19,
+    "classroom": 19,
     "address": "626 Heffernan Junction",
     "birthdate": "2003-02-21"
   },
@@ -355,7 +355,7 @@
     "prefix": "Jr.",
     "gradeLevel": 9,
     "sex": "Male",
-    "class": 13,
+    "classroom": 13,
     "address": "97139 Ronald Regan Street",
     "birthdate": "1997-06-18"
   },
@@ -367,7 +367,7 @@
     "prefix": "Ms.",
     "gradeLevel": 10,
     "sex": "Female",
-    "class": 20,
+    "classroom": 20,
     "address": "1064 Kedzie Alley",
     "birthdate": "1996-07-01"
   },
@@ -379,7 +379,7 @@
     "prefix": "Mr.",
     "gradeLevel": 5,
     "sex": "Male",
-    "class": 24,
+    "classroom": 24,
     "address": "79 Miller Circle",
     "birthdate": "1990-02-23"
   },
@@ -391,7 +391,7 @@
     "prefix": "Jr.",
     "gradeLevel": 3,
     "sex": "Bigender",
-    "class": 9,
+    "classroom": 9,
     "address": "04855 Prairie Rose Drive",
     "birthdate": "2008-06-06"
   },
@@ -403,7 +403,7 @@
     "prefix": "Jr.",
     "gradeLevel": 12,
     "sex": "Female",
-    "class": 23,
+    "classroom": 23,
     "address": "1106 Raven Circle",
     "birthdate": "1992-02-15"
   },
@@ -415,7 +415,7 @@
     "prefix": "Jr.",
     "gradeLevel": 4,
     "sex": "Male",
-    "class": 25,
+    "classroom": 25,
     "address": "6679 Eastwood Parkway",
     "birthdate": "1990-05-28"
   },
@@ -427,7 +427,7 @@
     "prefix": "Mr.",
     "gradeLevel": 6,
     "sex": "Bigender",
-    "class": 14,
+    "classroom": 14,
     "address": "08 Summerview Trail",
     "birthdate": "1998-03-23"
   },
@@ -439,7 +439,7 @@
     "prefix": null,
     "gradeLevel": 6,
     "sex": "Male",
-    "class": 4,
+    "classroom": 4,
     "address": "1182 Gateway Avenue",
     "birthdate": "2007-01-27"
   },
@@ -451,7 +451,7 @@
     "prefix": "Ms.",
     "gradeLevel": 6,
     "sex": "Female",
-    "class": 4,
+    "classroom": 4,
     "address": "00 Redwing Street",
     "birthdate": "2005-11-19"
   },
@@ -463,7 +463,7 @@
     "prefix": "Ms.",
     "gradeLevel": 7,
     "sex": "Male",
-    "class": 25,
+    "classroom": 25,
     "address": "31 Packers Place",
     "birthdate": "1997-07-02"
   },
@@ -475,7 +475,7 @@
     "prefix": "Jr.",
     "gradeLevel": 1,
     "sex": "Male",
-    "class": 5,
+    "classroom": 5,
     "address": "6 Lake View Terrace",
     "birthdate": "1991-12-10"
   },
@@ -487,7 +487,7 @@
     "prefix": "Mr.",
     "gradeLevel": 8,
     "sex": "Male",
-    "class": 10,
+    "classroom": 10,
     "address": "59 Fairfield Road",
     "birthdate": "1999-11-09"
   },
@@ -499,7 +499,7 @@
     "prefix": null,
     "gradeLevel": 9,
     "sex": "Male",
-    "class": 24,
+    "classroom": 24,
     "address": "8521 Fallview Court",
     "birthdate": "1999-10-26"
   },
@@ -511,7 +511,7 @@
     "prefix": "Mrs.",
     "gradeLevel": 10,
     "sex": "Genderfluid",
-    "class": 1,
+    "classroom": 1,
     "address": "51 Pawling Plaza",
     "birthdate": "2008-10-29"
   },
@@ -523,7 +523,7 @@
     "prefix": "Mr.",
     "gradeLevel": 7,
     "sex": "Female",
-    "class": 12,
+    "classroom": 12,
     "address": "289 Hauk Pass",
     "birthdate": "2000-01-26"
   },
@@ -535,7 +535,7 @@
     "prefix": null,
     "gradeLevel": 12,
     "sex": "Female",
-    "class": 12,
+    "classroom": 12,
     "address": "1 Comanche Drive",
     "birthdate": "1995-08-31"
   },
@@ -547,7 +547,7 @@
     "prefix": "Mrs.",
     "gradeLevel": 9,
     "sex": "Male",
-    "class": 23,
+    "classroom": 23,
     "address": "572 American Ash Hill",
     "birthdate": "2001-01-25"
   },
@@ -559,7 +559,7 @@
     "prefix": "Mr.",
     "gradeLevel": 6,
     "sex": "Male",
-    "class": 15,
+    "classroom": 15,
     "address": "60 Norway Maple Pass",
     "birthdate": "1996-04-09"
   },
@@ -571,7 +571,7 @@
     "prefix": "Ms.",
     "gradeLevel": 1,
     "sex": "Male",
-    "class": 19,
+    "classroom": 19,
     "address": "02 Lighthouse Bay Place",
     "birthdate": "1999-12-14"
   },
@@ -583,7 +583,7 @@
     "prefix": "Mr.",
     "gradeLevel": 6,
     "sex": "Male",
-    "class": 1,
+    "classroom": 1,
     "address": "58015 Mallard Court",
     "birthdate": "2005-11-13"
   },
@@ -595,7 +595,7 @@
     "prefix": "Ms.",
     "gradeLevel": 11,
     "sex": "Male",
-    "class": 19,
+    "classroom": 19,
     "address": "3466 Menomonie Crossing",
     "birthdate": "2001-10-22"
   }
