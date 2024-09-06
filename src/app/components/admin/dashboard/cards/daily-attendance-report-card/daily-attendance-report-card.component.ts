@@ -4,12 +4,13 @@ import {ChartModule} from "primeng/chart";
 import {AttendanceService} from "../../../../../services/attendance/attendance.service";
 import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
 import {UtilService} from "../../../../../services/util/util.service";
-import {ChartDays} from "../../../../../enums/ChartDays";
+import {TimeRange} from "../../../../../enums/TimeRange";
 import {DropdownModule} from "primeng/dropdown";
 import {MenuModule} from "primeng/menu";
 import {PanelModule} from "primeng/panel";
 import {MenuItem} from "primeng/api";
 import 'chartjs-adapter-moment';
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 @Component({
   selector: 'app-daily-attendance-report-card',
@@ -19,7 +20,8 @@ import 'chartjs-adapter-moment';
     ChartModule,
     DropdownModule,
     MenuModule,
-    PanelModule
+    PanelModule,
+    ProgressSpinnerModule
   ],
   templateUrl: './daily-attendance-report-card.component.html',
   styleUrl: './daily-attendance-report-card.component.css'
@@ -75,10 +77,6 @@ export class DailyAttendanceReportCardComponent implements OnInit {
     tension: 0.4,
     scales: {
       x: {
-        type: 'time',
-        time: {
-          unit: 'day'
-        },
         grid: {
           display: false
         }
@@ -90,16 +88,12 @@ export class DailyAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 365 Days',
       command: () => {
-        this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_365_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_365_DAYS);
         this.options = {
           ...this.options,
           // Set scales x type to Time
           scales: {
             x: {
-              type: 'time',
-              time: {
-                unit: 'month'
-              },
               grid: {
                 display: false
               }
@@ -119,17 +113,13 @@ export class DailyAttendanceReportCardComponent implements OnInit {
           // Set scales x type to Time
           scales: {
             x: {
-              type: 'time',
-              time: {
-                unit: 'day'
-              },
               grid: {
                 display: false
               }
             }
           }
         }
-        this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_90_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
         this.updateDailyAttendanceReport("week");
       },
       tooltip: "This will show data for the last 90 days.",
@@ -138,7 +128,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 30 Days',
       command: () => {
-        this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
         this.updateDailyAttendanceReport("week");
       },
       tooltip: "This will show data for the last 30 days.",
@@ -147,7 +137,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 7 Days',
       command: () => {
-        this.date = this.utilService.chartDaysToDateRange(ChartDays.LAST_7_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_7_DAYS);
         this.updateDailyAttendanceReport("day");
       },
       tooltip: "This will show data for the last 7 days.",
@@ -157,34 +147,41 @@ export class DailyAttendanceReportCardComponent implements OnInit {
 
   // Date Range, default is last 30 days
   @Input()
-  public date = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
+  public date = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
 
-  private async updateDailyAttendanceReport(timeStack: "day" | "week" | "month" = "week"): Promise<void> {
-    const onTime = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME], undefined, undefined, timeStack);
-    const late = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE], undefined, undefined, timeStack);
-    const absent = await this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT], undefined, undefined, timeStack);
+  protected loading = false;
 
-    this.data = {
-      ...this.data,
-      labels: onTime.labels, // you can use onTime.labels and late.labels and absent.labels since the date range used is the same
-      datasets: [
-        {
-          ...this.data.datasets[0],
-          data: onTime.data
-        },
-        {
-          ...this.data.datasets[1],
-          data: late.data
-        },
-        {
-          ...this.data.datasets[2],
-          data: absent.data
-        }
-      ]
-    }
+  private updateDailyAttendanceReport(timeStack = "week") {
+    this.loading = true;
+    const onTime = this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME], undefined, undefined, timeStack);
+    const late = this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE], undefined, undefined, timeStack);
+    const absent = this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT], undefined, undefined, timeStack);
+
+    Promise.all([onTime, late, absent]).then((values) => {
+      this.data = {
+        ...this.data,
+        labels: values[0].labels,
+        datasets: [
+          {
+            label: "On Time",
+            data: values[0].data
+          },
+          {
+            label: "Late",
+            data: values[1].data
+          },
+          {
+            label: "Absent",
+            data: values[2].data
+          }
+        ]
+      }
+      this.loading = false;
+    });
   }
 
   ngOnInit() {
-    this.updateDailyAttendanceReport().then(_ => console.log("Daily attendance report updated"));
+    this.loading = true;
+    this.updateDailyAttendanceReport()
   }
 }

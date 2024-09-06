@@ -3,11 +3,12 @@ import {CardModule} from "primeng/card";
 import {ChartModule} from "primeng/chart";
 import {AttendanceService} from "../../../../../services/attendance/attendance.service";
 import {UtilService} from "../../../../../services/util/util.service";
-import {ChartDays} from "../../../../../enums/ChartDays";
+import {TimeRange} from "../../../../../enums/TimeRange";
 import {LineChartDTO} from "../../../../../interfaces/LineChartDTO";
 import {PanelModule} from "primeng/panel";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 @Component({
   selector: 'app-total-attendance-report-card',
@@ -16,7 +17,8 @@ import {MenuItem} from "primeng/api";
     CardModule,
     ChartModule,
     PanelModule,
-    MenuModule
+    MenuModule,
+    ProgressSpinnerModule
   ],
   templateUrl: './total-attendance-report-card.component.html',
   styleUrl: './total-attendance-report-card.component.css'
@@ -46,29 +48,21 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     aspectRatio: 1,
-    scales: {
-      x: {
-        type: 'time',
-        time: {
-          unit: 'day'
-        }
-      }
-    },
     tension: 0.4
   }
 
   @Input()
-  public dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
+  public dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
 
   public chartDaysOptions: MenuItem[] = [
     {
-      label: 'Last 365 Days',
+      label: 'Last Year',
       command: () => {
         this.options = {
           ...this.options,
         }
-        this.dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_365_DAYS);
-        this.updateTotalAttendanceReport();
+        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_365_DAYS);
+        this.updateTotalAttendanceReport("month");
       },
       tooltip: "This will show data for the last 365 days.",
       icon: 'pi pi-chart-line'
@@ -79,8 +73,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
         this.options = {
           ...this.options,
         }
-        this.dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_90_DAYS);
-        this.updateTotalAttendanceReport();
+        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
+        this.updateTotalAttendanceReport("month");
       },
       tooltip: "This will show data for the last 90 days.",
       icon: 'pi pi-chart-line'
@@ -88,8 +82,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 30 Days',
       command: () => {
-        this.dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_30_DAYS);
-        this.updateTotalAttendanceReport();
+        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
+        this.updateTotalAttendanceReport("day");
       },
       tooltip: "This will show data for the last 30 days.",
       icon: 'pi pi-chart-line'
@@ -97,31 +91,36 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 7 Days',
       command: () => {
-        this.dateRange = this.utilService.chartDaysToDateRange(ChartDays.LAST_7_DAYS);
-        this.updateTotalAttendanceReport();
+        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_7_DAYS);
+        this.updateTotalAttendanceReport("day");
       },
       tooltip: "This will show data for the last 7 days.",
       icon: 'pi pi-chart-line'
     }
   ]
 
-  public async updateTotalAttendanceReport() {
+  public updateTotalAttendanceReport(timeStack = "week") {
     // Get the on time and late students and add together
-    const lineChartDTO: LineChartDTO = await this.attendanceService.getLineChartOfTotalAttendance(this.dateRange);
-
-    this.data = {
-      ...this.data,
-      labels: lineChartDTO.labels,
-      datasets: [
-        {
-          ...this.data.datasets[0],
-          data: lineChartDTO.data
-        }
-      ]
-    };
+    this.loading = true;
+    const lineChartDTO = this.attendanceService.getLineChartOfTotalAttendance(this.dateRange, timeStack);
+    lineChartDTO.then().then((lineChartDTO: LineChartDTO) => {
+      this.data = {
+        ...this.data,
+        labels: lineChartDTO.labels,
+        datasets: [
+          {
+            ...this.data.datasets[0],
+            data: lineChartDTO.data
+          }
+        ]
+      };
+      this.loading = false;
+    });
   }
+  public loading = false;
 
   ngOnInit() {
-    this.updateTotalAttendanceReport().then(_ => console.log("Total Attendance Report Chart was reloaded."));
+    this.loading = true;
+    this.updateTotalAttendanceReport();
   }
 }

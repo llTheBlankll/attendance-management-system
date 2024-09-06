@@ -1,9 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PanelModule} from "primeng/panel";
 import {Button} from "primeng/button";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {ChartModule} from "primeng/chart";
+import {TimeRange} from "../../../../enums/TimeRange";
 
 @Component({
   selector: 'students-attendance-distribution',
@@ -69,18 +70,30 @@ export class StudentAttendanceDistributionComponent {
     }
   }
 
+  @Output()
+  public timeRange: EventEmitter<TimeRange> = new EventEmitter<TimeRange>()
+
   attendanceDistributionModel: MenuItem[] = [
-    {
-      label: "Last 7 Days",
-      icon: "pi pi-fw pi-calendar",
-    },
     {
       label: "Last 30 Days",
       icon: "pi pi-fw pi-calendar",
+      command: () => {
+        this.timeRange.emit(TimeRange.LAST_30_DAYS);
+      }
     },
     {
       label: "Last 90 Days",
       icon: "pi pi-fw pi-calendar",
+      command: () => {
+        this.timeRange.emit(TimeRange.LAST_90_DAYS);
+      }
+    },
+    {
+      label: "Last 180 Days",
+      icon: "pi pi-fw pi-calendar",
+      command: () => {
+        this.timeRange.emit(TimeRange.LAST_180_DAYS);
+      }
     }
   ]
 }

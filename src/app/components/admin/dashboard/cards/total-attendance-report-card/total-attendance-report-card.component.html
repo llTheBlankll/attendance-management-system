@@ -6,5 +6,13 @@
     </button>
     <p-menu #menu [popup]="true" [model]="this.chartDaysOptions"></p-menu>
   </ng-template>
-  <p-chart type="line" [data]="this.data" [options]="this.options"></p-chart>
+  @if (this.loading) {
+    <div class="text-center">
+      <p-progressSpinner ariaLabel="loading">
+
+      </p-progressSpinner>
+    </div>
+  } @else {
+    <p-chart type="line" [data]="this.data" [options]="this.options"></p-chart>
+  }
 </p-panel>
