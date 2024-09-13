@@ -69,6 +69,22 @@ export class AttendanceService {
     return collectionData(attendanceCollection, {idField: "id"});
   }
 
+  /**
+   * This function is used to generate a line chart of attendance by the given time stack.
+   * It is used to generate a line chart of attendance by the given time stack.
+   *
+   * @param dateRange - The date range of the data to be graphed.
+   * @param attendanceStatus - The statuses of attendance that you want to graph.
+   * @param classroom - The classroom that you want to graph. If undefined, all classrooms will be graphed.
+   * @param student - The student that you want to graph. If undefined, all students will be graphed.
+   * @param timeStack - The time stack that you want to graph. The default is "week".
+   *                    The available time stacks are
+   *                    - "week" - The graph will be divided into weeks.
+   *                    - "month" - The graph will be divided into months.
+   *                    - Any other string - The graph will be divided into days.
+   * @returns A promise that resolves to a LineChartDTO object.
+   * @throws When there is an error with the Firebase Firestore.
+   */
   public async getLineChart(dateRange: DateRange, attendanceStatus: AttendanceStatus[], classroom: Class | undefined = undefined, student: Student | undefined = undefined, timeStack = "week") {
     console.log(timeStack);
     const lineChart: LineChartDTO = {

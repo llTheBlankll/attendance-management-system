@@ -7,6 +7,8 @@ import numpy
 import faker
 from datetime import datetime, timedelta
 from firebase_admin import firestore
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 from dtos import Guardian
 
@@ -112,43 +114,41 @@ def generate_random_guardian() -> Guardian:
 
 def import_students_attendance(students: list[int]):
     print("Importing attendance...")
-    # Loop date range, from start date to end date
-    start_date = datetime.strptime("2024-09-1", "%Y-%m-%d").date()
-    end_date = datetime.strptime("2024-12-31", "%Y-%m-%d").date()
+    start_date = datetime.strptime("2024-01-01", "%Y-%m-%d").date()
+    end_date = datetime.strptime("2024-06-30", "%Y-%m-%d").date()
 
-    current_date = start_date
-    batch = db.batch()
-    count = 0
-    while current_date <= end_date:
-        if count <= 100:
-            batch.commit()
-            count = 0
+    # Bulk fetch student data
+    student_data = {
+        str(student_id): db.collection(u'students').document(str(student_id)).get().to_dict()
+        for student_id in students
+    }
+
+    def process_date(current_date):
+        batch = db.batch()
+        count = 0
         print(f"Importing attendance for {current_date}...")
-        # Generate random time
+
+        # Generate random times once per day
         time_in = util.generate_time("06:00", "07:00")
         time_out = util.generate_time("12:30", "16:00")
 
-        # Add attendance for each student
         for student_id in students:
-            # Get Student Reference
+            student_obj = student_data[str(student_id)]
             student_ref = db.collection(u'students').document(str(student_id))
-            student_obj = student_ref.get().to_dict()
             class_ref = student_obj["classroom"]
 
-            # Select attendance status randomly
             status = util.randomize_attendance_status()
 
             if status == "ABSENT":
-                time_in = None
-                time_out = None
+                attendance_time_in = None
+                attendance_time_out = None
             elif status == "ON_TIME":
-                time_in = util.generate_time("06:00", "07:00")
-                time_out = util.generate_time("13:00", "16:00")
+                attendance_time_in = util.generate_time("06:00", "07:00")
+                attendance_time_out = util.generate_time("13:00", "16:00")
             elif status == "LATE":
-                time_in = util.generate_time("07:01", "08:00")
-                time_out = util.generate_time("13:00", "16:00")
+                attendance_time_in = util.generate_time("07:01", "08:00")
+                attendance_time_out = util.generate_time("13:00", "16:00")
 
-            # Add attendance
             batch.set(
                 db.collection(u'attendances').document(),
                 {
@@ -156,19 +156,34 @@ def import_students_attendance(students: list[int]):
                     "student": student_ref,
                     "status": status,
                     "date": datetime.strptime(str(current_date), "%Y-%m-%d"),
-                    "timeIn": time_in,
-                    "timeOut": time_out,
+                    "timeIn": attendance_time_in,
+                    "timeOut": attendance_time_out,
                     "class": class_ref,
                     "notes": faker.Faker().text()
                 }
             )
 
-        print(f"Done for {current_date}.")
-        current_date += timedelta(days=1)
-    # Save all changes
-    batch.commit()
-    print("Done!")
+            count += 1
+            if count >= 500:
+                print(f"Committing batch for {current_date}...")
+                batch.commit()
+                print(f"Committed batch for {current_date}...")
+                batch = db.batch()
+                count = 0
 
+        if count > 0:
+            print(f"Committing batch for {current_date}...")
+            batch.commit()
+            print(f"Committed batch for {current_date}...")
+        print(f"Done for {current_date}.")
+
+    with ThreadPoolExecutor(max_workers=64) as executor:
+        date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        futures = [executor.submit(process_date, date) for date in date_range]
+        for future in as_completed(futures):
+            future.result()
+
+    print("Done!")
 
 if __name__ == '__main__':
     main()

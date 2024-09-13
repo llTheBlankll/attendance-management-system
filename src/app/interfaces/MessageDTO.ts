@@ -1,6 +1,6 @@
-import {ExecutionStatus} from "../enums/ExecutionStatus";
+import {CodeStatus} from "../enums/CodeStatus";
 
 export interface MessageDTO {
   message: string;
-  status: ExecutionStatus;
+  status: CodeStatus;
 }

@@ -1,4 +1,4 @@
-export enum ExecutionStatus {
+export enum CodeStatus {
   SUCCESS = "SUCCESS",
   FAILED = "FAILED",
   NOT_FOUND = "NOT_FOUND",
