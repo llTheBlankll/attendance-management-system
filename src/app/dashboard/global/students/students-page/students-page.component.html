@@ -14,10 +14,10 @@
   <div class="col-12 lg:col-6 xl:col-3">
     <students-absent-card [totalAbsent]="this.attendanceCard.absent"/>
   </div>
-  <div class="col-12 xl:col-9">
+  <div class="col-12 xl:col-8">
     <students-attendance-distribution [data]="this.monthlyAttendanceChartData" (timeRange)="this.onTimeRangeChange($event)"/>
   </div>
-  <div class="col-12 xl:col-3">
+  <div class="col-12 xl:col-4">
     <students-profile-information [studentInformation]="this.selectedStudent"/>
   </div>
 </div>

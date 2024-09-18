@@ -11,6 +11,7 @@ import {TooltipModule} from "primeng/tooltip";
 import {Student} from "../../../../interfaces/dto/Student";
 import {LoggingService} from "../../../../services/logging/logging.service";
 import {StudentService} from "../../../../services/student/student.service";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'student-details-and-selection-card',
@@ -24,7 +25,8 @@ import {StudentService} from "../../../../services/student/student.service";
     DropdownModule,
     PrimeTemplate,
     ToastModule,
-    TooltipModule
+    TooltipModule,
+    FormsModule
   ],
   providers: [
     MessageService,
@@ -37,6 +39,8 @@ export class StudentDetailsAndSelectionCardComponent {
 
   private readonly loggingService = inject(LoggingService);
   private readonly studentService = inject(StudentService);
+  private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   @Output()
   public students: EventEmitter<Student[]> = new EventEmitter<Student[]>();
@@ -63,8 +67,41 @@ export class StudentDetailsAndSelectionCardComponent {
     this._studentSelected = event.value;
   }
 
-  public onDeleteStudent(event: any) {
+  public onDeleteStudent(event: any, student?: Student) {
+    if (student === undefined) {
+      return;
+    }
 
+    if (event) {
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: 'Are you sure you want to proceed?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.studentService.deleteStudent(student).then(() => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              icon: 'pi pi-check',
+              detail: 'Student deleted successfully'
+            });
+            this._studentSelected = undefined;
+            this.students.emit(this._students);
+            this._students = [];
+          }).catch(() => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              icon: 'pi pi-times',
+              detail: 'Failed to delete student'
+            });
+          })
+        },
+        reject: () => {
+          this.messageService.add({severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000});
+        }
+      });
+    }
   }
 
   public loadStudents() {

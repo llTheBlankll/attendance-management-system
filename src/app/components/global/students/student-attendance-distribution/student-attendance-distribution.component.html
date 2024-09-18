@@ -1,10 +1,8 @@
-<p-panel header="Attendance Distribution">
+<p-panel header="Attendance Distribution" styleClass="shadow-3">
   <ng-template pTemplate="icons">
     <p-button icon="pi pi-cog" (onClick)="menu.toggle($event)" text rounded/>
     <p-menu [popup]="true" [model]="this.attendanceDistributionModel" #menu>
     </p-menu>
   </ng-template>
-  <div>
-    <p-chart type="bar" [data]="this.data"></p-chart>
-  </div>
+    <p-chart type="bar" [data]="this.data" [options]="this.options" height="40rem"></p-chart>
 </p-panel>

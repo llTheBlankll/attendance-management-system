@@ -116,6 +116,7 @@ export class ClassesComponent implements OnInit {
     this._classSelected = classSelected;
 
     // * Update the components
+
     this.updateAbsentStudents(classSelected);
     this.updateStudents(classSelected);
     this.updateMonthlyAttendance(classSelected);
@@ -151,7 +152,15 @@ export class ClassesComponent implements OnInit {
     ).subscribe((totalAttendance: number) => {
       const daysCount = this.utilService.getDaysCount(dateRange);
       // Get overall attendance by percentage using daysCount, totalAttendance, and totalStudents
-      this.totalCards.overAllAttendance = Number(Number((totalAttendance / (daysCount * this.totalCards.totalStudents) * 100) / 100).toFixed(2));
+      if (daysCount * this.totalCards.totalStudents !== 0) {
+        this.totalCards.overAllAttendance = (totalAttendance / (daysCount * this.totalCards.totalStudents) * 100) / 100;
+      } else {
+        console.log(totalAttendance);
+        console.log((daysCount * this.totalCards.totalStudents));
+        console.error(
+          (totalAttendance / (daysCount * this.totalCards.totalStudents) * 100) / 100
+        );
+      }
     });
   }
 
@@ -201,8 +210,8 @@ export class ClassesComponent implements OnInit {
   }
 
   private updateAttendanceDemographics(classroom: Class) {
-    const maleAttendance = this.attendanceService.countAttendancesInClass(classroom, new Date(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], [Sex.MALE]);
-    const femaleAttendance = this.attendanceService.countAttendancesInClass(classroom, new Date(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], [Sex.FEMALE]);
+    const maleAttendance = firstValueFrom(this.attendanceService.countAttendancesInClass(classroom, new Date(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], [Sex.MALE]));
+    const femaleAttendance = firstValueFrom(this.attendanceService.countAttendancesInClass(classroom, new Date(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], [Sex.FEMALE]));
     const attendanceDemographics = Promise.all([maleAttendance, femaleAttendance]);
     attendanceDemographics.then((values) => {
       const male = values[0];

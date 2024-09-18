@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {
   collection,
   collectionCount,
-  collectionData,
+  collectionData, deleteDoc,
   doc,
   Firestore,
   query,
@@ -36,11 +36,28 @@ export class StudentService {
   }
 
   /**
+   * Deletes a student from the Firestore.
+   * @param student The student to delete from the Firestore.
+   * @returns A promise that resolves to void if the student was successfully
+   * deleted, and rejects otherwise.
+   * @remarks This function is called when the user clicks the "Delete Student"
+   * button.
+   * @summary Deletes a student from the Firestore.
+   * @notes The student is deleted by deleting the student document from the
+   * Firestore. If the student does not exist, the function returns a rejected
+   * promise.
+   */
+  public deleteStudent(student: Student): Promise<void> {
+    const studentDoc = doc(this.firebase, 'students', student.id.toString());
+    return deleteDoc(studentDoc);
+  }
+
+  /**
    * Get total number of students.
    */
   public getTotalStudents(classroom?: Class): Observable<number> {
     const studentsCollection = query(collection(this.firebase, 'students'),
-      ...(classroom ? [where('class', '==', this.classService.getClassroom(classroom.id))] : [])
+      ...(classroom ? [where('classroom', '==', this.classService.getClassroom(classroom.id))] : [])
     );
     return collectionCount(studentsCollection);
   }

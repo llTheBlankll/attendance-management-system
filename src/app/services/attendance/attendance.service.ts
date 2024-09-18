@@ -21,6 +21,16 @@ export class AttendanceService {
   private readonly studentService = inject(StudentService);
   private readonly utilService = inject(UtilService);
 
+  /**
+   * Get the total number of attendances by the given status and date range.
+   *
+   * @param attendanceStatus - The statuses of attendance that you want to count.
+   * @param date - The date or date range of the data to be counted.
+   *               If a DateRange is given, the function will count the attendance for all days in the range.
+   * @param classroom - The classroom that you want to count the attendance for. If undefined, all classrooms will be counted.
+   * @param student - The student that you want to count the attendance for. If undefined, all students will be counted.
+   * @returns An observable that resolves to the total number of attendances.
+   */
   public countTotalByAttendanceByStatus(attendanceStatus: AttendanceStatus[], date: Date | DateRange, classroom?: Class, student?: Student): Observable<number> {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
@@ -102,7 +112,7 @@ export class AttendanceService {
       const currentDate = new Date(date);
       switch (timeStack) {
         case "week":
-          dateString = "Week " + this.utilService.getCurrentWeekOfMonth(date).toString() + " of " + this.utilService.getMonthName(date.getMonth() + 1)   + "/" + date.getFullYear().toString();
+          dateString = "Week " + this.utilService.getCurrentWeekOfMonth(date).toString() + " of " + this.utilService.getMonthName(date.getMonth() + 1) + "/" + date.getFullYear().toString();
           date.setDate(date.getDate() + 7);
           break;
         case "month":
@@ -132,6 +142,13 @@ export class AttendanceService {
     return lineChart;
   }
 
+  /**
+   * Retrieves the line chart data of total attendance for the given date range, grouped by the given time stack.
+   * @param dateRange The date range for which to retrieve the total attendance line chart.
+   * @param timeStack The time stack to group the total attendance by. Possible values are "day", "week", and "month".
+   * @returns A promise that resolves to a LineChartDTO containing the labels and data for the total attendance line chart.
+   * If the line chart was not retrieved properly, a LineChartDTO with empty labels and data will be returned.
+   */
   public async getLineChartOfTotalAttendance(dateRange: DateRange, timeStack: string) {
     return this.getLineChart(dateRange, [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], undefined, undefined, timeStack).then((lineChartDTO: LineChartDTO) => {
       // Checks if line chart is null
@@ -147,6 +164,13 @@ export class AttendanceService {
     });
   }
 
+  /**
+   * Retrieves the total number of attendances for the given date, attendance status, and sex.
+   * @param date The date for which to retrieve the total attendance count.
+   * @param attendanceStatus The statuses of attendance that you want to count.
+   * @param sex The sex of the students that you want to count the attendance for. If undefined, all sexes will be counted.
+   * @returns A promise that resolves to the total number of attendances for the given date, attendance status, and sex.
+   */
   public async countAttendances(date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]): Promise<number> {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
@@ -161,7 +185,16 @@ export class AttendanceService {
     return firstValueFrom(collectionCount(attendanceCollection));
   }
 
-  public countAttendancesInClass(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]) {
+
+  /**
+   * Retrieves the total number of attendances for the given class, date, attendance status, and sex.
+   * @param classroom The class for which to retrieve the total attendance count.
+   * @param date The date for which to retrieve the total attendance count.
+   * @param attendanceStatus The statuses of attendance that you want to count.
+   * @param sex The sex of the students that you want to count the attendance for. If undefined, all sexes will be counted.
+   * @returns A promise that resolves to the total number of attendances for the given class, date, attendance status, and sex.
+   */
+  public countAttendancesInClass(classroom: Class, date: Date, attendanceStatus: AttendanceStatus[], sex: Sex[] = [Sex.MALE, Sex.FEMALE]): Observable<number> {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
 
     const classRef = this.classService.getClassroom(classroom.id);
@@ -177,6 +210,15 @@ export class AttendanceService {
     return collectionCount(attendanceCollection);
   }
 
+  /**
+   * Retrieves all attendances for the given student, date, and attendance status.
+   * @param student The student for which to retrieve the attendances.
+   * @param date The date or date range for which to retrieve the attendances.
+   *             If a DateRange is given, the function will retrieve all attendances for all days in the range.
+   * @param attendanceStatus The statuses of attendance that you want to retrieve. If undefined, all statuses will be retrieved.
+   * @returns A promise that resolves to an array of attendance objects.
+   * @throws When there is an error with the Firebase Firestore.
+   */
   public getAllStudentAttendance(student: Student, date: Date | DateRange, attendanceStatus: AttendanceStatus[] = [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]) {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
     const studentRef = doc(this.firestore, "students", student.id.toString());
@@ -192,6 +234,15 @@ export class AttendanceService {
     return collectionData(attendanceCollection, {idField: "id"});
   }
 
+  /**
+   * Retrieves the total number of attendances for the given student, date, and attendance status.
+   * @param student The student for which to retrieve the total number of attendances.
+   * @param date The date or date range for which to retrieve the total number of attendances.
+   *             If a DateRange is given, the function will retrieve the total number of attendances for all days in the range.
+   * @param attendanceStatus The statuses of attendance that you want to retrieve. If undefined, all statuses will be retrieved.
+   * @returns A promise that resolves to the total number of attendances for the given student, date, and attendance status.
+   * @throws When there is an error with the Firebase Firestore.
+   */
   public totalStudentAttendance(student: Student, date: Date | DateRange, attendanceStatus: AttendanceStatus[] = [AttendanceStatus.ON_TIME, AttendanceStatus.LATE]) {
     const [startDate, endDate] = this.utilService.dateToTimestamp(date);
     const studentRef = doc(this.firestore, "students", student.id.toString());

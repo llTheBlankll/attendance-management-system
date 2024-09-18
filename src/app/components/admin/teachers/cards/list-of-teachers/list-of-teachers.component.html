@@ -33,20 +33,18 @@
           <th scope="col">Actions</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body">
-        @for (teacher of this.teachers; track $index) {
-          <tr>
-            <td>{{ teacher.firstName }} {{ teacher.lastName }}</td>
-            <td>{{ teacher.position }}</td>
-            <td class="">
-              <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warning"/>
-              <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="success"
-                        (onClick)="this.teacherSelected.emit(teacher)"/>
-              <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger"
-                        (onClick)="this.deleteTeacher(teacher, $event)"/>
-            </td>
-          </tr>
-        }
+      <ng-template pTemplate="body" let-teacher>
+        <tr>
+          <td>{{ teacher.firstName }} {{ teacher.lastName }}</td>
+          <td>{{ teacher.position }}</td>
+          <td class="">
+            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warning"/>
+            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="success"
+                      (onClick)="this.teacherSelected.emit(teacher)"/>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger"
+                      (onClick)="this.deleteTeacher(teacher, $event)"/>
+          </td>
+        </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>

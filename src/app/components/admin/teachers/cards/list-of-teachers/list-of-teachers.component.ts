@@ -74,9 +74,9 @@ export class ListOfTeachersComponent implements OnInit {
     this.loggingService.log("Retrieving list of teachers...");
     this.teachers = [];
     this.teacherService.getAllTeachers().subscribe((teachers: Teacher[]) => {
-      this.teachers = teachers;
       this.loggingService.log("List of teachers retrieved.");
-    }).unsubscribe();
+      this.teachers = teachers;
+    });
   }
 
   protected async deleteTeacher(teacher: Teacher, event: Event | null) {
@@ -118,7 +118,6 @@ export class ListOfTeachersComponent implements OnInit {
       this.retrieveListOfTeachers();
       return;
     }
-
     this.teacherService.searchTeacherByLastName(value).subscribe((teachers: Teacher[]) => {
       this.loggingService.info("Found " + teachers.length + " teacher(s)");
       // * Show a warning if no teachers are found

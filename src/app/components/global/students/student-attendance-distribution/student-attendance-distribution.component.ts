@@ -56,18 +56,9 @@ export class StudentAttendanceDistributionComponent {
         intersect: true
       }
     },
-    responsive: true,
     maintainAspectRatio: false,
     aspectRatio: 1,
     tension: 0.4,
-    scales: {
-      x: {
-        type: 'time',
-        time: {
-          unit: 'day'
-        }
-      }
-    }
   }
 
   @Output()
