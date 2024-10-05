@@ -116,12 +116,12 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     // Get the on time and late students and add together
     this.loading = true;
     const lineChartObservable = this.attendanceService.getLineChart(
+      this.dateRange,
       [
         AttendanceStatus.ABSENT,
         AttendanceStatus.LATE,
         AttendanceStatus.ON_TIME,
       ],
-      this.dateRange,
       timeStack
     );
     lineChartObservable.subscribe((lineChartDTO) => {

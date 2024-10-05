@@ -139,7 +139,7 @@ export class ListOfTeachersComponent implements OnInit {
     }
 
     this.teacherService
-      .searchTeacherByLastName(value)
+      .searchTeacherByName(value)
       .subscribe((teachers: Teacher[]) => {
         this.loggingService.info('Found ' + teachers.length + ' teacher(s)');
         // * Show a warning if no teachers are found
