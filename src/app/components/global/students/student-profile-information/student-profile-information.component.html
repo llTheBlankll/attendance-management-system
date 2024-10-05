@@ -1,24 +1,25 @@
 <p-card subheader="Student Profile Information" styleClass="h-full">
   <div class="flex-column flex align-items-center justify-content-center mb-3">
-    <p-image src="/school-logo.png" width="156" height="156">
-    </p-image>
+    <p-image src="/school-logo.png" width="156" height="156"> </p-image>
     @if (this.studentInformation !== undefined) {
-      <span class="text-900 font-medium text-xl">
-        <b>{{ this.studentInformation.prefix }}
-          {{ this.studentInformation.firstName }}&nbsp;{{ this.studentInformation.lastName }}</b>
-      </span>
+    <span class="text-900 font-medium text-xl">
+      <b
+        >{{ this.studentInformation.prefix }}
+        {{ this.studentInformation.firstName }}&nbsp;{{
+          this.studentInformation.lastName
+        }}</b
+      >
+    </span>
     } @else {
-      <span class="text-900 font-medium text-xl">
-        <b>Waiting for the selection of student</b>
-      </span>
+    <span class="text-900 font-medium text-xl">
+      <b>Waiting for the selection of student</b>
+    </span>
     }
   </div>
   <div class="grid">
     <div class="col-12 w-full">
       <div class="flex flex-column gap-2">
-        <label for="sex">
-          Sex
-        </label>
+        <label for="sex"> Sex </label>
         <input
           pInputText
           id="sex"
@@ -33,33 +34,37 @@
         <input
           pInputText
           id="birthDate"
-          [value]="this.studentInformation?.birthdate ?? 'Birthdate is not specified'"
+          [value]="
+            this.studentInformation?.birthdate ?? 'Birthdate is not specified'
+          "
           readonly
         />
       </div>
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-2">
-        <label for="guardianName">
-          Guardian Name
-        </label>
+        <label for="guardianName"> Guardian Name </label>
         <input
           pInputText
           id="guardianName"
-          [value]="this.studentInformation?.guardian?.fullName ?? 'Guardian name is not specified'"
+          [value]="
+            this.studentInformation?.guardian?.fullName ??
+            'Guardian name is not specified'
+          "
           readonly
         />
       </div>
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-2">
-        <label for="guardianContactNumber">
-          Guardian Contact Number
-        </label>
+        <label for="guardianContactNumber"> Guardian Contact Number </label>
         <input
           pInputText
           id="guardianContactNumber"
-          [value]="this.studentInformation?.guardian?.contactNumber ?? 'Guardian contact number is not specified'"
+          [value]="
+            this.studentInformation?.guardian?.contactNumber ??
+            'Guardian contact number is not specified'
+          "
           readonly
         />
       </div>
@@ -70,7 +75,10 @@
         <input
           pInputText
           id="className"
-          [value]="this.studentInformation?.classroom?.classroomName ?? 'Class name is not specified'"
+          [value]="
+            this.studentInformation?.classroom?.classroomName ??
+            'Class name is not specified'
+          "
           readonly
         />
       </div>
@@ -81,7 +89,10 @@
         <input
           pInputText
           id="gradeLevel"
-          [value]="this.studentInformation?.gradeLevel?.name ?? 'Grade level is not specified'"
+          [value]="
+            this.studentInformation?.gradeLevel?.name ??
+            'Grade level is not specified'
+          "
           readonly
         />
       </div>

@@ -13,7 +13,7 @@
           <h2>
             @if (this._classroom === undefined && this.currentUser !== null) {
               <span class="text-3xl">
-                Hello {{ this.currentUser.displayName ?? this.currentUser.email }}!
+                Hello {{ this.currentUser?.username ?? this.currentUser?.email }}!
               </span>
             } @else {
               <span class="text-3xl">
