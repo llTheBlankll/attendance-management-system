@@ -4,7 +4,7 @@ import {PanelModule} from "primeng/panel";
 import {MenuModule} from "primeng/menu";
 import {Firestore} from "@angular/fire/firestore";
 import {TableModule} from "primeng/table";
-import {Teacher} from "../../../../interfaces/dto/Teacher";
+import {Teacher} from "../../../../interfaces/dto/teacher/Teacher";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";

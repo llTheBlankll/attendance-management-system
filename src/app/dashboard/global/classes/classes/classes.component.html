@@ -1,6 +1,6 @@
 <div class="grid">
   <div class="col-12">
-    <classes-class-details-card (classSelected)="this.onClassSelected($event)" [classes]="this.classes"/>
+    <classes-class-details-card (classroomSelected)="this.onClassSelected($event)" [classes]="this.classrooms"/>
   </div>
   <div class="col-12 xl:col-3 lg:col-4 md:col-6">
     <classes-overall-attendance-card [classOverAllAttendance]="this.totalCards.overAllAttendance"/>

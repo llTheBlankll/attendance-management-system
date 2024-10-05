@@ -30,17 +30,20 @@ import {
 import {
   ClassSectionDetailsCardComponent
 } from "../../../../components/global/classes/cards/class-section-selection-card/class-section-details-card.component";
-import {Class} from "../../../../interfaces/dto/Class";
-import {ClassService} from "../../../../services/class/class.service";
+import {Classroom} from "../../../../interfaces/dto/classroom/Classroom";
 import {AttendanceService} from "../../../../services/attendance/attendance.service";
 import {AttendanceStatus} from "../../../../enums/AttendanceStatus";
-import {Student} from "../../../../interfaces/dto/Student";
 import {UtilService} from "../../../../services/util/util.service";
 import {TimeRange} from "../../../../enums/TimeRange";
 import {Sex} from "../../../../enums/Sex";
 import {StudentService} from "../../../../services/student/student.service";
-import {Attendance} from "../../../../interfaces/dto/Attendance";
 import {firstValueFrom} from "rxjs";
+import {Student} from "../../../../interfaces/dto/student/Student";
+import {Attendance} from "../../../../interfaces/dto/attendance/Attendance";
+import {ClassroomService} from "../../../../services/classroom/classroom.service";
+import {DateRange} from "../../../../interfaces/DateRange";
+import {AttendanceForeignEntity} from "../../../../enums/AttendanceForeignEntity";
+import {TimeStack} from "../../../../enums/TimeStack";
 
 @Component({
   selector: 'app-classes',
@@ -64,14 +67,14 @@ import {firstValueFrom} from "rxjs";
 export class ClassesComponent implements OnInit {
 
   // ! Injections
-  private readonly classService = inject(ClassService);
+  private readonly classroomService = inject(ClassroomService);
   private readonly utilService = inject(UtilService);
   private readonly attendanceService = inject(AttendanceService);
   private readonly studentService = inject(StudentService);
 
   // * Classes
-  public classes: Class[] = [];
-  public _classSelected?: Class;
+  public classrooms: Classroom[] = [];
+  public _classroomSelected?: Classroom;
 
   // * Students
   public students: Student[] = [];
@@ -112,8 +115,11 @@ export class ClassesComponent implements OnInit {
     this.retrieveClasses();
   }
 
-  public async onClassSelected(classSelected: Class) {
-    this._classSelected = classSelected;
+  public async onClassSelected(classSelected: Classroom) {
+    this._classroomSelected = classSelected;
+    if (classSelected.id || classSelected.id) {
+      return;
+    }
 
     // * Update the components
     this.updateAbsentStudents(classSelected);
@@ -122,10 +128,10 @@ export class ClassesComponent implements OnInit {
     this.updateAttendanceDemographics(classSelected);
 
     // * Get the class details
-    const late = firstValueFrom<number>(this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.LATE], [Sex.MALE, Sex.FEMALE]));
-    const absent = firstValueFrom<number>(this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.ABSENT], [Sex.MALE, Sex.FEMALE]));
-    const onTime = firstValueFrom<number>(this.attendanceService.countAttendancesInClass(classSelected, new Date(), [AttendanceStatus.ON_TIME], [Sex.MALE, Sex.FEMALE]));
-    const totalStudents = firstValueFrom<number>(this.studentService.getTotalStudents(classSelected));
+    const late = firstValueFrom<number>(this.attendanceService.countAttendancesInClassroom([AttendanceStatus.LATE], new DateRange(), classSelected.id));
+    const absent = firstValueFrom<number>(this.attendanceService.countAttendancesInClassroom([AttendanceStatus.ABSENT], new DateRange(), classSelected.id));
+    const onTime = firstValueFrom<number>(this.attendanceService.countAttendancesInClassroom([AttendanceStatus.ON_TIME], new DateRange(), classSelected.id));
+    const totalStudents = firstValueFrom<number>(this.studentService.getTotalStudents(classSelected.id));
     const classDetails = Promise.all([late, absent, onTime, totalStudents]);
     classDetails.then((values) => {
       console.log(values)
@@ -141,13 +147,14 @@ export class ClassesComponent implements OnInit {
     this.updateOverAllAttendance(classSelected);
   }
 
-  private updateOverAllAttendance(classroom: Class) {
+  private updateOverAllAttendance(classroom: Classroom) {
     // * Over all attendance
     const dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
-    this.attendanceService.countTotalByAttendanceByStatus(
+    this.attendanceService.countTotalAttendanceByStatus(
       [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
       dateRange,
-      classroom
+      AttendanceForeignEntity.CLASSROOM,
+      classroom.id
     ).subscribe((totalAttendance: number) => {
       const daysCount = this.utilService.getDaysCount(dateRange);
       // Get overall attendance by percentage using daysCount, totalAttendance, and totalStudents
@@ -155,18 +162,18 @@ export class ClassesComponent implements OnInit {
     });
   }
 
-  private updateAbsentStudents(classroom: Class) {
+  private updateAbsentStudents(classroom: Classroom) {
     const absentStudentsObservable = this.attendanceService.getAllAttendanceByStatusAndDateRange([AttendanceStatus.ABSENT], new Date(), classroom);
     absentStudentsObservable.subscribe((attendances: Attendance[]) => {
-      this.absentStudents = attendances.filter(attendance => attendance.status === AttendanceStatus.ABSENT).map(attendance => attendance.studentObj);
+
     });
   }
 
-  private updateMonthlyAttendance(classroom: Class) {
+  private updateMonthlyAttendance(classroom: Classroom) {
     // ! Get Monthly Attendance and Attendance demographics, load them asynchronously
-    const lateChart = this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.LATE], classroom);
-    const onTimeChart = this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.ON_TIME], classroom);
-    const absentChart = this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.ABSENT], classroom);
+    const lateChart = firstValueFrom(this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.LATE], TimeStack.MONTH, AttendanceForeignEntity.CLASSROOM, classroom.id));
+    const onTimeChart = firstValueFrom(this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.ON_TIME], TimeStack.MONTH, AttendanceForeignEntity.CLASSROOM, classroom.id));
+    const absentChart = firstValueFrom(this.attendanceService.getLineChart(this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS), [AttendanceStatus.ABSENT], TimeStack.MONTH, AttendanceForeignEntity.CLASSROOM, classroom.id));
     const chart = Promise.all([lateChart, onTimeChart, absentChart]);
     chart.then((value) => {
       const late = value[0];
@@ -193,31 +200,21 @@ export class ClassesComponent implements OnInit {
     });
   }
 
-  private updateStudents(classroom: Class) {
-    const studentsObservable = this.studentService.getClassStudents(classroom);
-    studentsObservable.subscribe((students: Student[]) => {
-      this.students = students;
+  private updateStudents(classroom: Classroom) {
+    const studentsObservable = this.classroomService.getClassroom(classroom.id);
+    studentsObservable.subscribe((classroom: Classroom) => {
+      this.students = classroom.students;
     });
   }
 
-  private updateAttendanceDemographics(classroom: Class) {
-    const maleAttendance = this.attendanceService.countAttendancesInClass(classroom, new Date(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], [Sex.MALE]);
-    const femaleAttendance = this.attendanceService.countAttendancesInClass(classroom, new Date(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], [Sex.FEMALE]);
-    const attendanceDemographics = Promise.all([maleAttendance, femaleAttendance]);
-    attendanceDemographics.then((values) => {
-      const male = values[0];
-      const female = values[1];
-      this.attendanceDemographics = {
-        ...this.attendanceDemographics,
-        male: male,
-        female: female
-      }
-    });
+  private updateAttendanceDemographics(classroom: Classroom) {
+    const attendanceDemographics = this.attendanceService.getClassroomAttendanceDemographics(new DateRange(), [AttendanceStatus.ON_TIME, AttendanceStatus.LATE], classroom.id);
+    attendanceDemographics.subscribe()
   }
 
   public retrieveClasses(): void {
-    this.classService.getAllClasses().subscribe((classes: Class[]) => {
-      this.classes = classes;
+    this.classroomService.getAllClassrooms().subscribe((classes: Classroom[]) => {
+      this.classrooms = classes;
     });
   }
 }
