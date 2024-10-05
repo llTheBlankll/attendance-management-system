@@ -1,7 +1,7 @@
 @if (this.authenticated) {
   <app-topbar></app-topbar>
   <app-sidebar>
-    <p-breadcrumb [model]="this.breadcrumbsService.breadcrumbs" styleClass="mb-3"/>
+    <p-breadcrumb [model]="this.breadcrumbService.breadcrumbs" styleClass="mb-3"/>
     <router-outlet>
 
     </router-outlet>

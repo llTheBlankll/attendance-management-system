@@ -8,8 +8,8 @@ import {NgIf, NgTemplateOutlet} from "@angular/common";
 import {AuthComponent} from "./auth/auth.component";
 import {AuthenticationService} from "./auth/authentication.service";
 import {ToastModule} from "primeng/toast";
-import {BreadcrumbsService} from "./services/breadcrumbs/breadcrumbs.service";
 import {filter, Subject} from "rxjs";
+import { BreadcrumbService } from './services/breadcrumbs/breadcrumb.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   // Injections
   private readonly authService = inject(AuthenticationService);
   private readonly router = inject(Router);
-  protected readonly breadcrumbsService = inject(BreadcrumbsService);
+  protected readonly breadcrumbService = inject(BreadcrumbService);
   private primeNgConfig = inject(PrimeNGConfig);
 
   // * Authentication
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
           }
           currentRoute = currentRoute.firstChild;
         }
-        this.breadcrumbsService.updateBreadcrumbs(breadcrumbs);
+        this.breadcrumbService.updateBreadcrumbs(breadcrumbs);
       });
 
     // Check if authenticated
