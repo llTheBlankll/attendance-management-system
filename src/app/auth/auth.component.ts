@@ -10,8 +10,6 @@ import {Button} from "primeng/button";
 import {SplitterModule} from "primeng/splitter";
 import {DividerModule} from "primeng/divider";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Firestore} from "@angular/fire/firestore";
-import {Auth, getAuth, signInWithEmailAndPassword} from "@angular/fire/auth";
 import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {MessageService} from "primeng/api";
@@ -45,7 +43,6 @@ import {ToastModule} from "primeng/toast";
 export class AuthComponent {
 
   // Injections
-  private readonly auth = inject(Auth);
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
 
@@ -56,26 +53,7 @@ export class AuthComponent {
 
   public login() {
     if (this.loginForm.valid) {
-      signInWithEmailAndPassword(this.auth, this.loginForm.value.email, this.loginForm.value.password)
-        .then((userCredential) => {
-          // Signed in
-          this.router.navigate(["/dashboard/admin"]);
-        })
-        .catch((error) => {
-          if (!environment.production) {
-            console.error(error.code);
-            console.error(error.message);
-          }
-
-          // Display error
-          if (error.code === 'auth/invalid-email') {
-            this.messageService.add({severity: 'error', summary: 'Error', detail: `Email '${this.loginForm.value.email}' is not valid`});
-          } else if (error.code === 'auth/user-not-found') {
-            this.messageService.add({severity: 'error', summary: 'Error', detail: 'User not found'});
-          } else if (error.code === 'auth/invalid-credential') {
-            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Email or Password is not correct'});
-          }
-        });
+      // TODO: Implement login mechanism
     }
   }
 }

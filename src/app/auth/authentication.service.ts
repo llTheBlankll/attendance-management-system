@@ -1,47 +1,28 @@
-import {inject, Injectable} from '@angular/core';
-import {Auth, User, user} from "@angular/fire/auth";
-import {map, Observable} from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { User } from '../interfaces/dto/user/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
+  private readonly apiUrl = environment.apiUrl;
+  private readonly http = inject(HttpClient);
 
-  private readonly auth = inject(Auth);
-  private currentUser = user(this.auth);
-
-  constructor() {
-  }
+  constructor() {}
 
   public isAuthenticated() {
-    // Get user
-    return this.currentUser.pipe(
-      map((user: User | null) => {
-        if (user === null) {
-          console.error("User is null");
-          return null;
-        }
-
-        // TODO: Get the custom claims
-        user.getIdTokenResult().then((token) => {
-          if (token.claims["role"] === "ADMIN") {
-            sessionStorage.setItem("role", "ADMIN");
-          } else if (token.claims["role"] === "TEACHER") {
-            sessionStorage.setItem("role", "TEACHER");
-          } else {
-            // Guest
-            token.claims["role"] = "GUEST";
-            sessionStorage.setItem("role", "GUEST");
-          }
-        })
-
-        // Check if user is not null
-        return user;
-      })
-    );
+    console.log("Checking if user is authenticated...");
+    return true;
   }
 
   public getCurrentUser(): Observable<User | null> {
-    return user(this.auth);
+    return this.http.get<User | null>(`${this.apiUrl}/users/me`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    });
   }
 }
