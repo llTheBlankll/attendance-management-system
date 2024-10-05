@@ -46,7 +46,7 @@
         <input
           pInputText
           id="guardianName"
-          [value]="this.studentInformation?.guardian.fullName ?? 'Guardian name is not specified'"
+          [value]="this.studentInformation?.guardian?.fullName ?? 'Guardian name is not specified'"
           readonly
         />
       </div>
@@ -59,7 +59,7 @@
         <input
           pInputText
           id="guardianContactNumber"
-          [value]="this.studentInformation?.guardian.contactNumber ?? 'Guardian contact number is not specified'"
+          [value]="this.studentInformation?.guardian?.contactNumber ?? 'Guardian contact number is not specified'"
           readonly
         />
       </div>
@@ -70,7 +70,7 @@
         <input
           pInputText
           id="className"
-          [value]="this.studentInformation?.classroom.className ?? 'Class name is not specified'"
+          [value]="this.studentInformation?.classroom?.classroomName ?? 'Class name is not specified'"
           readonly
         />
       </div>
@@ -81,7 +81,7 @@
         <input
           pInputText
           id="gradeLevel"
-          [value]="this.studentInformation?.gradeLevel.name ?? 'Grade level is not specified'"
+          [value]="this.studentInformation?.gradeLevel?.name ?? 'Grade level is not specified'"
           readonly
         />
       </div>

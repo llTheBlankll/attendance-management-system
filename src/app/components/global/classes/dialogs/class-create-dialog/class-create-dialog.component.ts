@@ -5,14 +5,14 @@ import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {DropdownModule} from "primeng/dropdown";
 import {FileSelectEvent, FileUploadModule} from "primeng/fileupload";
 import {TooltipModule} from "primeng/tooltip";
-import {GradeLevel} from "../../../../../interfaces/dto/GradeLevel";
-import {Teacher} from "../../../../../interfaces/dto/Teacher";
+import {GradeLevel} from "../../../../../interfaces/dto/grade-level/GradeLevel";
+import {Teacher} from "../../../../../interfaces/dto/teacher/Teacher";
 import {TeacherService} from "../../../../../services/teacher/teacher.service";
 import {GradeLevelService} from "../../../../../services/grade-level/grade-level.service";
 import {ClassService} from "../../../../../services/class/class.service";
 import {AvatarModule} from "primeng/avatar";
 import {LoggingService} from "../../../../../services/logging/logging.service";
-import {Class} from "../../../../../interfaces/dto/Class";
+import {Classroom} from "../../../../../interfaces/dto/classroom/Classroom";
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
 import {FirebaseStorageService} from "../../../../../services/storage/firebase-storage.service";
@@ -75,7 +75,7 @@ export class ClassCreateDialogComponent implements OnInit {
   public async createClass(): Promise<void> {
     this.loggingService.log(`Creating Class: ${JSON.stringify(this.classFormGroup.value)}`);
     // Instantiate the class
-    let classroom = {} as Class;
+    let classroom = {} as Classroom;
 
     // * Assigned Required values
     classroom.room = <string>this.classFormGroup.value.room;

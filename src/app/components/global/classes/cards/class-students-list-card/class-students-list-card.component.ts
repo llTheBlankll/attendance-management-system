@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CardModule} from "primeng/card";
-import {Student} from "../../../../../interfaces/dto/Student";
 import {TableModule} from "primeng/table";
 import {Button, ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
+import {Student} from "../../../../../interfaces/dto/student/Student";
 
 @Component({
   selector: 'classes-students-list-card',

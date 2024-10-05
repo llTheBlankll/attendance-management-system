@@ -1,34 +1,34 @@
-import {Component, inject, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {CardModule} from "primeng/card";
-import {ImageModule} from "primeng/image";
-import {FloatLabelModule} from "primeng/floatlabel";
-import {InputTextModule} from "primeng/inputtext";
-import {Student} from "../../../../interfaces/dto/Student";
-import {ClassService} from "../../../../services/class/class.service";
-import {StrandService} from "../../../../services/strand/strand.service";
-import {GradeLevelService} from "../../../../services/grade-level/grade-level.service";
-import {GuardianService} from "../../../../services/guardian/guardian.service";
-import {Class} from "../../../../interfaces/dto/Class";
-import {GradeLevel} from "../../../../interfaces/dto/GradeLevel";
-import {Guardian} from "../../../../interfaces/dto/Guardian";
-import {Strand} from "../../../../interfaces/dto/Strand";
+import {
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import { CardModule } from 'primeng/card';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { ImageModule } from 'primeng/image';
+import { InputTextModule } from 'primeng/inputtext';
+import { Classroom } from '../../../../interfaces/dto/classroom/Classroom';
+import { GradeLevel } from '../../../../interfaces/dto/grade-level/GradeLevel';
+import { Guardian } from '../../../../interfaces/dto/guardian/Guardian';
+import { Strand } from '../../../../interfaces/dto/strand/Strand';
+import { Student } from '../../../../interfaces/dto/student/Student';
+import { GradeLevelService } from '../../../../services/grade-level/grade-level.service';
+import { StrandService } from '../../../../services/strand/strand.service';
+import { GuardianService } from '../../../../services/guardian/guardian.service';
+import { ClassroomService } from '../../../../services/classroom/classroom.service';
 
 @Component({
   selector: 'students-profile-information',
   standalone: true,
-  imports: [
-    CardModule,
-    ImageModule,
-    FloatLabelModule,
-    InputTextModule
-  ],
+  imports: [CardModule, ImageModule, FloatLabelModule, InputTextModule],
   templateUrl: './student-profile-information.component.html',
-  styleUrl: './student-profile-information.component.css'
+  styleUrl: './student-profile-information.component.css',
 })
 export class StudentProfileInformationComponent implements OnChanges {
-
   // * Injections
-  private readonly classService = inject(ClassService);
+  private readonly classService = inject(ClassroomService);
   private readonly guardianService = inject(GuardianService);
   private readonly strandService = inject(StrandService);
   private readonly gradeLevelService = inject(GradeLevelService);
@@ -37,8 +37,8 @@ export class StudentProfileInformationComponent implements OnChanges {
   public studentInformation: Student | undefined = undefined;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["studentInformation"]) {
-      this.studentInformation = changes["studentInformation"].currentValue;
+    if (changes['studentInformation']) {
+      this.studentInformation = changes['studentInformation'].currentValue;
       // Populate student information
       if (this.studentInformation !== undefined) {
         this.populateStudentInformation(this.studentInformation);
@@ -59,16 +59,18 @@ export class StudentProfileInformationComponent implements OnChanges {
         guardian: guardian,
         gradeLevel: gradeLevel,
         strand: strand,
-        classroom: classroom
-      }
+        classroom: classroom,
+      };
       console.error(this.studentInformation);
     } else {
-      console.log("Student is undefined");
+      console.log('Student is undefined');
     }
   }
 
   private async getStudentGuardian(student: Student) {
-    const guardian = await this.guardianService.getGuardianDocByReference(student.guardian);
+    const guardian = await this.guardianService.getGuardianDocByReference(
+      student.guardian
+    );
     if (guardian.exists()) {
       return guardian.data() as Guardian;
     } else {
@@ -77,7 +79,9 @@ export class StudentProfileInformationComponent implements OnChanges {
   }
 
   private async getStudentGradeLevel(student: Student) {
-    const gradeLevel = await this.gradeLevelService.getGradeLevelDocByReference(student.gradeLevel);
+    const gradeLevel = await this.gradeLevelService.getGradeLevelDocByReference(
+      student.gradeLevel
+    );
     if (gradeLevel.exists()) {
       return gradeLevel.data() as GradeLevel;
     } else {
@@ -86,7 +90,9 @@ export class StudentProfileInformationComponent implements OnChanges {
   }
 
   private async getStudentStrand(student: Student) {
-    const strand = await this.strandService.getStrandDocByReference(student.strand);
+    const strand = await this.strandService.getStrandDocByReference(
+      student.strand
+    );
     if (strand.exists()) {
       return strand.data() as Strand;
     } else {
@@ -95,9 +101,11 @@ export class StudentProfileInformationComponent implements OnChanges {
   }
 
   private async getStudentClassroom(student: Student) {
-    const classroom = await this.classService.getClassroomDocByReference(student.classroom);
+    const classroom = await this.classService.getClassroomDocByReference(
+      student.classroom
+    );
     if (classroom.exists()) {
-      return classroom.data() as Class;
+      return classroom.data() as Classroom;
     } else {
       return undefined;
     }

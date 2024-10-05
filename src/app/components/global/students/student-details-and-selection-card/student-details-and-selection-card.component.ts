@@ -8,9 +8,11 @@ import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
 import {ConfirmationService, MessageService, PrimeTemplate} from "primeng/api";
 import {ToastModule} from "primeng/toast";
 import {TooltipModule} from "primeng/tooltip";
-import {Student} from "../../../../interfaces/dto/Student";
 import {LoggingService} from "../../../../services/logging/logging.service";
 import {StudentService} from "../../../../services/student/student.service";
+import {Student} from "../../../../interfaces/dto/student/Student";
+import {PageRequest} from "../../../../interfaces/PageRequest";
+import {SortRequest} from "../../../../interfaces/SortRequest";
 
 @Component({
   selector: 'student-details-and-selection-card',
