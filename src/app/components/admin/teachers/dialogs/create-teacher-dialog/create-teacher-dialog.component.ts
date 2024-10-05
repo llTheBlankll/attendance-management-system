@@ -8,7 +8,7 @@ import {PaginatorModule} from "primeng/paginator";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TooltipModule} from "primeng/tooltip";
 import {AddTeacherDTO} from "../../../../../interfaces/dto/forms/AddTeacher";
-import {Teacher} from "../../../../../interfaces/dto/Teacher";
+import {Teacher} from "../../../../../interfaces/dto/teacher/Teacher";
 import {UploadResult} from "@angular/fire/storage";
 import {LoggingService} from "../../../../../services/logging/logging.service";
 import {TeacherService} from "../../../../../services/teacher/teacher.service";

@@ -2,7 +2,7 @@ import {Component, inject, Input, OnChanges, SimpleChanges} from '@angular/core'
 import {CardModule} from "primeng/card";
 import {ImageModule} from "primeng/image";
 import {InputTextModule} from "primeng/inputtext";
-import {Teacher} from "../../../../../interfaces/dto/Teacher";
+import {Teacher} from "../../../../../interfaces/dto/teacher/Teacher";
 import {FirebaseStorageService} from "../../../../../services/storage/firebase-storage.service";
 import {LoggingService} from "../../../../../services/logging/logging.service";
 import {AvatarModule} from "primeng/avatar";
