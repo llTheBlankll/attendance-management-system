@@ -11,6 +11,8 @@ import {PanelModule} from "primeng/panel";
 import {MenuItem} from "primeng/api";
 import 'chartjs-adapter-moment';
 import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {TimeStack} from "../../../../../enums/TimeStack";
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-daily-attendance-report-card',
@@ -100,7 +102,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
             }
           }
         }
-        this.updateDailyAttendanceReport("month");
+        this.updateDailyAttendanceReport(TimeStack.MONTH);
       },
       tooltip: "This will show data for the last 365 days.",
       icon: 'pi pi-chart-line'
@@ -120,7 +122,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
           }
         }
         this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
-        this.updateDailyAttendanceReport("week");
+        this.updateDailyAttendanceReport(TimeStack.WEEK);
       },
       tooltip: "This will show data for the last 90 days.",
       icon: 'pi pi-chart-line'
@@ -129,7 +131,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
       label: 'Last 30 Days',
       command: () => {
         this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
-        this.updateDailyAttendanceReport("week");
+        this.updateDailyAttendanceReport(TimeStack.WEEK);
       },
       tooltip: "This will show data for the last 30 days.",
       icon: 'pi pi-chart-line'
@@ -138,7 +140,7 @@ export class DailyAttendanceReportCardComponent implements OnInit {
       label: 'Last 7 Days',
       command: () => {
         this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_7_DAYS);
-        this.updateDailyAttendanceReport("day");
+        this.updateDailyAttendanceReport(TimeStack.DAY);
       },
       tooltip: "This will show data for the last 7 days.",
       icon: 'pi pi-chart-line'
@@ -151,11 +153,11 @@ export class DailyAttendanceReportCardComponent implements OnInit {
 
   protected loading = false;
 
-  private updateDailyAttendanceReport(timeStack = "week") {
+  private updateDailyAttendanceReport(timeStack = TimeStack.WEEK) {
     this.loading = true;
-    const onTime = this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME], undefined, undefined, timeStack);
-    const late = this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE], undefined, undefined, timeStack);
-    const absent = this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT], undefined, undefined, timeStack);
+    const onTime = firstValueFrom(this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME], timeStack));
+    const late = firstValueFrom(this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE], timeStack));
+    const absent = firstValueFrom(this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT], timeStack));
 
     Promise.all([onTime, late, absent]).then((values) => {
       this.data = {

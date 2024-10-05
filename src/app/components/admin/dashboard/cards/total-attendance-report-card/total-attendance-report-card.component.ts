@@ -1,14 +1,16 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
-import {CardModule} from "primeng/card";
-import {ChartModule} from "primeng/chart";
-import {AttendanceService} from "../../../../../services/attendance/attendance.service";
-import {UtilService} from "../../../../../services/util/util.service";
-import {TimeRange} from "../../../../../enums/TimeRange";
-import {LineChartDTO} from "../../../../../interfaces/LineChartDTO";
-import {PanelModule} from "primeng/panel";
-import {MenuModule} from "primeng/menu";
-import {MenuItem} from "primeng/api";
-import {ProgressSpinnerModule} from "primeng/progressspinner";
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
+import { AttendanceService } from '../../../../../services/attendance/attendance.service';
+import { UtilService } from '../../../../../services/util/util.service';
+import { TimeRange } from '../../../../../enums/TimeRange';
+import { LineChartDTO } from '../../../../../interfaces/LineChartDTO';
+import { PanelModule } from 'primeng/panel';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AttendanceStatus } from '../../../../../enums/AttendanceStatus';
+import { TimeStack } from '../../../../../enums/TimeStack';
 
 @Component({
   selector: 'app-total-attendance-report-card',
@@ -18,41 +20,44 @@ import {ProgressSpinnerModule} from "primeng/progressspinner";
     ChartModule,
     PanelModule,
     MenuModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
   ],
   templateUrl: './total-attendance-report-card.component.html',
-  styleUrl: './total-attendance-report-card.component.css'
+  styleUrl: './total-attendance-report-card.component.css',
 })
 export class TotalAttendanceReportCardComponent implements OnInit {
-
   // Injections
   private readonly attendanceService = inject(AttendanceService);
   private readonly utilService = inject(UtilService);
+
+  public loading = false;
 
   public data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
         data: [0],
-        borderColor: '#42A5F5'
-      }
-    ]
+        borderColor: '#42A5F5',
+      },
+    ],
   };
 
   options = {
     plugins: {
       legend: {
-        display: false
-      }
+        display: false,
+      },
     },
     responsive: true,
     maintainAspectRatio: false,
     aspectRatio: 1,
-    tension: 0.4
-  }
+    tension: 0.4,
+  };
 
   @Input()
-  public dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
+  public dateRange = this.utilService.timeRangeToDateRange(
+    TimeRange.LAST_30_DAYS
+  );
 
   public chartDaysOptions: MenuItem[] = [
     {
@@ -60,64 +65,79 @@ export class TotalAttendanceReportCardComponent implements OnInit {
       command: () => {
         this.options = {
           ...this.options,
-        }
-        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_365_DAYS);
-        this.updateTotalAttendanceReport("month");
+        };
+        this.dateRange = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_365_DAYS
+        );
+        this.updateTotalAttendanceReport(TimeStack.MONTH);
       },
-      tooltip: "This will show data for the last 365 days.",
-      icon: 'pi pi-chart-line'
+      tooltip: 'This will show data for the last 365 days.',
+      icon: 'pi pi-chart-line',
     },
     {
       label: 'Last 90 Days',
       command: () => {
         this.options = {
           ...this.options,
-        }
-        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
-        this.updateTotalAttendanceReport("month");
+        };
+        this.dateRange = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_90_DAYS
+        );
+        this.updateTotalAttendanceReport(TimeStack.MONTH);
       },
-      tooltip: "This will show data for the last 90 days.",
-      icon: 'pi pi-chart-line'
+      tooltip: 'This will show data for the last 90 days.',
+      icon: 'pi pi-chart-line',
     },
     {
       label: 'Last 30 Days',
       command: () => {
-        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
-        this.updateTotalAttendanceReport("day");
+        this.dateRange = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_30_DAYS
+        );
+        this.updateTotalAttendanceReport(TimeStack.DAY);
       },
-      tooltip: "This will show data for the last 30 days.",
-      icon: 'pi pi-chart-line'
+      tooltip: 'This will show data for the last 30 days.',
+      icon: 'pi pi-chart-line',
     },
     {
       label: 'Last 7 Days',
       command: () => {
-        this.dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_7_DAYS);
-        this.updateTotalAttendanceReport("day");
+        this.dateRange = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_7_DAYS
+        );
+        this.updateTotalAttendanceReport(TimeStack.DAY);
       },
-      tooltip: "This will show data for the last 7 days.",
-      icon: 'pi pi-chart-line'
-    }
-  ]
+      tooltip: 'This will show data for the last 7 days.',
+      icon: 'pi pi-chart-line',
+    },
+  ];
 
-  public updateTotalAttendanceReport(timeStack = "week") {
+  public updateTotalAttendanceReport(timeStack: TimeStack = TimeStack.WEEK) {
     // Get the on time and late students and add together
     this.loading = true;
-    const lineChartDTO = this.attendanceService.getLineChartOfTotalAttendance(this.dateRange, timeStack);
-    lineChartDTO.then().then((lineChartDTO: LineChartDTO) => {
+    const lineChartObservable = this.attendanceService.getLineChart(
+      [
+        AttendanceStatus.ABSENT,
+        AttendanceStatus.LATE,
+        AttendanceStatus.ON_TIME,
+      ],
+      this.dateRange,
+      timeStack
+    );
+    lineChartObservable.subscribe((lineChartDTO) => {
       this.data = {
         ...this.data,
         labels: lineChartDTO.labels,
         datasets: [
           {
             ...this.data.datasets[0],
-            data: lineChartDTO.data
-          }
-        ]
+            data: lineChartDTO.data,
+          },
+        ],
       };
       this.loading = false;
     });
   }
-  public loading = false;
 
   ngOnInit() {
     this.loading = true;
