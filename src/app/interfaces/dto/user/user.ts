@@ -7,10 +7,10 @@ export interface User {
   isLocked: boolean;
   isEnabled: boolean;
   lastLogin?: Date;
-  teacher?: UserTeacherDTO;
+  teacher?: UserTeacher;
 }
 
-interface UserTeacherDTO {
+interface UserTeacher {
   id: number;
   firstName: string;
   lastName: string;
