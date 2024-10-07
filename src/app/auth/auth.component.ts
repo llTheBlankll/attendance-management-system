@@ -14,6 +14,11 @@ import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
+import {AuthenticationService} from "./authentication.service";
+import {MessageDTO} from "../interfaces/MessageDTO";
+import {CodeStatus} from "../enums/CodeStatus";
+import {HttpErrorResponse} from "@angular/common/http";
+import {JWTInformation} from "../interfaces/JWTInformation";
 
 @Component({
   selector: 'app-auth',
@@ -45,15 +50,48 @@ export class AuthComponent {
   // Injections
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
+  private readonly authenticationService = inject(AuthenticationService);
 
   loginForm: FormGroup = new FormGroup({
-    email: new FormControl("", Validators.required),
+    username: new FormControl("", Validators.required),
     password: new FormControl("", Validators.required)
   });
 
   public login() {
     if (this.loginForm.valid) {
       // TODO: Implement login mechanism
+      this.authenticationService.login(this.loginForm.value).subscribe({
+          next: (message: JWTInformation) => {
+            localStorage.setItem("token", message.rawToken);
+            localStorage.setItem("role", message.groups[0]);
+            localStorage.setItem("username", message.name);
+            // Get Email Address
+            message.claims.forEach((claim) => {
+              if (claim.name === "email") {
+                localStorage.setItem("email", claim.value);
+              }
+            })
+            localStorage.setItem("jwt", JSON.stringify(message));
+
+
+            this.router.navigate(["/dashboard/admin"]).then(r => console.debug(r));
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Login successful'
+            });
+          },
+          error:
+            (error: HttpErrorResponse) => {
+              const messageDTO: MessageDTO = error.error as MessageDTO;
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: messageDTO.message
+              });
+            }
+        }
+      );
     }
   }
 }
