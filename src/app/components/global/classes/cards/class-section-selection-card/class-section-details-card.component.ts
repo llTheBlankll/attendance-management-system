@@ -3,7 +3,7 @@ import {PanelModule} from 'primeng/panel';
 import {CardModule} from 'primeng/card';
 import {ImageModule} from 'primeng/image';
 import {AvatarModule} from 'primeng/avatar';
-import {Classroom} from '../../../../../interfaces/dto/classroom/Classroom';
+import {ClassroomDTO} from '../../../../../interfaces/dto/classroom/ClassroomDTO';
 import {AuthenticationService} from '../../../../../auth/authentication.service';
 import {DropdownChangeEvent, DropdownFilterEvent, DropdownModule} from 'primeng/dropdown';
 import {Button} from 'primeng/button';
@@ -46,12 +46,12 @@ export class ClassSectionDetailsCardComponent implements OnInit {
   private readonly classroomService = inject(ClassroomService);
 
   @Output()
-  public classroomSelected = new EventEmitter<Classroom>();
+  public classroomSelected = new EventEmitter<ClassroomDTO>();
 
   @Input()
-  public classes?: Classroom[];
+  public classes?: ClassroomDTO[];
   // The class that is currently selected
-  public _classroom?: Classroom;
+  public _classroom?: ClassroomDTO;
   protected currentUser?: User;
 
   ngOnInit(): void {

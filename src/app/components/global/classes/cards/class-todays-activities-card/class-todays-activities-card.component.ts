@@ -3,7 +3,7 @@ import {CardModule} from "primeng/card";
 import {PrimeTemplate} from "primeng/api";
 import {TimelineModule} from "primeng/timeline";
 import {EventItem} from "../../../../../interfaces/EventItem";
-import {Classroom} from "../../../../../interfaces/dto/classroom/Classroom";
+import {ClassroomDTO} from "../../../../../interfaces/dto/classroom/ClassroomDTO";
 import {AttendanceService} from "../../../../../services/attendance/attendance.service";
 import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
 import {DateRange} from "../../../../../interfaces/DateRange";
@@ -28,7 +28,7 @@ export class ClassTodaysActivitiesCardComponent implements OnChanges {
   private readonly attendanceService = inject(AttendanceService);
 
   @Input()
-  public classroom?: Classroom;
+  public classroom?: ClassroomDTO;
 
   public activities: EventItem[] = []
 
