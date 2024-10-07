@@ -19,7 +19,16 @@ export class TeacherService {
     sortRequest?: SortRequest
   ): Observable<Teacher[]> {
     return this.http.get<Teacher[]>(`${this.apiUrl}/teachers/all`, {
-      params: { ...pageRequest, ...sortRequest },
+      params: {
+        ...(pageRequest && {
+          page: pageRequest.pageNumber,
+          size: pageRequest.pageSize,
+        }),
+        ...(sortRequest && {
+          sortBy: sortRequest.sortBy,
+          sortDirection: sortRequest.sortDirection,
+        }),
+      }
     });
   }
 
