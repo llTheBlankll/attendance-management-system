@@ -1,23 +1,17 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Button } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
-import { InputTextModule } from 'primeng/inputtext';
-import { PaginatorModule } from 'primeng/paginator';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { TooltipModule } from 'primeng/tooltip';
-import { AddTeacherDTO } from '../../../../../interfaces/dto/forms/AddTeacher';
-import { Teacher } from '../../../../../interfaces/dto/teacher/Teacher';
-import { LoggingService } from '../../../../../services/logging/logging.service';
-import { TeacherService } from '../../../../../services/teacher/teacher.service';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {Button} from 'primeng/button';
+import {DialogModule} from 'primeng/dialog';
+import {DropdownModule} from 'primeng/dropdown';
+import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
+import {InputTextModule} from 'primeng/inputtext';
+import {PaginatorModule} from 'primeng/paginator';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {TooltipModule} from 'primeng/tooltip';
+import {AddTeacherDTO} from '../../../../../interfaces/dto/forms/AddTeacher';
+import {Teacher} from '../../../../../interfaces/dto/teacher/Teacher';
+import {TeacherService} from '../../../../../services/teacher/teacher.service';
+import {MessageService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'admin-teachers-create-teacher-dialog',
@@ -39,7 +33,6 @@ import { ToastModule } from 'primeng/toast';
 })
 export class CreateTeacherDialogComponent {
   // * Injections
-  private readonly loggingService = inject(LoggingService);
   private readonly teacherService = inject(TeacherService);
   private readonly messageService = inject(MessageService);
 
@@ -98,7 +91,7 @@ export class CreateTeacherDialogComponent {
    */
   public async addTeacher() {
     // TODO: Implement Add Teacher
-    this.loggingService.log('Add Teacher button clicked.');
+    console.debug('Add Teacher button clicked.');
 
     const formTeacher: AddTeacherDTO = this.addTeacherFormGroup.value;
     let teacher: Teacher = {
@@ -114,7 +107,7 @@ export class CreateTeacherDialogComponent {
 
     // Upload the profile picture first if provided
     if (formTeacher.pfp !== null) {
-      this.loggingService.log('Profile Picture uploading...');
+      console.debug('Profile Picture uploading...');
       // uploadResult = await this.storageService.uploadProfilePicture(formTeacher.pfp, teacher);
       // // If uploadResult is null, it means the upload failed
       // if (uploadResult === null) {
@@ -127,11 +120,11 @@ export class CreateTeacherDialogComponent {
       //   this.loggingService.error("Failed to upload profile picture");
       //   return;
       // }
-      // this.loggingService.info(
+      // console.debug(
       //   'Got profile picture URL: ' + uploadResult.ref.fullPath
       // );
     } else {
-      this.loggingService.info('Profile Picture not provided, continuing...');
+      console.debug('Profile Picture not provided, continuing...');
     }
 
     // // * Update teacher with profile picture URL
@@ -139,7 +132,7 @@ export class CreateTeacherDialogComponent {
     //   ...teacher,
     //   photoUrl: uploadResult?.ref.fullPath
     // }
-    // this.loggingService.info("Teacher: " + JSON.stringify(teacher));
+    // console.debug("Teacher: " + JSON.stringify(teacher));
     // // ! Add Teacher to the firebase
     // this.teacherService.addTeacher(teacher);
     // * Show alert
@@ -157,13 +150,13 @@ export class CreateTeacherDialogComponent {
   protected onProfilePictureChange(event: FileSelectEvent) {
     // Check if the user selected a file
     if (event.currentFiles.length === 0) {
-      this.loggingService.info('Profile Picture not provided, continuing...');
+      console.debug('Profile Picture not provided, continuing...');
       return;
     }
 
-    this.loggingService.info('Profile Picture selected');
+    console.debug('Profile Picture selected');
     const file = event.currentFiles[0];
-    this.loggingService.info(`Profile Picture: ${file.name}`);
+    console.debug(`Profile Picture: ${file.name}`);
 
     this.addTeacherFormGroup.patchValue({
       pfp: file,
