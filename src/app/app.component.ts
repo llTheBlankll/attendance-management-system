@@ -9,7 +9,10 @@ import {AuthComponent} from "./auth/auth.component";
 import {AuthenticationService} from "./auth/authentication.service";
 import {ToastModule} from "primeng/toast";
 import {filter, Subject} from "rxjs";
-import { BreadcrumbService } from './services/breadcrumbs/breadcrumb.service';
+import {BreadcrumbService} from './services/breadcrumbs/breadcrumb.service';
+import {CodeStatus} from "./enums/CodeStatus";
+import {MessageDTO} from "./interfaces/MessageDTO";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -53,9 +56,19 @@ export class AppComponent implements OnInit {
       });
 
     // Check if authenticated
-    this.authenticated = {
-      authenticated: this.authService.isAuthenticated(),
-      role: sessionStorage.getItem("role") ?? "GUEST"
-    };
+    this.authService.isAuthenticated().subscribe({
+      next: (message: MessageDTO) => {
+        if (message.status === CodeStatus.OK) {
+          this.authenticated.authenticated = true;
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.authenticated.authenticated = false;
+        this.authenticated.role = "GUEST";
+        this.router.navigate(["/auth"]).then(r => console.debug(`Navigating to error: ${r}`));
+        console.error(error.error);
+      },
+      complete: () => console.debug("Authentication check completed")
+    })
   }
 }
