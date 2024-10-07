@@ -24,7 +24,7 @@ import {AttendanceService} from '../../../../services/attendance/attendance.serv
 import {UtilService} from '../../../../services/util/util.service';
 import {TimeRange} from '../../../../enums/TimeRange';
 import {AttendanceStatus} from '../../../../enums/AttendanceStatus';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, forkJoin} from 'rxjs';
 import {DateRange} from '../../../../interfaces/DateRange';
 import {TimeStack} from '../../../../enums/TimeStack';
 import {AttendanceForeignEntity} from '../../../../enums/AttendanceForeignEntity';
@@ -50,18 +50,9 @@ export class StudentsPageComponent {
   private readonly attendanceService = inject(AttendanceService);
   private readonly utilService = inject(UtilService);
 
-  protected attendanceCard = {
-    late: 0,
-    onTime: 0,
-    absent: 0,
-    overAllAttendance: 0,
-  };
-  protected monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_90_DAYS
-  );
-  protected attendanceCardDateRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_30_DAYS
-  );
+  protected attendanceCard = {late: 0, onTime: 0, absent: 0, overAllAttendance: 0};
+  protected monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_180_DAYS);
+  protected attendanceCardDateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
 
   public monthlyAttendanceChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -125,34 +116,28 @@ export class StudentsPageComponent {
     date: DateRange = this.monthlyAttendanceTimeRange
   ) {
     if (this.selectedStudent) {
-      const onTimeLineChart = firstValueFrom(
-        this.attendanceService.getLineChart(
-          date,
-          [AttendanceStatus.ON_TIME],
-          TimeStack.MONTH,
-          AttendanceForeignEntity.STUDENT,
-          student.id
-        )
+      const onTimeLineChart = this.attendanceService.getLineChart(
+        date,
+        [AttendanceStatus.ON_TIME],
+        TimeStack.MONTH,
+        AttendanceForeignEntity.STUDENT,
+        student.id
       );
-      const lateLineChart = firstValueFrom(
-        this.attendanceService.getLineChart(
-          date,
-          [AttendanceStatus.LATE],
-          TimeStack.MONTH,
-          AttendanceForeignEntity.STUDENT,
-          student.id
-        )
+      const lateLineChart = this.attendanceService.getLineChart(
+        date,
+        [AttendanceStatus.LATE],
+        TimeStack.MONTH,
+        AttendanceForeignEntity.STUDENT,
+        student.id
       );
-      const absentChart = firstValueFrom(
-        this.attendanceService.getLineChart(
-          date,
-          [AttendanceStatus.ABSENT],
-          TimeStack.MONTH,
-          AttendanceForeignEntity.STUDENT,
-          student.id
-        )
+      const absentChart = this.attendanceService.getLineChart(
+        date,
+        [AttendanceStatus.ABSENT],
+        TimeStack.MONTH,
+        AttendanceForeignEntity.STUDENT,
+        student.id
       );
-      Promise.all([onTimeLineChart, lateLineChart, absentChart]).then(
+      forkJoin([onTimeLineChart, lateLineChart, absentChart]).subscribe(
         (values) => {
           console.log(values);
           this.monthlyAttendanceChartData = {
@@ -185,28 +170,25 @@ export class StudentsPageComponent {
    * @param student - The student object containing the student's ID.
    */
   public updateAttendanceCard(student: Student) {
-    const onTime = firstValueFrom<number>(
+    const onTime =
       this.attendanceService.totalStudentAttendance(
         student.id,
         this.attendanceCardDateRange,
         [AttendanceStatus.ON_TIME]
-      )
-    );
-    const late = firstValueFrom<number>(
+      );
+    const late =
       this.attendanceService.totalStudentAttendance(
         student.id,
         this.attendanceCardDateRange,
         [AttendanceStatus.LATE]
-      )
-    );
-    const absent = firstValueFrom<number>(
+      );
+    const absent =
       this.attendanceService.totalStudentAttendance(
         student.id,
         this.attendanceCardDateRange,
         [AttendanceStatus.ABSENT]
-      )
-    );
-    Promise.all([onTime, late, absent]).then((values) => {
+      );
+    forkJoin([onTime, late, absent]).subscribe((values) => {
       const overAllCountAttendance = values[0] + values[1] + values[2];
       this.attendanceCard = {
         ...this.attendanceCard,

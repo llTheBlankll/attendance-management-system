@@ -1,18 +1,18 @@
 import {GradeLevel} from '../grade-level/GradeLevel';
 import {Student} from '../student/Student';
 
-export interface Classroom {
-  id: number;
+export interface ClassroomDTO {
+  id?: number;
   room: string;
+  schoolYear: string;
   classroomName: string;
   classroomPhoto?: string;
-  description?: string;
   teacher?: ClassroomTeacherDTO;
   gradeLevel: GradeLevel;
   students: Student[];
 }
 
-interface ClassroomTeacherDTO {
+export interface ClassroomTeacherDTO {
   id: number;
   firstName: string;
   lastName: string;

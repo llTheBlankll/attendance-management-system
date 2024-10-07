@@ -15,6 +15,12 @@ import {ToastModule} from 'primeng/toast';
 import {ClassroomService} from '../../../../../services/classroom/classroom.service';
 import {PageRequest} from '../../../../../interfaces/PageRequest';
 import {SortRequest} from '../../../../../interfaces/SortRequest';
+import {
+  ClassroomDTO,
+  ClassroomTeacherDTO
+} from "../../../../../interfaces/dto/classroom/ClassroomDTO";
+import {MessageDTO} from "../../../../../interfaces/MessageDTO";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'classes-create-dialog',
@@ -38,7 +44,7 @@ export class ClassCreateDialogComponent implements OnInit {
   public isVisible = false;
   classFormGroup = new FormGroup({
     room: new FormControl(''),
-    className: new FormControl(''),
+    classroomName: new FormControl(''),
     description: new FormControl(''),
     schoolYear: new FormControl(''),
     teacher: new FormControl({} as Teacher),
@@ -79,6 +85,33 @@ export class ClassCreateDialogComponent implements OnInit {
     if (!this.validateTeacher() || !this.validateGradeLevel()) {
       return;
     }
+
+    const classroom: ClassroomDTO = {
+      room: this.classFormGroup.get('room')?.value ?? '',
+      classroomName: this.classFormGroup.get('classroomName')?.value ?? '',
+      schoolYear: this.classFormGroup.get('schoolYear')?.value ?? '',
+      teacher: this.classFormGroup.get('teacher')?.value as ClassroomTeacherDTO ?? {} as ClassroomTeacherDTO,
+      gradeLevel: this.classFormGroup.get('gradeLevel')?.value as GradeLevel ?? {},
+      students: []
+    };
+    // TODO: Implement Photo Picture
+    this.classroomService.createClassroom(classroom).subscribe({
+      next: (message: MessageDTO) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: message.message
+        });
+        this.isVisible = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error.message
+        });
+      }
+    })
   }
 
   public onLogoSelect(event: FileSelectEvent) {
@@ -127,7 +160,7 @@ export class ClassCreateDialogComponent implements OnInit {
    * @returns {boolean} True if the teacher is selected, false otherwise.
    */
 
-  private validateTeacher() {
+  private validateTeacher(): boolean {
     if (!this.classFormGroup.value.teacher) {
       this.messageService.add({
         severity: 'error',
@@ -144,7 +177,7 @@ export class ClassCreateDialogComponent implements OnInit {
    * If the grade level is not selected, an error message is added to the MessageService.
    * @returns {boolean} True if the grade level is selected, false otherwise.
    */
-  private validateGradeLevel() {
+  private validateGradeLevel(): boolean {
     if (!this.classFormGroup.value.gradeLevel) {
       this.messageService.add({
         severity: 'error',

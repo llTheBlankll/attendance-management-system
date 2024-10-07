@@ -30,7 +30,7 @@ import {
 import {
   ClassSectionDetailsCardComponent
 } from '../../../../components/global/classes/cards/class-section-selection-card/class-section-details-card.component';
-import {Classroom} from '../../../../interfaces/dto/classroom/Classroom';
+import {ClassroomDTO} from '../../../../interfaces/dto/classroom/ClassroomDTO';
 import {AttendanceService} from '../../../../services/attendance/attendance.service';
 import {AttendanceStatus} from '../../../../enums/AttendanceStatus';
 import {UtilService} from '../../../../services/util/util.service';
@@ -72,8 +72,8 @@ export class ClassesComponent implements OnInit {
   private readonly studentService = inject(StudentService);
 
   // * Classes
-  public classrooms: Classroom[] = [];
-  public _classroomSelected?: Classroom;
+  public classrooms: ClassroomDTO[] = [];
+  public _classroomSelected?: ClassroomDTO;
 
   // * Students
   public students: Student[] = [];
@@ -116,14 +116,17 @@ export class ClassesComponent implements OnInit {
     this.retrieveClasses();
   }
 
-  public onClassroomSelected(classSelected: Classroom) {
+  public onClassroomSelected(classSelected: ClassroomDTO) {
+    if (classSelected.id === undefined) {
+      return;
+    }
     console.debug(`New Classroom Selected: ${classSelected.classroomName}`)
     this._classroomSelected = classSelected;
     this.students = classSelected.students;
 
     // * Update the components
-    this.updateMonthlyAttendance(classSelected);
-    this.updateAttendanceDemographics(classSelected);
+    this.updateMonthlyAttendance(classSelected.id);
+    this.updateAttendanceDemographics(classSelected.id);
 
     // * Get the class details
     const late = this.attendanceService.countForeignEntityAttendance(
@@ -148,12 +151,15 @@ export class ClassesComponent implements OnInit {
     const classDetails = forkJoin([late, absent, onTime, totalStudents]);
     classDetails.subscribe((values) => {
       this.totalCards = {
-        overAllAttendance: 0,
+        ...this.totalCards,
         late: values[0],
         absent: values[1],
         onTime: values[2],
         totalStudents: values[3],
       };
+      if (classSelected.id !== undefined) {
+        this.updateOverAllAttendance(classSelected.id);
+      }
     });
     this.attendanceService.getForeignEntityAttendances(
       [AttendanceStatus.ON_TIME, AttendanceStatus.LATE, AttendanceStatus.ABSENT],
@@ -163,11 +169,9 @@ export class ClassesComponent implements OnInit {
     ).subscribe((attendances: Attendance[]) => {
       this.absentStudents = attendances.filter((attendance) => attendance.status === AttendanceStatus.ABSENT).map((attendance) => attendance.student);
     });
-
-    this.updateOverAllAttendance(classSelected);
   }
 
-  private updateOverAllAttendance(classroom: Classroom) {
+  private updateOverAllAttendance(classroomId: number) {
     // * Over all attendance
     const dateRange = this.utilService.timeRangeToDateRange(
       TimeRange.LAST_30_DAYS
@@ -177,22 +181,22 @@ export class ClassesComponent implements OnInit {
         [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
         dateRange,
         AttendanceForeignEntity.CLASSROOM,
-        classroom.id
+        classroomId
       )
       .subscribe((totalAttendance: number) => {
         const daysCount = this.utilService.getDaysCount(dateRange);
         // Get overall attendance by percentage using daysCount, totalAttendance, and totalStudents
-        this.totalCards.overAllAttendance = Number(
-          Number(
-            (((totalAttendance / (daysCount * this.totalCards.totalStudents)) *
-                100) /
-              100) * 100
-          ).toFixed(2)
-        );
+        const monthOverAllAttendance = ((totalAttendance / daysCount) * 100) /
+          this.totalCards.totalStudents;
+        if (isNaN(monthOverAllAttendance)) {
+          this.totalCards.overAllAttendance = 0;
+        } else {
+          this.totalCards.overAllAttendance = Number(monthOverAllAttendance.toFixed(2));
+        }
       });
   }
 
-  private updateMonthlyAttendance(classroom: Classroom) {
+  private updateMonthlyAttendance(classroomId: number) {
     console.debug("Get Monthly Attendance and Attendance demographics with Date Range: ", this.dateRange);
     // ! Get Monthly Attendance and Attendance demographics, load them asynchronously
     const lateChart =
@@ -201,7 +205,7 @@ export class ClassesComponent implements OnInit {
         [AttendanceStatus.LATE],
         TimeStack.MONTH,
         AttendanceForeignEntity.CLASSROOM,
-        classroom.id
+        classroomId
       );
     const onTimeChart =
       this.attendanceService.getLineChart(
@@ -209,7 +213,7 @@ export class ClassesComponent implements OnInit {
         [AttendanceStatus.ON_TIME],
         TimeStack.MONTH,
         AttendanceForeignEntity.CLASSROOM,
-        classroom.id
+        classroomId
       );
     const absentChart =
       this.attendanceService.getLineChart(
@@ -217,7 +221,7 @@ export class ClassesComponent implements OnInit {
         [AttendanceStatus.ABSENT],
         TimeStack.MONTH,
         AttendanceForeignEntity.CLASSROOM,
-        classroom.id
+        classroomId
       );
     const chart = forkJoin([lateChart, onTimeChart, absentChart])
     chart.subscribe((lineCharts) => {
@@ -246,11 +250,11 @@ export class ClassesComponent implements OnInit {
     });
   }
 
-  private updateAttendanceDemographics(classroom: Classroom) {
+  private updateAttendanceDemographics(classroomId: number) {
     this.attendanceService.getClassroomAttendanceDemographics(
       new DateRange(),
       [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
-      classroom.id
+      classroomId
     ).subscribe((demographics) => {
       this.attendanceDemographics = demographics;
     });
@@ -259,7 +263,7 @@ export class ClassesComponent implements OnInit {
   public retrieveClasses(): void {
     this.classroomService
       .getAllClassrooms()
-      .subscribe((classes: Classroom[]) => {
+      .subscribe((classes: ClassroomDTO[]) => {
         this.classrooms = classes;
       });
   }

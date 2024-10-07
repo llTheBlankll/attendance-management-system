@@ -9,7 +9,7 @@ import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ImageModule } from 'primeng/image';
 import { InputTextModule } from 'primeng/inputtext';
-import { Classroom } from '../../../../interfaces/dto/classroom/Classroom';
+import { ClassroomDTO } from '../../../../interfaces/dto/classroom/ClassroomDTO';
 import { GradeLevel } from '../../../../interfaces/dto/grade-level/GradeLevel';
 import { Guardian } from '../../../../interfaces/dto/guardian/Guardian';
 import { Strand } from '../../../../interfaces/dto/strand/Strand';

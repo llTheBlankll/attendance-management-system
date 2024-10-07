@@ -8,7 +8,7 @@ import {UtilService} from '../util/util.service';
 import {LineChartDTO} from '../../interfaces/LineChartDTO';
 import {TimeStack} from '../../enums/TimeStack';
 import {AttendanceForeignEntity} from '../../enums/AttendanceForeignEntity';
-import {Classroom} from '../../interfaces/dto/classroom/Classroom';
+import {ClassroomDTO} from '../../interfaces/dto/classroom/ClassroomDTO';
 import {ClassroomDemographicsChart} from '../../interfaces/ClassroomDemographicsChart';
 import {Attendance} from '../../interfaces/dto/attendance/Attendance';
 import {PageRequest} from '../../interfaces/PageRequest';
@@ -106,7 +106,7 @@ export class AttendanceService {
     statuses: AttendanceStatus[]
   ): Observable<number> {
     return this.http.get<number>(
-      `${this.apiUrl}/attendances/count/status/STUDENT/${studentId}`,
+      `${this.apiUrl}/attendances/STUDENT/${studentId}/all/count`,
       {
         params: {
           startDate: dateRange.startDate.toISOString().split('T')[0],
