@@ -5,13 +5,12 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { ImageModule } from 'primeng/image';
-import { InputTextModule } from 'primeng/inputtext';
-import { Teacher } from '../../../../../interfaces/dto/teacher/Teacher';
-import { LoggingService } from '../../../../../services/logging/logging.service';
-import { AvatarModule } from 'primeng/avatar';
-import { NgOptimizedImage } from '@angular/common';
+import {CardModule} from 'primeng/card';
+import {ImageModule} from 'primeng/image';
+import {InputTextModule} from 'primeng/inputtext';
+import {Teacher} from '../../../../../interfaces/dto/teacher/Teacher';
+import {AvatarModule} from 'primeng/avatar';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-teacher-additional-information',
