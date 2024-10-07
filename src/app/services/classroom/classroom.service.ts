@@ -23,11 +23,32 @@ export class ClassroomService {
     return this.http.get<Classroom>(`${this.apiUrl}/classrooms/${classroomId}`);
   }
 
+  public searchClassroomByName(name: string, pageRequest?: PageRequest, sortRequest?: SortRequest): Observable<Classroom[]> {
+    return this.http.get<Classroom[]>(`${this.apiUrl}/classrooms/search/name/${name}`, {
+      params: {
+        ...(pageRequest && {
+          page: pageRequest.pageNumber,
+          size: pageRequest.pageSize
+        }),
+        ...(sortRequest && {
+          sortBy: sortRequest.sortBy,
+          sortDirection: sortRequest.sortDirection
+        })
+      }
+    });
+  }
+
   public getAllClassrooms(pageRequest?: PageRequest, sortRequest?: SortRequest): Observable<Classroom[]> {
     return this.http.get<Classroom[]>(`${this.apiUrl}/classrooms/all`, {
       params: {
-        ...pageRequest,
-        ...sortRequest
+        ...(pageRequest && {
+          page: pageRequest.pageNumber,
+          size: pageRequest.pageSize
+        }),
+        ...(sortRequest && {
+          sortBy: sortRequest.sortBy,
+          sortDirection: sortRequest.sortDirection
+        })
       }
     });
   }

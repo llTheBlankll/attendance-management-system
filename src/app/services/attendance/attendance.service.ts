@@ -1,18 +1,18 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { AttendanceStatus } from '../../enums/AttendanceStatus';
-import { DateRange } from '../../interfaces/DateRange';
-import { Observable, ObservableLike } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { UtilService } from '../util/util.service';
-import { LineChartDTO } from '../../interfaces/LineChartDTO';
-import { TimeStack } from '../../enums/TimeStack';
-import { AttendanceForeignEntity } from '../../enums/AttendanceForeignEntity';
-import { Classroom } from '../../interfaces/dto/classroom/Classroom';
-import { ClassroomDemographicsChart } from '../../interfaces/ClassroomDemographicsChart';
-import { Attendance } from '../../interfaces/dto/attendance/Attendance';
-import { PageRequest } from '../../interfaces/PageRequest';
-import { SortRequest } from '../../interfaces/SortRequest';
+import {HttpClient} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {AttendanceStatus} from '../../enums/AttendanceStatus';
+import {DateRange} from '../../interfaces/DateRange';
+import {Observable, ObservableLike} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {UtilService} from '../util/util.service';
+import {LineChartDTO} from '../../interfaces/LineChartDTO';
+import {TimeStack} from '../../enums/TimeStack';
+import {AttendanceForeignEntity} from '../../enums/AttendanceForeignEntity';
+import {Classroom} from '../../interfaces/dto/classroom/Classroom';
+import {ClassroomDemographicsChart} from '../../interfaces/ClassroomDemographicsChart';
+import {Attendance} from '../../interfaces/dto/attendance/Attendance';
+import {PageRequest} from '../../interfaces/PageRequest';
+import {SortRequest} from '../../interfaces/SortRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -22,16 +22,15 @@ export class AttendanceService {
   private readonly apiUrl = environment.apiUrl;
   private readonly utilService = inject(UtilService);
 
-  public countAttendancesInClassroom(
-    statuses: AttendanceStatus[],
+  public countForeignEntityAttendance(
+    attendanceStatuses: AttendanceStatus[],
     dateRange: DateRange,
-    classroomId: number
+    foreignEntity: AttendanceForeignEntity,
+    id: number
   ) {
-    return this.http.get<number>(`${this.apiUrl}/attendances/count/status/`, {
+    return this.http.get<number>(`${this.apiUrl}/attendances/${foreignEntity}/${id}/all/count`, {
       params: {
-        attendanceStatuses:
-          this.utilService.attendanceStatusListToString(statuses),
-        classroomId: classroomId,
+        attendanceStatuses: this.utilService.attendanceStatusListToString(attendanceStatuses),
         startDate: dateRange.startDate.toISOString().split('T')[0],
         endDate: dateRange.endDate.toISOString().split('T')[0],
       },
@@ -40,30 +39,13 @@ export class AttendanceService {
 
   public countTotalAttendanceByStatus(
     attendanceStatuses: AttendanceStatus[],
-    dateRange: DateRange,
-    foreignEntity?: AttendanceForeignEntity,
-    id?: number
+    dateRange: DateRange
   ): Observable<number> {
-    const listString =
-      this.utilService.attendanceStatusListToString(attendanceStatuses);
-
-    if (foreignEntity && id) {
-      return this.http.get<number>(
-        `${this.apiUrl}/attendances/count/status/${foreignEntity}/${id}`,
-        {
-          params: {
-            attendanceStatuses: listString,
-            startDate: dateRange.startDate.toISOString().split('T')[0],
-            endDate: dateRange.endDate.toISOString().split('T')[0],
-          },
-          responseType: 'json',
-        }
-      );
-    }
+    const listString = this.utilService.attendanceStatusListToString(attendanceStatuses);
 
     return this.http.get<number>(`${this.apiUrl}/attendances/count/status`, {
       params: {
-        status: listString,
+        attendanceStatuses: listString,
         startDate: dateRange.startDate.toISOString().split('T')[0],
         endDate: dateRange.endDate.toISOString().split('T')[0],
       },
@@ -81,16 +63,17 @@ export class AttendanceService {
     const statusListString =
       this.utilService.attendanceStatusListToString(statuses);
     return this.http.get<LineChartDTO>(
-      `${this.apiUrl}/attendances/line/chart`,
+      `${this.apiUrl}/attendances/chart/line`,
       {
         params: {
           attendanceStatuses: statusListString,
           startDate: dateRange.startDate.toISOString().split('T')[0],
           endDate: dateRange.endDate.toISOString().split('T')[0],
           stack: timeStack,
-          ...(attendanceForeignEntity && id
-            ? { id, attendanceForeignEntity }
-            : {}),
+          ...(attendanceForeignEntity && id && {
+            entity: attendanceForeignEntity,
+            id: id
+          })
         },
         responseType: 'json',
       }
@@ -105,7 +88,7 @@ export class AttendanceService {
     const statusListString =
       this.utilService.attendanceStatusListToString(attendanceStatus);
     return this.http.get<ClassroomDemographicsChart>(
-      `${this.apiUrl}/attendances/chart/demographics/classroom/${classroomId}`,
+      `${this.apiUrl}/attendances/chart/pie/classroom/${classroomId}/demographics`,
       {
         params: {
           attendanceStatuses: statusListString,
@@ -123,7 +106,7 @@ export class AttendanceService {
     statuses: AttendanceStatus[]
   ): Observable<number> {
     return this.http.get<number>(
-      `${this.apiUrl}/attendances/student/${studentId}/count/all`,
+      `${this.apiUrl}/attendances/count/status/STUDENT/${studentId}`,
       {
         params: {
           startDate: dateRange.startDate.toISOString().split('T')[0],
@@ -146,10 +129,10 @@ export class AttendanceService {
     const statusListString =
       this.utilService.attendanceStatusListToString(attendanceStatuses);
     return this.http.get<Attendance[]>(
-      `${this.apiUrl}/attendances/${foreignEntity}/${id}`,
+      `${this.apiUrl}/attendances/${foreignEntity}/${id}/all`,
       {
         params: {
-          statuses: statusListString,
+          attendanceStatuses: statusListString,
           startDate: dateRange.startDate.toISOString().split('T')[0],
           endDate: dateRange.endDate.toISOString().split('T')[0],
           ...(pageRequest && {
