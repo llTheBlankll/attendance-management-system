@@ -1,21 +1,20 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
-import { TooltipModule } from 'primeng/tooltip';
-import { GradeLevel } from '../../../../../interfaces/dto/grade-level/GradeLevel';
-import { Teacher } from '../../../../../interfaces/dto/teacher/Teacher';
-import { TeacherService } from '../../../../../services/teacher/teacher.service';
-import { GradeLevelService } from '../../../../../services/grade-level/grade-level.service';
-import { AvatarModule } from 'primeng/avatar';
-import { LoggingService } from '../../../../../services/logging/logging.service';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { ClassroomService } from '../../../../../services/classroom/classroom.service';
-import { PageRequest } from '../../../../../interfaces/PageRequest';
-import { SortRequest } from '../../../../../interfaces/SortRequest';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {DialogModule} from 'primeng/dialog';
+import {InputTextModule} from 'primeng/inputtext';
+import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {DropdownModule} from 'primeng/dropdown';
+import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
+import {TooltipModule} from 'primeng/tooltip';
+import {GradeLevel} from '../../../../../interfaces/dto/grade-level/GradeLevel';
+import {Teacher} from '../../../../../interfaces/dto/teacher/Teacher';
+import {TeacherService} from '../../../../../services/teacher/teacher.service';
+import {GradeLevelService} from '../../../../../services/grade-level/grade-level.service';
+import {AvatarModule} from 'primeng/avatar';
+import {MessageService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
+import {ClassroomService} from '../../../../../services/classroom/classroom.service';
+import {PageRequest} from '../../../../../interfaces/PageRequest';
+import {SortRequest} from '../../../../../interfaces/SortRequest';
 
 @Component({
   selector: 'classes-create-dialog',
@@ -55,7 +54,6 @@ export class ClassCreateDialogComponent implements OnInit {
   // End: Injections
   private readonly gradeLevelService = inject(GradeLevelService);
   private readonly classroomService = inject(ClassroomService);
-  private readonly loggingService = inject(LoggingService);
   private readonly messageService = inject(MessageService);
   // * Form Group
   private classLogo?: File;
@@ -73,7 +71,7 @@ export class ClassCreateDialogComponent implements OnInit {
    */
   public async createClassroom(): Promise<void> {
     // TODO: Create Classroom
-    this.loggingService.log(
+    console.debug(
       `Creating Class: ${JSON.stringify(this.classFormGroup.value)}`
     );
 
@@ -86,13 +84,13 @@ export class ClassCreateDialogComponent implements OnInit {
   public onLogoSelect(event: FileSelectEvent) {
     // Check if the user selected a file
     if (event.currentFiles.length === 0) {
-      this.loggingService.info('Logo not provided, continuing...');
+      console.debug('Logo not provided, continuing...');
       return;
     }
 
     // Get the file from the event
     this.classLogo = event.currentFiles[0];
-    this.loggingService.info(`Logo: ${this.classLogo.name}`);
+    console.debug(`Logo: ${this.classLogo.name}`);
   }
 
   public loadTeachers() {

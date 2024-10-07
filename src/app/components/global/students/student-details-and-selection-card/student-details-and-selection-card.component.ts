@@ -8,11 +8,8 @@ import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
 import {ConfirmationService, MessageService, PrimeTemplate} from "primeng/api";
 import {ToastModule} from "primeng/toast";
 import {TooltipModule} from "primeng/tooltip";
-import {LoggingService} from "../../../../services/logging/logging.service";
 import {StudentService} from "../../../../services/student/student.service";
 import {Student} from "../../../../interfaces/dto/student/Student";
-import {PageRequest} from "../../../../interfaces/PageRequest";
-import {SortRequest} from "../../../../interfaces/SortRequest";
 
 @Component({
   selector: 'student-details-and-selection-card',
@@ -37,7 +34,6 @@ import {SortRequest} from "../../../../interfaces/SortRequest";
 })
 export class StudentDetailsAndSelectionCardComponent {
 
-  private readonly loggingService = inject(LoggingService);
   private readonly studentService = inject(StudentService);
 
   @Output()
@@ -55,7 +51,7 @@ export class StudentDetailsAndSelectionCardComponent {
       if (this.students.length !== total) {
         this.loadStudents();
       } else {
-        this.loggingService.log("Students was already loaded");
+        console.debug("Students was already loaded");
       }
     });
   }
@@ -70,9 +66,9 @@ export class StudentDetailsAndSelectionCardComponent {
   }
 
   public loadStudents() {
-    this.loggingService.log("Retrieving Students...");
+    console.debug("Retrieving Students...");
     this.studentService.getAllStudents().subscribe((students: Student[]) => {
-      this.loggingService.log("Students Retrieved");
+      console.debug("Students Retrieved");
       this.students.emit(students);
       this._students = students;
     });
