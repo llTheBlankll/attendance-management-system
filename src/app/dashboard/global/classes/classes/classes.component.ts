@@ -1,29 +1,49 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { ClassOverAllAttendanceComponent } from '../../../../components/global/classes/cards/class-total-student-card/class-over-all-attendance.component';
-import { ClassOnTimeStudentCardComponent } from '../../../../components/global/classes/cards/class-on-time-student-card/class-on-time-student-card.component';
-import { ClassLateStudentCardComponent } from '../../../../components/global/classes/cards/class-late-student-card/class-late-student-card.component';
-import { ClassAbsentStudentCardComponent } from '../../../../components/global/classes/cards/class-absent-student-card/class-absent-student-card.component';
-import { ClassMonthlyAttendanceCardComponent } from '../../../../components/global/classes/cards/class-monthly-attendance-card/class-monthly-attendance-card.component';
-import { ClassAttendanceDemographicsCardComponent } from '../../../../components/global/classes/cards/class-attendance-demographics-card/class-attendance-demographics-card.component';
-import { ClassAbsentStudentsListCardComponent } from '../../../../components/global/classes/cards/class-absent-students-list-card/class-absent-students-list-card.component';
-import { ClassStudentsListCardComponent } from '../../../../components/global/classes/cards/class-students-list-card/class-students-list-card.component';
-import { ClassTodaysActivitiesCardComponent } from '../../../../components/global/classes/cards/class-todays-activities-card/class-todays-activities-card.component';
-import { ClassSectionDetailsCardComponent } from '../../../../components/global/classes/cards/class-section-selection-card/class-section-details-card.component';
-import { Classroom } from '../../../../interfaces/dto/classroom/Classroom';
-import { AttendanceService } from '../../../../services/attendance/attendance.service';
-import { AttendanceStatus } from '../../../../enums/AttendanceStatus';
-import { UtilService } from '../../../../services/util/util.service';
-import { TimeRange } from '../../../../enums/TimeRange';
-import { Sex } from '../../../../enums/Sex';
-import { StudentService } from '../../../../services/student/student.service';
-import { firstValueFrom } from 'rxjs';
-import { Student } from '../../../../interfaces/dto/student/Student';
-import { Attendance } from '../../../../interfaces/dto/attendance/Attendance';
-import { ClassroomService } from '../../../../services/classroom/classroom.service';
-import { DateRange } from '../../../../interfaces/DateRange';
-import { AttendanceForeignEntity } from '../../../../enums/AttendanceForeignEntity';
-import { TimeStack } from '../../../../enums/TimeStack';
+import {Component, inject, OnInit} from '@angular/core';
+import {CardModule} from 'primeng/card';
+import {
+  ClassOverAllAttendanceComponent
+} from '../../../../components/global/classes/cards/class-total-student-card/class-over-all-attendance.component';
+import {
+  ClassOnTimeStudentCardComponent
+} from '../../../../components/global/classes/cards/class-on-time-student-card/class-on-time-student-card.component';
+import {
+  ClassLateStudentCardComponent
+} from '../../../../components/global/classes/cards/class-late-student-card/class-late-student-card.component';
+import {
+  ClassAbsentStudentCardComponent
+} from '../../../../components/global/classes/cards/class-absent-student-card/class-absent-student-card.component';
+import {
+  ClassMonthlyAttendanceCardComponent
+} from '../../../../components/global/classes/cards/class-monthly-attendance-card/class-monthly-attendance-card.component';
+import {
+  ClassAttendanceDemographicsCardComponent
+} from '../../../../components/global/classes/cards/class-attendance-demographics-card/class-attendance-demographics-card.component';
+import {
+  ClassAbsentStudentsListCardComponent
+} from '../../../../components/global/classes/cards/class-absent-students-list-card/class-absent-students-list-card.component';
+import {
+  ClassStudentsListCardComponent
+} from '../../../../components/global/classes/cards/class-students-list-card/class-students-list-card.component';
+import {
+  ClassTodaysActivitiesCardComponent
+} from '../../../../components/global/classes/cards/class-todays-activities-card/class-todays-activities-card.component';
+import {
+  ClassSectionDetailsCardComponent
+} from '../../../../components/global/classes/cards/class-section-selection-card/class-section-details-card.component';
+import {Classroom} from '../../../../interfaces/dto/classroom/Classroom';
+import {AttendanceService} from '../../../../services/attendance/attendance.service';
+import {AttendanceStatus} from '../../../../enums/AttendanceStatus';
+import {UtilService} from '../../../../services/util/util.service';
+import {TimeRange} from '../../../../enums/TimeRange';
+import {StudentService} from '../../../../services/student/student.service';
+import {forkJoin} from 'rxjs';
+import {Student} from '../../../../interfaces/dto/student/Student';
+import {Attendance} from '../../../../interfaces/dto/attendance/Attendance';
+import {ClassroomService} from '../../../../services/classroom/classroom.service';
+import {DateRange} from '../../../../interfaces/DateRange';
+import {AttendanceForeignEntity} from '../../../../enums/AttendanceForeignEntity';
+import {TimeStack} from '../../../../enums/TimeStack';
+import {ClassroomDemographicsChart} from "../../../../interfaces/ClassroomDemographicsChart";
 
 @Component({
   selector: 'app-classes',
@@ -71,76 +91,77 @@ export class ClassesComponent implements OnInit {
     datasets: [
       {
         label: 'Late',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        data: [] as number[],
       },
       {
         label: 'On Time',
-        data: [28, 48, 40, 19, 86, 27, 90],
+        data: [] as number[],
       },
       {
         label: 'Absent',
-        data: [28, 48, 40, 19, 86, 27, 90],
+        data: [] as number[],
       },
     ],
   };
-  protected attendanceDemographics = {
+  protected attendanceDemographics: ClassroomDemographicsChart = {
     male: 0,
     female: 0,
   };
-  protected classAttendanceToday: Attendance[] = [];
+  // * Charts
+  private dateRange = this.utilService.timeRangeToDateRange(TimeRange.LAST_365_DAYS);
+
   protected absentStudents: Student[] = [];
 
   ngOnInit() {
     this.retrieveClasses();
   }
 
-  public async onClassSelected(classSelected: Classroom) {
+  public onClassroomSelected(classSelected: Classroom) {
+    console.debug(`New Classroom Selected: ${classSelected.classroomName}`)
     this._classroomSelected = classSelected;
-    if (classSelected.id || classSelected.id) {
-      return;
-    }
+    this.students = classSelected.students;
 
     // * Update the components
-    this.updateAbsentStudents(classSelected);
-    this.updateStudents(classSelected);
     this.updateMonthlyAttendance(classSelected);
     this.updateAttendanceDemographics(classSelected);
 
     // * Get the class details
-    const late = firstValueFrom<number>(
-      this.attendanceService.countAttendancesInClassroom(
-        [AttendanceStatus.LATE],
-        new DateRange(),
-        classSelected.id
-      )
+    const late = this.attendanceService.countForeignEntityAttendance(
+      [AttendanceStatus.LATE],
+      new DateRange(),
+      AttendanceForeignEntity.CLASSROOM,
+      classSelected.id
     );
-    const absent = firstValueFrom<number>(
-      this.attendanceService.countAttendancesInClassroom(
-        [AttendanceStatus.ABSENT],
-        new DateRange(),
-        classSelected.id
-      )
+    const absent = this.attendanceService.countForeignEntityAttendance(
+      [AttendanceStatus.ABSENT],
+      new DateRange(),
+      AttendanceForeignEntity.CLASSROOM,
+      classSelected.id
     );
-    const onTime = firstValueFrom<number>(
-      this.attendanceService.countAttendancesInClassroom(
-        [AttendanceStatus.ON_TIME],
-        new DateRange(),
-        classSelected.id
-      )
+    const onTime = this.attendanceService.countForeignEntityAttendance(
+      [AttendanceStatus.ON_TIME],
+      new DateRange(),
+      AttendanceForeignEntity.CLASSROOM,
+      classSelected.id
     );
-    const totalStudents = firstValueFrom<number>(
-      this.studentService.getTotalStudents(classSelected.id)
-    );
-    const classDetails = Promise.all([late, absent, onTime, totalStudents]);
-    classDetails.then((values) => {
-      console.log(values);
+    const totalStudents = this.studentService.getTotalStudents(classSelected.id);
+    const classDetails = forkJoin([late, absent, onTime, totalStudents]);
+    classDetails.subscribe((values) => {
       this.totalCards = {
-        ...this.totalCards,
+        overAllAttendance: 0,
         late: values[0],
         absent: values[1],
         onTime: values[2],
         totalStudents: values[3],
       };
+    });
+    this.attendanceService.getForeignEntityAttendances(
+      [AttendanceStatus.ON_TIME, AttendanceStatus.LATE, AttendanceStatus.ABSENT],
+      new DateRange(),
+      AttendanceForeignEntity.CLASSROOM,
+      classSelected.id
+    ).subscribe((attendances: Attendance[]) => {
+      this.absentStudents = attendances.filter((attendance) => attendance.status === AttendanceStatus.ABSENT).map((attendance) => attendance.student);
     });
 
     this.updateOverAllAttendance(classSelected);
@@ -152,7 +173,7 @@ export class ClassesComponent implements OnInit {
       TimeRange.LAST_30_DAYS
     );
     this.attendanceService
-      .countTotalAttendanceByStatus(
+      .countForeignEntityAttendance(
         [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
         dateRange,
         AttendanceForeignEntity.CLASSROOM,
@@ -163,63 +184,47 @@ export class ClassesComponent implements OnInit {
         // Get overall attendance by percentage using daysCount, totalAttendance, and totalStudents
         this.totalCards.overAllAttendance = Number(
           Number(
-            ((totalAttendance / (daysCount * this.totalCards.totalStudents)) *
-              100) /
-              100
+            (((totalAttendance / (daysCount * this.totalCards.totalStudents)) *
+                100) /
+              100) * 100
           ).toFixed(2)
         );
       });
   }
 
-  private updateAbsentStudents(classroom: Classroom) {
-    const absentStudentsObservable =
-      this.attendanceService.getForeignEntityAttendances(
-        [AttendanceStatus.ABSENT],
-        new DateRange(),
-        AttendanceForeignEntity.CLASSROOM,
-        classroom.id
-      );
-    absentStudentsObservable.subscribe((attendances: Attendance[]) => {
-      this.absentStudents = attendances.map((attendance) => {
-        return attendance.student;
-      });
-    });
-  }
-
   private updateMonthlyAttendance(classroom: Classroom) {
+    console.debug("Get Monthly Attendance and Attendance demographics with Date Range: ", this.dateRange);
     // ! Get Monthly Attendance and Attendance demographics, load them asynchronously
-    const lateChart = firstValueFrom(
+    const lateChart =
       this.attendanceService.getLineChart(
-        this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS),
+        this.dateRange,
         [AttendanceStatus.LATE],
         TimeStack.MONTH,
         AttendanceForeignEntity.CLASSROOM,
         classroom.id
-      )
-    );
-    const onTimeChart = firstValueFrom(
+      );
+    const onTimeChart =
       this.attendanceService.getLineChart(
-        this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS),
+        this.dateRange,
         [AttendanceStatus.ON_TIME],
         TimeStack.MONTH,
         AttendanceForeignEntity.CLASSROOM,
         classroom.id
-      )
-    );
-    const absentChart = firstValueFrom(
+      );
+    const absentChart =
       this.attendanceService.getLineChart(
-        this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS),
+        this.dateRange,
         [AttendanceStatus.ABSENT],
         TimeStack.MONTH,
         AttendanceForeignEntity.CLASSROOM,
         classroom.id
-      )
-    );
-    const chart = Promise.all([lateChart, onTimeChart, absentChart]);
-    chart.then((value) => {
-      const late = value[0];
-      const onTime = value[1];
-      const absent = value[2];
+      );
+    const chart = forkJoin([lateChart, onTimeChart, absentChart])
+    chart.subscribe((lineCharts) => {
+      console.debug(lineCharts);
+      const late = lineCharts[0];
+      const onTime = lineCharts[1];
+      const absent = lineCharts[2];
       this.monthlyAttendance = {
         ...this.monthlyAttendance,
         labels: late.labels,
@@ -241,21 +246,14 @@ export class ClassesComponent implements OnInit {
     });
   }
 
-  private updateStudents(classroom: Classroom) {
-    const studentsObservable = this.classroomService.getClassroom(classroom.id);
-    studentsObservable.subscribe((classroom: Classroom) => {
-      this.students = classroom.students;
-    });
-  }
-
   private updateAttendanceDemographics(classroom: Classroom) {
-    const attendanceDemographics =
-      this.attendanceService.getClassroomAttendanceDemographics(
-        new DateRange(),
-        [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
-        classroom.id
-      );
-    attendanceDemographics.subscribe();
+    this.attendanceService.getClassroomAttendanceDemographics(
+      new DateRange(),
+      [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
+      classroom.id
+    ).subscribe((demographics) => {
+      this.attendanceDemographics = demographics;
+    });
   }
 
   public retrieveClasses(): void {
