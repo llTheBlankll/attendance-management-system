@@ -11,7 +11,7 @@
         </div>
         <div class="col-12 xl:col-9 flex-column align-self-center">
           <h2>
-            @if (this._classroom === undefined && this.currentUser !== null) {
+            @if (this._classroom === undefined && this.currentUser !== undefined) {
               <span class="text-3xl">
                 Hello {{ this.currentUser?.username ?? this.currentUser?.email }}!
               </span>
@@ -29,13 +29,13 @@
     <div class="col-12 xl:col-6 flex align-self-center justify-content-center">
       <div class="flex mr-2">
         <p-dropdown (onChange)="this.onClassSelect($event)" [options]="this.classes" [required]="true"
-                    filter filterBy="clasName" filterPlaceholder="Class Name" placeholder="Select Section..."
-                    styleClass="w-20rem" z>
+                    filter filterBy="classroomName" filterPlaceholder="Class Name" placeholder="Select Section..."
+                    styleClass="w-20rem" (onFilter)="this.onClassroomFilter($event)">
           <ng-template let-items pTemplate="item">
-            {{ items.className }}
+            {{ items.classroomName }}
           </ng-template>
           <ng-template let-classItem pTemplate="selectedItem">
-            {{ classItem.className }}
+            {{ classItem.classroomName }}
           </ng-template>
         </p-dropdown>
       </div>

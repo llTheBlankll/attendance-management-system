@@ -1,28 +1,22 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { PanelModule } from 'primeng/panel';
-import { CardModule } from 'primeng/card';
-import { ImageModule } from 'primeng/image';
-import { AvatarModule } from 'primeng/avatar';
-import { Classroom } from '../../../../../interfaces/dto/classroom/Classroom';
-import { AuthenticationService } from '../../../../../auth/authentication.service';
-import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
-import { Button } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { ClassCreateDialogComponent } from '../../dialogs/class-create-dialog/class-create-dialog.component';
-import { LoggingService } from '../../../../../services/logging/logging.service';
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { ClassroomService } from '../../../../../services/classroom/classroom.service';
-import { User } from '../../../../../interfaces/dto/user/user';
+import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
+import {PanelModule} from 'primeng/panel';
+import {CardModule} from 'primeng/card';
+import {ImageModule} from 'primeng/image';
+import {AvatarModule} from 'primeng/avatar';
+import {Classroom} from '../../../../../interfaces/dto/classroom/Classroom';
+import {AuthenticationService} from '../../../../../auth/authentication.service';
+import {DropdownChangeEvent, DropdownFilterEvent, DropdownModule} from 'primeng/dropdown';
+import {Button} from 'primeng/button';
+import {TooltipModule} from 'primeng/tooltip';
+import {ClassCreateDialogComponent} from '../../dialogs/class-create-dialog/class-create-dialog.component';
+import {DialogModule} from 'primeng/dialog';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
+import {ClassroomService} from '../../../../../services/classroom/classroom.service';
+import {User} from '../../../../../interfaces/dto/user/user';
+import {MessageDTO} from "../../../../../interfaces/MessageDTO";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'classes-class-details-card',
@@ -44,38 +38,78 @@ import { User } from '../../../../../interfaces/dto/user/user';
   templateUrl: './class-section-details-card.component.html',
   styleUrl: './class-section-details-card.component.css',
 })
-export class ClassSectionDetailsCardComponent implements OnInit{
+export class ClassSectionDetailsCardComponent implements OnInit {
   // Injections
   private readonly authService = inject(AuthenticationService);
-  private readonly loggingService = inject(LoggingService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
-  private readonly classService = inject(ClassroomService);
+  private readonly classroomService = inject(ClassroomService);
 
   @Output()
   public classroomSelected = new EventEmitter<Classroom>();
 
   @Input()
   public classes?: Classroom[];
-
   // The class that is currently selected
   public _classroom?: Classroom;
-
   protected currentUser?: User;
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe((user: User | null) => {
-      if (user == null) {
-        console.error("Not Logged!");
-        return;
-      }
+    this.authService.getCurrentUser().subscribe(
+      {
+        next: (user: User) => {
+          if (user == null) {
+            console.error("Not Logged!");
+            return;
+          }
 
-      this.currentUser = user;
-    });
+          this.currentUser = user;
+        },
+        error: (error: HttpErrorResponse) => {
+          const messageDTO: MessageDTO = error.message as unknown as MessageDTO;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: messageDTO.message,
+          });
+        }
+      }
+    );
+
+  }
+
+  private debounceTimeout: any;
+
+  protected onClassroomFilter(event: DropdownFilterEvent) {
+    const classroomNameSearch = event.filter as string;
+    if (classroomNameSearch === "") {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        this.classroomService.getAllClassrooms().subscribe({
+          next: (classes) => {
+            this.classes = classes;
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        })
+      }, 500); // adjust the delay to your liking
+    } else {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        this.classroomService.searchClassroomByName(classroomNameSearch).subscribe({
+          next: (classes) => {
+            this.classes = classes;
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        })
+      }, 500); // adjust the delay to your liking
+    }
   }
 
   public onClassSelect(event: DropdownChangeEvent) {
-    this.loggingService.info(`Class Selected: ${JSON.stringify(event.value)}`);
     this._classroom = event.value;
     this.classroomSelected.emit(event.value);
   }
@@ -97,13 +131,13 @@ export class ClassSectionDetailsCardComponent implements OnInit{
       accept: () => {
         // ! Delete the class
         if (this._classroom !== undefined && this._classroom.id !== undefined) {
-          this.classService.deleteClassroom(this._classroom.id).subscribe(
-            (result) => {
+          this.classroomService.deleteClassroom(this._classroom.id).subscribe({
+            next: (result) => {
               // * Check if the deletion was successful
               if (result) {
                 this._classroom = undefined;
                 this.classroomSelected.emit(undefined);
-                this.loggingService.info(result.message);
+                console.debug(result.message);
                 this.messageService.add({
                   severity: 'success',
                   summary: 'Success',
@@ -111,18 +145,18 @@ export class ClassSectionDetailsCardComponent implements OnInit{
                 });
               }
             },
-            (error) => {
-              this.loggingService.error(error);
+            error: (error: HttpErrorResponse) => {
+              console.error(error);
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Failed to delete class',
+                detail: `Failed to delete class\n${error.error}`,
               });
             }
-          );
+          });
         } else {
           // ! Class is undefined therefore no class to delete
-          this.loggingService.info('Class is undefined');
+          console.debug('Class is undefined');
           this.messageService.add({
             severity: 'error',
             summary: 'Rejected',
@@ -131,7 +165,7 @@ export class ClassSectionDetailsCardComponent implements OnInit{
         }
       },
       reject: () => {
-        this.loggingService.info('Delete Canceled');
+        console.debug('Delete Canceled');
         this.messageService.add({
           severity: 'error',
           summary: 'Rejected',
