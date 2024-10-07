@@ -17,7 +17,7 @@
                 pTooltip="Refresh the list of teachers" (onClick)="this.retrieveListOfTeachers()" rounded/>
     </div>
   </div>
-  <div>
+  <div class="h-30rem overflow-auto">
     <p-table [loadingIcon]="'pi pi-refresh'" [value]="teachers" scrollable>
       <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
