@@ -20,12 +20,12 @@ export class ClassAttendanceDemographicsCardComponent implements OnChanges {
       {
         data: [1, 1],
         backgroundColor: [
-          "#FF6384",
-          "#36A2EB"
+          "#36A2EB",
+          "#FF6384"
         ],
         hoverBackgroundColor: [
-          "#FF6384",
-          "#36A2EB"
+          "#36A2EB",
+          "#FF6384"
         ]
       }
     ]
