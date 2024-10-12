@@ -7,10 +7,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ChartModule } from 'primeng/chart';
 import { FormsModule } from '@angular/forms';
-import { TotalStrandsCardComponent } from './cards/total-strands-card/total-strands-card.component';
-import { MostPopularStrandCardComponent } from './cards/most-popular-strand-card/most-popular-strand-card.component';
-import { AvgStudentsStrandCardComponent } from './cards/avg-students-strand-card/avg-students-strand-card.component';
-import { NewStrandsCardComponent } from './cards/new-strands-card/new-strands-card.component';
+import { TotalStrandsCardComponent } from '../../../components/admin/strands/cards/total-strands-card/total-strands-card.component';
+import { MostPopularStrandCardComponent } from '../../../components/admin/strands/cards/most-popular-strand-card/most-popular-strand-card.component';
+import { AvgStudentsStrandCardComponent } from '../../../components/admin/strands/cards/avg-students-strand-card/avg-students-strand-card.component';
+import { NewStrandsCardComponent } from '../../../components/admin/strands/cards/new-strands-card/new-strands-card.component';
 
 @Component({
   selector: 'app-strands',

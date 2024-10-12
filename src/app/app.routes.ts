@@ -8,6 +8,7 @@ import { AttendanceComponent } from './shared/public/attendances/attendance/atte
 import { ClassesComponent } from './shared/public/classes/classes/classes.component';
 import { StudentsPageComponent } from './shared/public/students/students-page/students-page.component';
 import { TeacherComponent } from './shared/teacher/teacher.component';
+import { GradeLevelsComponent } from './shared/principal/grade-levels/grade-levels.component';
 
 export const routes: Routes = [
   {
@@ -143,6 +144,26 @@ export const routes: Routes = [
         {
           label: 'Dashboard',
           url: '/dashboard/strands',
+          icon: 'pi pi-fw pi-home',
+        },
+      ],
+    },
+  },
+  {
+    path: 'dashboard/admin/grade-levels',
+    component: GradeLevelsComponent,
+    canActivate: [authGuard],
+    data: {
+      breadcrumb: [
+        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        {
+          label: 'Grade Levels',
+          url: '/dashboard/grade-levels',
+          icon: 'pi pi-fw pi-list',
+        },
+        {
+          label: 'Dashboard',
+          url: '/dashboard/grade-levels',
           icon: 'pi pi-fw pi-home',
         },
       ],

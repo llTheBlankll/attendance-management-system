@@ -1,0 +1,8 @@
+:host ::ng-deep .p-card {
+  height: 100%;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  overflow-y: visible;
+}
+
