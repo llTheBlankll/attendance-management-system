@@ -1,0 +1,32 @@
+<div class="grid">
+  <div class="col-12">
+    <classes-class-details-card (classroomSelected)="this.onClassroomSelected($event)" [classes]="this.classrooms"/>
+  </div>
+  <div class="col-12 xl:col-3 lg:col-4 md:col-6">
+    <classes-overall-attendance-card [classOverAllAttendance]="this.totalCards.overAllAttendance"/>
+  </div>
+  <div class="col-12 xl:col-3 lg:col-4 md:col-6">
+    <classes-on-time-student-card [classOnTimeStudent]="this.totalCards.onTime"/>
+  </div>
+  <div class="col-12 xl:col-3 lg:col-4 md:col-6">
+    <classes-late-student-card [classLateStudents]="this.totalCards.late"/>
+  </div>
+  <div class="col-12 xl:col-3 lg:col-4 md:col-6">
+    <classes-absent-student-card [classAbsentStudents]="this.totalCards.absent"/>
+  </div>
+  <div class="col-12 xl:col-8">
+    <classes-monthly-attendance-card [data]="this.monthlyAttendance"/>
+  </div>
+  <div class="col-12 xl:col-4">
+    <classes-attendance-demographics-card [sex]="this.attendanceDemographics"/>
+  </div>
+  <div class="col-12 xl:col-6">
+    <classes-students-list-card [students]="this.students"/>
+  </div>
+  <div class="col-12 xl:col-3">
+    <classes-absent-students-list-card [absentStudents]="this.absentStudents"/>
+  </div>
+  <div class="col-12 xl:col-3">
+    <classes-today-activities-card [attendances]="this.classroomAttendanceToday"/>
+  </div>
+</div>

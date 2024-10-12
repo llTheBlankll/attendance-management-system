@@ -3,12 +3,11 @@ import {ClassroomDTO} from "../../../../../interfaces/dto/classroom/ClassroomDTO
 import {DialogModule} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {TooltipModule} from "primeng/tooltip";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule} from "@angular/forms";
 import {Teacher} from "../../../../../interfaces/dto/teacher/Teacher";
 import {GradeLevel} from "../../../../../interfaces/dto/grade-level/GradeLevel";
 import {MessageService} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
-import {FloatLabelModule} from "primeng/floatlabel";
 
 @Component({
   selector: 'app-class-edit-dialog',
@@ -18,9 +17,7 @@ import {FloatLabelModule} from "primeng/floatlabel";
     Button,
     TooltipModule,
     FormsModule,
-    InputTextModule,
-    FloatLabelModule,
-    ReactiveFormsModule
+    InputTextModule
   ],
   providers:  [
     MessageService

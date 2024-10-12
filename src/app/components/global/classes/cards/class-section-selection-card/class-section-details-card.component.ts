@@ -17,6 +17,7 @@ import {ClassroomService} from '../../../../../services/classroom/classroom.serv
 import {User} from '../../../../../interfaces/dto/user/user';
 import {MessageDTO} from "../../../../../interfaces/MessageDTO";
 import {HttpErrorResponse} from "@angular/common/http";
+import {ClassEditDialogComponent} from "../../dialogs/class-edit-dialog/class-edit-dialog.component";
 
 @Component({
   selector: 'classes-class-details-card',
@@ -33,6 +34,7 @@ import {HttpErrorResponse} from "@angular/common/http";
     DialogModule,
     ConfirmPopupModule,
     ToastModule,
+    ClassEditDialogComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './class-section-details-card.component.html',

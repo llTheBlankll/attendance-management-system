@@ -61,6 +61,8 @@ export class ListOfTeachersComponent implements OnInit {
   private readonly teacherService = inject(TeacherService);
   private readonly confirmationService = inject(ConfirmationService);
 
+  private timer: any;
+
   @Input()
   public teachers: Teacher[] = [];
 
@@ -128,16 +130,15 @@ export class ListOfTeachersComponent implements OnInit {
     }
   }
 
-  private debounceTimeout: any;
   protected filterTeacher(value: string) {
     console.debug(`Searching for ${value}`);
     if (value === '') {
       this.retrieveListOfTeachers();
       return;
     }
-
-    clearTimeout(this.debounceTimeout);
-    this.debounceTimeout = setTimeout(() => {
+    
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
       this.teacherService
         .searchTeacherByName(value)
         .subscribe((teachers: Teacher[]) => {

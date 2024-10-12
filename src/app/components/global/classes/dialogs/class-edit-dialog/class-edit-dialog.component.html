@@ -1,1 +1,19 @@
-<p>class-edit-dialog works!</p>
+<p-dialog [visible]="this.isVisible" styleClass="w-30rem" [header]="'Edit Classroom ' + this.classroom?.classroomName"
+          closable="false">
+  <br>
+  <div class="grid">
+    <form (ngSubmit)="this.editClassroom()" [formGroup]="this.classroomForm" action="" class="w-full">
+      <div class="col-12">
+        <p-floatLabel>
+          <input id="classroomName" type="text" pInputText formControlName="classroomName"/>
+          <label for="classroomName">Classroom Name</label>
+        </p-floatLabel>
+      </div>
+      <div class="col-12 flex justify-content-center">
+        <p-button (onClick)="this.isVisible = false" pTooltip="Close" rounded severity="danger">
+          Close
+        </p-button>
+      </div>
+    </form>
+  </div>
+</p-dialog>

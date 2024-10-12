@@ -6,7 +6,7 @@
       <form action="" (ngSubmit)="this.filterTeacher(filterInput.value)">
         <p-iconField iconPosition="left" class="mr-3">
           <p-inputIcon styleClass="pi pi-search"/>
-          <input type="text" pInputText placeholder="Search" #filterInput/>
+          <input type="text" pInputText placeholder="Search" (keyup)="filterTeacher(filterInput.value)" #filterInput/>
         </p-iconField>
         <p-button label="Filter" styleClass="w-8rem">
         </p-button>
