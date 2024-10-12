@@ -1,16 +1,15 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
-import { AttendanceService } from '../../../../../services/attendance/attendance.service';
-import { UtilService } from '../../../../../services/util/util.service';
-import { TimeRange } from '../../../../../enums/TimeRange';
-import { LineChartDTO } from '../../../../../interfaces/LineChartDTO';
 import { PanelModule } from 'primeng/panel';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { AttendanceStatus } from '../../../../../enums/AttendanceStatus';
-import { TimeStack } from '../../../../../enums/TimeStack';
+import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
+import { TimeRange } from '../../../../../core/enums/TimeRange';
+import { TimeStack } from '../../../../../core/enums/TimeStack';
+import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
+import { UtilService } from '../../../../../core/services/util/util.service';
 
 @Component({
   selector: 'app-total-attendance-report-card',

@@ -6,29 +6,29 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   ConfirmationService,
   MessageService,
   PrimeTemplate,
 } from 'primeng/api';
-import {Button} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {DialogModule} from 'primeng/dialog';
-import {DropdownModule} from 'primeng/dropdown';
-import {FileUploadModule} from 'primeng/fileupload';
-import {IconFieldModule} from 'primeng/iconfield';
-import {InputIconModule} from 'primeng/inputicon';
-import {InputTextModule} from 'primeng/inputtext';
-import {TableModule} from 'primeng/table';
-import {ToastModule} from 'primeng/toast';
-import {TooltipModule} from 'primeng/tooltip';
-import {Teacher} from '../../../../../interfaces/dto/teacher/Teacher';
-import {TeacherService} from '../../../../../services/teacher/teacher.service';
-import {CreateTeacherDialogComponent} from '../../dialogs/create-teacher-dialog/create-teacher-dialog.component';
-import {MessageDTO} from '../../../../../interfaces/MessageDTO';
-import {CodeStatus} from '../../../../../enums/CodeStatus';
+import { Button } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FileUploadModule } from 'primeng/fileupload';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { CodeStatus } from '../../../../../core/enums/CodeStatus';
+import { Teacher } from '../../../../../core/interfaces/dto/teacher/Teacher';
+import { MessageDTO } from '../../../../../core/interfaces/MessageDTO';
+import { TeacherService } from '../../../../../core/services/teacher/teacher.service';
+import { CreateTeacherDialogComponent } from '../../dialogs/create-teacher-dialog/create-teacher-dialog.component';
 
 @Component({
   selector: 'app-list-of-teachers',
@@ -79,12 +79,10 @@ export class ListOfTeachersComponent implements OnInit {
   protected retrieveListOfTeachers() {
     console.debug('Retrieving list of teachers...');
     this.teachers = [];
-    this.teacherService
-      .getAllTeachers()
-      .subscribe((teachers: Teacher[]) => {
-        this.teachers = teachers;
-        console.debug('List of teachers retrieved.');
-      });
+    this.teacherService.getAllTeachers().subscribe((teachers: Teacher[]) => {
+      this.teachers = teachers;
+      console.debug('List of teachers retrieved.');
+    });
   }
 
   protected async deleteTeacher(teacher: Teacher, event: Event | null) {
@@ -94,8 +92,11 @@ export class ListOfTeachersComponent implements OnInit {
         message: 'Are you sure you want to proceed?',
         icon: 'pi pi-exclamation-triangle',
         accept: async () => {
-          if (teacher.id !== undefined) { // Ensure teacher.id is defined
-            const statusObservable = this.teacherService.deleteTeacher(teacher.id);
+          if (teacher.id !== undefined) {
+            // Ensure teacher.id is defined
+            const statusObservable = this.teacherService.deleteTeacher(
+              teacher.id
+            );
             statusObservable.subscribe((status: MessageDTO) => {
               if (status.status == CodeStatus.OK) {
                 this.messageService.add({
@@ -160,6 +161,6 @@ export class ListOfTeachersComponent implements OnInit {
             this.teachers = teachers;
           }
         });
-    }, 500)
+    }, 500);
   }
 }

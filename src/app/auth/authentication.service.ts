@@ -1,12 +1,11 @@
-import {HttpClient} from '@angular/common/http';
-import {inject, Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {User} from '../interfaces/dto/user/user';
-import {JWTInformation} from "../interfaces/JWTInformation";
-import {MessageDTO} from '../interfaces/MessageDTO';
-import {Login} from "../interfaces/dto/forms/Login";
-import {CodeStatus} from "../enums/CodeStatus";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Login } from '../core/interfaces/dto/forms/Login';
+import { User } from '../core/interfaces/dto/user/user';
+import { JWTInformation } from '../core/interfaces/JWTInformation';
+import { MessageDTO } from '../core/interfaces/MessageDTO';
 
 @Injectable({
   providedIn: 'root',

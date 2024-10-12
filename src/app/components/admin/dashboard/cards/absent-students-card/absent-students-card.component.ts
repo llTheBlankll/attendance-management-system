@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { AttendanceStatus } from '../../../../../enums/AttendanceStatus';
-import { AttendanceService } from '../../../../../services/attendance/attendance.service';
-import { DateRange } from '../../../../../interfaces/DateRange';
+import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
+import { DateRange } from '../../../../../core/interfaces/DateRange';
+import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
 
 @Component({
   selector: 'app-absent-students-card',

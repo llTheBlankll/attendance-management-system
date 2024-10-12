@@ -1,18 +1,18 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
-import {CardModule} from "primeng/card";
-import {ChartModule} from "primeng/chart";
-import {AttendanceService} from "../../../../../services/attendance/attendance.service";
-import {AttendanceStatus} from "../../../../../enums/AttendanceStatus";
-import {UtilService} from "../../../../../services/util/util.service";
-import {TimeRange} from "../../../../../enums/TimeRange";
-import {DropdownModule} from "primeng/dropdown";
-import {MenuModule} from "primeng/menu";
-import {PanelModule} from "primeng/panel";
-import {MenuItem} from "primeng/api";
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
+import { DropdownModule } from 'primeng/dropdown';
+import { MenuModule } from 'primeng/menu';
+import { PanelModule } from 'primeng/panel';
+import { MenuItem } from 'primeng/api';
 import 'chartjs-adapter-moment';
-import {ProgressSpinnerModule} from "primeng/progressspinner";
-import {TimeStack} from "../../../../../enums/TimeStack";
-import {firstValueFrom} from 'rxjs';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { firstValueFrom } from 'rxjs';
+import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
+import { TimeRange } from '../../../../../core/enums/TimeRange';
+import { TimeStack } from '../../../../../core/enums/TimeStack';
+import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
+import { UtilService } from '../../../../../core/services/util/util.service';
 
 @Component({
   selector: 'app-daily-attendance-report-card',
@@ -23,54 +23,53 @@ import {firstValueFrom} from 'rxjs';
     DropdownModule,
     MenuModule,
     PanelModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
   ],
   templateUrl: './daily-attendance-report-card.component.html',
-  styleUrl: './daily-attendance-report-card.component.css'
+  styleUrl: './daily-attendance-report-card.component.css',
 })
 export class DailyAttendanceReportCardComponent implements OnInit {
-
   // Injections
   private readonly attendanceService = inject(AttendanceService);
   private readonly utilService = inject(UtilService);
 
   data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
-        label: "On Time",
-        data: [92, 22, 31, 39, 65, 47, 34]
+        label: 'On Time',
+        data: [92, 22, 31, 39, 65, 47, 34],
       },
       {
-        label: "Late",
+        label: 'Late',
         data: [65, 59, 80, 81, 56, 55, 40],
       },
       {
-        label: "Absent",
+        label: 'Absent',
         data: [55, 59, 90, 81, 2, 25, 40],
-      }
-    ]
-  }
+      },
+    ],
+  };
 
   options = {
     plugins: {
       legend: {
-        display: true
+        display: true,
       },
       title: {
         display: true,
-        text: 'Daily Attendance Report'
+        text: 'Daily Attendance Report',
       },
       layout: {
-        padding: 10
+        padding: 10,
       },
       tooltip: {
         mode: 'index',
-        intersect: true
+        intersect: true,
       },
       hover: {
         mode: 'nearest',
-        intersect: true
+        intersect: true,
       },
     },
     responsive: true,
@@ -80,32 +79,34 @@ export class DailyAttendanceReportCardComponent implements OnInit {
     scales: {
       x: {
         grid: {
-          display: false
-        }
-      }
-    }
-  }
+          display: false,
+        },
+      },
+    },
+  };
 
   chartDaysOptions: MenuItem[] = [
     {
       label: 'Last 365 Days',
       command: () => {
-        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_365_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_365_DAYS
+        );
         this.options = {
           ...this.options,
           // Set scales x type to Time
           scales: {
             x: {
               grid: {
-                display: false
-              }
-            }
-          }
-        }
+                display: false,
+              },
+            },
+          },
+        };
         this.updateDailyAttendanceReport(TimeStack.MONTH);
       },
-      tooltip: "This will show data for the last 365 days.",
-      icon: 'pi pi-chart-line'
+      tooltip: 'This will show data for the last 365 days.',
+      icon: 'pi pi-chart-line',
     },
     {
       label: 'Last 90 Days',
@@ -116,36 +117,42 @@ export class DailyAttendanceReportCardComponent implements OnInit {
           scales: {
             x: {
               grid: {
-                display: false
-              }
-            }
-          }
-        }
-        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_90_DAYS);
+                display: false,
+              },
+            },
+          },
+        };
+        this.date = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_90_DAYS
+        );
         this.updateDailyAttendanceReport(TimeStack.WEEK);
       },
-      tooltip: "This will show data for the last 90 days.",
-      icon: 'pi pi-chart-line'
+      tooltip: 'This will show data for the last 90 days.',
+      icon: 'pi pi-chart-line',
     },
     {
       label: 'Last 30 Days',
       command: () => {
-        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_30_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_30_DAYS
+        );
         this.updateDailyAttendanceReport(TimeStack.WEEK);
       },
-      tooltip: "This will show data for the last 30 days.",
-      icon: 'pi pi-chart-line'
+      tooltip: 'This will show data for the last 30 days.',
+      icon: 'pi pi-chart-line',
     },
     {
       label: 'Last 7 Days',
       command: () => {
-        this.date = this.utilService.timeRangeToDateRange(TimeRange.LAST_7_DAYS);
+        this.date = this.utilService.timeRangeToDateRange(
+          TimeRange.LAST_7_DAYS
+        );
         this.updateDailyAttendanceReport(TimeStack.DAY);
       },
-      tooltip: "This will show data for the last 7 days.",
-      icon: 'pi pi-chart-line'
-    }
-  ]
+      tooltip: 'This will show data for the last 7 days.',
+      icon: 'pi pi-chart-line',
+    },
+  ];
 
   // Date Range, default is last 30 days
   @Input()
@@ -155,9 +162,27 @@ export class DailyAttendanceReportCardComponent implements OnInit {
 
   private updateDailyAttendanceReport(timeStack = TimeStack.WEEK) {
     this.loading = true;
-    const onTime = firstValueFrom(this.attendanceService.getLineChart(this.date, [AttendanceStatus.ON_TIME], timeStack));
-    const late = firstValueFrom(this.attendanceService.getLineChart(this.date, [AttendanceStatus.LATE], timeStack));
-    const absent = firstValueFrom(this.attendanceService.getLineChart(this.date, [AttendanceStatus.ABSENT], timeStack));
+    const onTime = firstValueFrom(
+      this.attendanceService.getLineChart(
+        this.date,
+        [AttendanceStatus.ON_TIME],
+        timeStack
+      )
+    );
+    const late = firstValueFrom(
+      this.attendanceService.getLineChart(
+        this.date,
+        [AttendanceStatus.LATE],
+        timeStack
+      )
+    );
+    const absent = firstValueFrom(
+      this.attendanceService.getLineChart(
+        this.date,
+        [AttendanceStatus.ABSENT],
+        timeStack
+      )
+    );
 
     Promise.all([onTime, late, absent]).then((values) => {
       this.data = {
@@ -165,25 +190,25 @@ export class DailyAttendanceReportCardComponent implements OnInit {
         labels: values[0].labels,
         datasets: [
           {
-            label: "On Time",
-            data: values[0].data
+            label: 'On Time',
+            data: values[0].data,
           },
           {
-            label: "Late",
-            data: values[1].data
+            label: 'Late',
+            data: values[1].data,
           },
           {
-            label: "Absent",
-            data: values[2].data
-          }
-        ]
-      }
+            label: 'Absent',
+            data: values[2].data,
+          },
+        ],
+      };
       this.loading = false;
     });
   }
 
   ngOnInit() {
     this.loading = true;
-    this.updateDailyAttendanceReport()
+    this.updateDailyAttendanceReport();
   }
 }

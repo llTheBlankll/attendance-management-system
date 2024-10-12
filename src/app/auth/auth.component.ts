@@ -1,24 +1,22 @@
-import {Component, inject} from '@angular/core';
-import {CardModule} from "primeng/card";
-import {NgClass, NgOptimizedImage} from "@angular/common";
-import {StyleClassModule} from "primeng/styleclass";
-import {IconFieldModule} from "primeng/iconfield";
-import {InputIconModule} from "primeng/inputicon";
-import {InputTextModule} from "primeng/inputtext";
-import {FloatLabelModule} from "primeng/floatlabel";
-import {Button} from "primeng/button";
-import {SplitterModule} from "primeng/splitter";
-import {DividerModule} from "primeng/divider";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
-import {environment} from "../../environments/environment";
-import {MessageService} from "primeng/api";
-import {ToastModule} from "primeng/toast";
-import {AuthenticationService} from "./authentication.service";
-import {MessageDTO} from "../interfaces/MessageDTO";
-import {CodeStatus} from "../enums/CodeStatus";
-import {HttpErrorResponse} from "@angular/common/http";
-import {JWTInformation} from "../interfaces/JWTInformation";
+import { NgClass, NgOptimizedImage } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
+import { Button } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { DividerModule } from "primeng/divider";
+import { FloatLabelModule } from "primeng/floatlabel";
+import { IconFieldModule } from "primeng/iconfield";
+import { InputIconModule } from "primeng/inputicon";
+import { InputTextModule } from "primeng/inputtext";
+import { SplitterModule } from "primeng/splitter";
+import { StyleClassModule } from "primeng/styleclass";
+import { ToastModule } from "primeng/toast";
+import { AuthenticationService } from "./authentication.service";
+import { JWTInformation } from "../core/interfaces/JWTInformation";
+import { MessageDTO } from "../core/interfaces/MessageDTO";
 
 @Component({
   selector: 'app-auth',
@@ -59,7 +57,6 @@ export class AuthComponent {
 
   public login() {
     if (this.loginForm.valid) {
-      // TODO: Implement login mechanism
       this.authenticationService.login(this.loginForm.value).subscribe({
           next: (message: JWTInformation) => {
             localStorage.setItem("token", message.rawToken);

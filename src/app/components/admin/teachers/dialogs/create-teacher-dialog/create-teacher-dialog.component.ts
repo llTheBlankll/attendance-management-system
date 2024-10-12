@@ -1,17 +1,22 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {Button} from 'primeng/button';
-import {DialogModule} from 'primeng/dialog';
-import {DropdownModule} from 'primeng/dropdown';
-import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
-import {InputTextModule} from 'primeng/inputtext';
-import {PaginatorModule} from 'primeng/paginator';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
-import {TooltipModule} from 'primeng/tooltip';
-import {AddTeacherDTO} from '../../../../../interfaces/dto/forms/AddTeacher';
-import {Teacher} from '../../../../../interfaces/dto/teacher/Teacher';
-import {TeacherService} from '../../../../../services/teacher/teacher.service';
-import {MessageService} from 'primeng/api';
-import {ToastModule} from 'primeng/toast';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Button } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { InputTextModule } from 'primeng/inputtext';
+import { PaginatorModule } from 'primeng/paginator';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { AddTeacherDTO } from '../../../../../core/interfaces/dto/forms/AddTeacher';
+import { Teacher } from '../../../../../core/interfaces/dto/teacher/Teacher';
+import { TeacherService } from '../../../../../core/services/teacher/teacher.service';
 
 @Component({
   selector: 'admin-teachers-create-teacher-dialog',
