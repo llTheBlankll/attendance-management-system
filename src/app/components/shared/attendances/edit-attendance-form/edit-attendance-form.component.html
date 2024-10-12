@@ -1,0 +1,13 @@
+<form [formGroup]="editForm" (ngSubmit)="saveAttendance()">
+  <div class="p-fluid">
+    <div class="p-field mb-3">
+      <label for="status">Status</label>
+      <p-dropdown id="status" [options]="attendanceStatuses" formControlName="status" optionLabel="label" optionValue="value"></p-dropdown>
+    </div>
+    <div class="p-field mb-3">
+      <label for="notes">Notes</label>
+      <textarea id="notes" pInputTextarea formControlName="notes" rows="3"></textarea>
+    </div>
+  </div>
+  <p-button type="submit" label="Save Changes" [disabled]="!editForm.valid"></p-button>
+</form>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AttendanceForeignEntity } from '../../enums/AttendanceForeignEntity';
@@ -153,4 +153,23 @@ export class AttendanceService {
       }
     );
   }
+
+  getTodayAttendances(classroom?: string, gradeLevel?: string, strand?: string): Observable<Attendance[]> {
+    let params = new HttpParams();
+    if (classroom) params = params.append('classroom', classroom);
+    if (gradeLevel) params = params.append('gradeLevel', gradeLevel);
+    if (strand) params = params.append('strand', strand);
+
+    return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/today`, { params });
+  }
+
+  addAttendance(attendance: Attendance): Observable<Attendance> {
+    return this.http.post<Attendance>(`${this.apiUrl}/attendances`, attendance);
+  }
+
+  updateAttendance(attendance: Attendance): Observable<Attendance> {
+    return this.http.put<Attendance>(`${this.apiUrl}/attendances/${attendance.id}`, attendance);
+  }
+
+  // Add methods to fetch classrooms, grade levels, and strands if needed
 }

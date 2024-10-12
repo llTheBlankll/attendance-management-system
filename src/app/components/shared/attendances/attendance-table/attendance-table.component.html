@@ -1,0 +1,24 @@
+<p-table [value]="attendances" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+         [rowsPerPageOptions]="[10,25,50]">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Student ID</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Notes</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-attendance>
+    <tr>
+      <td>{{attendance.studentId}}</td>
+      <td>{{attendance.status}}</td>
+      <td>{{attendance.date | date:'short'}}</td>
+      <td>{{attendance.notes}}</td>
+      <td>
+        <p-button icon="pi pi-pencil" (onClick)="editAttendance(attendance)" styleClass="p-button-rounded p-button-text"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -1,7 +1,44 @@
 <div class="grid">
-  <div class="card-12 xl:col-8">
-    <p-card styleClass="shadow-3">
-
+  <div class="col-12 xl:col-9">
+    <p-card header="Today's Attendance" styleClass="shadow-3">
+      <div class="p-fluid grid">
+        <div class="col-12 md:col-4">
+          <p-dropdown [options]="classrooms"
+                      (onChange)="onFilterChange($event)" placeholder="Select Classroom"
+                      [showClear]="true"></p-dropdown>
+        </div>
+        <div class="col-12 md:col-4">
+          <p-dropdown [options]="gradeLevels"
+                      (onChange)="onFilterChange($event)" placeholder="Select Grade Level"
+                      [showClear]="true"></p-dropdown>
+        </div>
+        <div class="col-12 md:col-4">
+          <p-dropdown [options]="strands"
+                      (onChange)="onFilterChange($event)" placeholder="Select Strand"
+                      [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+      <app-attendance-table
+        [attendances]="todayAttendances"
+        (onEdit)="openEditDialog($event)"
+      ></app-attendance-table>
     </p-card>
   </div>
+  <div class="col-12 xl:col-3">
+    <app-manual-attendance-input
+      (onSubmit)="addAttendance($event)"
+    ></app-manual-attendance-input>
+  </div>
 </div>
+
+<p-dialog
+  header="Edit Attendance"
+  [(visible)]="editDialogVisible"
+  [style]="{ width: '50vw' }"
+  [modal]="true"
+>
+  <app-edit-attendance-form
+    [attendance]="selectedAttendance"
+    (onSave)="updateAttendance($event)"
+  ></app-edit-attendance-form>
+</p-dialog>

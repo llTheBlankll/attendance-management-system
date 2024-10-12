@@ -22,6 +22,7 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   padding: 0;
+  font-size: 14px;
 }
 
 .flex-fill {
