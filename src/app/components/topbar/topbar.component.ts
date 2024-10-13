@@ -79,7 +79,7 @@ export class TopbarComponent implements OnInit {
       label: 'Settings',
       icon: 'pi pi-fw pi-cog',
       command: () => {
-        console.log('Settings');
+        this.router.navigate(['/settings']);
       },
     },
     {

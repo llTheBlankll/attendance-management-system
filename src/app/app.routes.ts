@@ -9,6 +9,7 @@ import { ClassesComponent } from './shared/public/classes/classes/classes.compon
 import { StudentsPageComponent } from './shared/public/students/students-page/students-page.component';
 import { TeacherComponent } from './shared/teacher/teacher.component';
 import { GradeLevelsComponent } from './shared/principal/grade-levels/grade-levels.component';
+import { SettingsComponent } from './shared/public/settings/settings/settings.component';
 
 export const routes: Routes = [
   {
@@ -170,6 +171,17 @@ export const routes: Routes = [
     },
   },
   // End: GLOBAL REGION
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    canActivate: [authGuard],
+    data: {
+      breadcrumb: [
+        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        { label: 'Settings', url: '/settings', icon: 'pi pi-fw pi-cog' },
+      ],
+    },
+  },
   {
     path: '**',
     redirectTo: 'auth',
