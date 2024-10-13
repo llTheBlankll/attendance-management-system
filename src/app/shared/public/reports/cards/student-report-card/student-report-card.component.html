@@ -1,0 +1,18 @@
+<p-card styleClass="h-full">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center justify-content-between px-3 py-2">
+      <h2 class="text-xl font-semibold m-0">Student Attendance Details</h2>
+      <p-button icon="pi pi-info-circle" styleClass="p-button-rounded p-button-text"></p-button>
+    </div>
+  </ng-template>
+  <p class="m-0 mb-3 text-secondary">View detailed attendance report for a specific student. This report includes:</p>
+  <ul class="list-none p-0 m-0 mb-3">
+    <li class="flex align-items-center mb-2"><i class="pi pi-calendar-plus mr-2 text-green-500"></i>Days present</li>
+    <li class="flex align-items-center mb-2"><i class="pi pi-calendar-minus mr-2 text-red-500"></i>Days absent</li>
+    <li class="flex align-items-center"><i class="pi pi-chart-bar mr-2 text-blue-500"></i>Attendance percentage over time</li>
+  </ul>
+  <p-autoComplete [(ngModel)]="selectedStudent" [suggestions]="filteredStudents" (completeMethod)="filterStudents($event)" field="name" [dropdown]="true" placeholder="Search Student"></p-autoComplete>
+  <ng-template pTemplate="footer">
+    <p-button label="Generate Report" icon="pi pi-file-pdf" (onClick)="generateReport()" [disabled]="!selectedStudent"></p-button>
+  </ng-template>
+</p-card>

@@ -73,7 +73,7 @@ export class SidebarComponent {
     {
       label: "Reports",
       icon: 'pi pi-fw pi-chart-bar',
-      routerLink: ['/dashboard/admin/reports']
+      routerLink: ['/dashboard/reports']
     }
   ]
 }

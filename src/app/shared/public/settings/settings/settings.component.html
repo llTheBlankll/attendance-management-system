@@ -74,8 +74,10 @@
   </div>
 
   <!-- Teacher Information Card -->
-  <div class="col-12 lg:col-6 flex flex-column teacher-info-container">
-    <p-card header="Teacher Information" styleClass="h-full shadow-3">
+  <div
+    class="col-12 lg:col-6 flex-auto flex-column teacher-info-container"
+  >
+    <p-card header="Teacher Information" styleClass="h-full flex-fill shadow-3">
       <form [formGroup]="teacherForm" class="flex flex-column gap-3">
         <div class="grid">
           <div class="col-12 md:col-4">
@@ -95,9 +97,7 @@
             }
           </div>
           <div class="col-12 md:col-4">
-            <label for="lastName" class="block font-bold mb-2"
-              >Last Name</label
-            >
+            <label for="lastName" class="block font-bold mb-2">Last Name</label>
             <input
               id="lastName"
               type="text"
@@ -157,9 +157,7 @@
             }
           </div>
           <div class="col-12 md:col-4">
-            <label for="position" class="block font-bold mb-2"
-              >Position</label
-            >
+            <label for="position" class="block font-bold mb-2">Position</label>
             <p-dropdown
               id="position"
               [options]="positionOptions"
@@ -208,8 +206,7 @@
             }
           </div>
         </div>
-        <div class="spacer"></div>
-        <div class="flex justify-content-end mt-3">
+        <div class="flex justify-content-center mt-auto">
           <p-button
             label="Save Teacher Info"
             icon="pi pi-check"

@@ -10,6 +10,7 @@ import { StudentsPageComponent } from './shared/public/students/students-page/st
 import { TeacherComponent } from './shared/teacher/teacher.component';
 import { GradeLevelsComponent } from './shared/principal/grade-levels/grade-levels.component';
 import { SettingsComponent } from './shared/public/settings/settings/settings.component';
+import { ReportsComponent } from './shared/public/reports/reports.component';
 
 export const routes: Routes = [
   {
@@ -147,6 +148,17 @@ export const routes: Routes = [
           url: '/dashboard/strands',
           icon: 'pi pi-fw pi-home',
         },
+      ],
+    },
+  },
+  {
+    path: 'dashboard/reports',
+    component: ReportsComponent,
+    canActivate: [authGuard],
+    data: {
+      breadcrumb: [
+        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        { label: 'Reports', url: '/dashboard/reports', icon: 'pi pi-fw pi-chart-bar' },
       ],
     },
   },

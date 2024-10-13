@@ -1,0 +1,31 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center justify-content-between px-3 py-2">
+      <h2 class="text-xl font-semibold m-0">Custom Report</h2>
+      <p-button icon="pi pi-info-circle" styleClass="p-button-rounded p-button-text"></p-button>
+    </div>
+  </ng-template>
+  <p class="m-0 mb-3 text-secondary">Generate a custom attendance report for a specific date range. This report allows you to:</p>
+  <ul class="list-none p-0 m-0 mb-3">
+    <li class="flex align-items-center mb-2"><i class="pi pi-calendar-range mr-2 text-blue-500"></i>Select custom start and end dates</li>
+    <li class="flex align-items-center mb-2"><i class="pi pi-filter mr-2 text-green-500"></i>Apply filters for classes or students</li>
+    <li class="flex align-items-center"><i class="pi pi-chart-pie mr-2 text-orange-500"></i>View comprehensive attendance statistics</li>
+  </ul>
+  <div class="grid">
+    <div class="col-12 md:col-6 mb-3">
+      <p-calendar [(ngModel)]="startDate" [showIcon]="true" placeholder="Start Date" styleClass="w-full"></p-calendar>
+    </div>
+    <div class="col-12 md:col-6 mb-3">
+      <p-calendar [(ngModel)]="endDate" [showIcon]="true" placeholder="End Date" styleClass="w-full"></p-calendar>
+    </div>
+    <div class="col-12 md:col-6 mb-3">
+      <p-multiSelect [options]="classes" [(ngModel)]="selectedClasses" optionLabel="name" placeholder="Select Classes" [filter]="true" styleClass="w-full"></p-multiSelect>
+    </div>
+    <div class="col-12 md:col-6 mb-3">
+      <p-multiSelect [options]="students" [(ngModel)]="selectedStudents" optionLabel="name" placeholder="Select Students" [filter]="true" styleClass="w-full"></p-multiSelect>
+    </div>
+    <div class="col-12">
+      <p-button label="Generate Custom Report" icon="pi pi-file-pdf" (onClick)="generateCustomReport()" [disabled]="!startDate || !endDate" styleClass="w-full"></p-button>
+    </div>
+  </div>
+</p-card>
