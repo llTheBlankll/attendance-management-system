@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { AddTeacherDTO } from '../../../../../core/interfaces/dto/forms/AddTeacher';
 import { Teacher } from '../../../../../core/interfaces/dto/teacher/Teacher';
 import { TeacherService } from '../../../../../core/services/teacher/teacher.service';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'admin-teachers-create-teacher-dialog',
@@ -50,8 +51,7 @@ export class CreateTeacherDialogComponent {
     age: new FormControl(1, Validators.required),
     position: new FormControl('', Validators.required),
     emergencyContact: new FormControl('', Validators.required),
-    contactNumber: new FormControl(''),
-    pfp: new FormControl(),
+    contactNumber: new FormControl('')
   });
 
   teacherPositions = [
@@ -84,22 +84,20 @@ export class CreateTeacherDialogComponent {
   public showDialog = false;
 
   @Output()
-  public refreshTeachersEmitter: EventEmitter<void> = new EventEmitter<void>();
+  public refreshTeachersTable: EventEmitter<void> = new EventEmitter<void>();
+
+  private readonly fileSelected: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
 
   /**
-   * Adds a new teacher to the Firestore.
+   * Adds a new teacher and uploads their profile picture if provided.
    * @remarks This function is called when the user clicks the "Add Teacher" button.
-   * @summary Adds a new teacher to the Firestore.
-   * @notes The teacher is created with the values from the addTeacherFormGroup.
-   * The teacher is then added to the Firestore and the list of teachers is updated.
-   *
+   * @summary Adds a new teacher to the database and uploads their profile picture.
    */
   public async addTeacher() {
-    // TODO: Implement Add Teacher
     console.debug('Add Teacher button clicked.');
 
     const formTeacher: AddTeacherDTO = this.addTeacherFormGroup.value;
-    let teacher: Teacher = {
+    const teacher: Teacher = {
       age: formTeacher.age,
       contactNumber: formTeacher.contactNumber,
       emergencyContact: formTeacher.emergencyContact,
@@ -110,46 +108,52 @@ export class CreateTeacherDialogComponent {
       sex: formTeacher.sex.toUpperCase(),
     };
 
-    // Upload the profile picture first if provided
-    if (formTeacher.pfp !== null) {
-      console.debug('Profile Picture uploading...');
-      // uploadResult = await this.storageService.uploadProfilePicture(formTeacher.pfp, teacher);
-      // // If uploadResult is null, it means the upload failed
-      // if (uploadResult === null) {
-      //   this.messageService.add({
-      //     severity: 'error',
-      //     summary: 'Error',
-      //     icon: 'pi pi-times',
-      //     detail: 'Failed to upload profile picture'
-      //   });
-      //   this.loggingService.error("Failed to upload profile picture");
-      //   return;
-      // }
-      // console.debug(
-      //   'Got profile picture URL: ' + uploadResult.ref.fullPath
-      // );
-    } else {
-      console.debug('Profile Picture not provided, continuing...');
-    }
+    try {
+      // Add the teacher first
+      const addedTeacher = await firstValueFrom(
+        this.teacherService.addTeacher(teacher)
+      );
 
-    // // * Update teacher with profile picture URL
-    // teacher = {
-    //   ...teacher,
-    //   photoUrl: uploadResult?.ref.fullPath
-    // }
-    // console.debug("Teacher: " + JSON.stringify(teacher));
-    // // ! Add Teacher to the firebase
-    // this.teacherService.addTeacher(teacher);
-    // * Show alert
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      icon: 'pi pi-check',
-      detail: 'Teacher added successfully',
-    });
-    this.showDialog = false;
-    this.refreshTeachersSignal();
-    this.addTeacherFormGroup.reset();
+      if (!addedTeacher || !addedTeacher.id) {
+        throw new Error('Failed to add teacher');
+      }
+
+      // Upload the profile picture if provided
+      if (this.fileSelected.getValue() !== null) {
+        console.debug('Profile Picture uploading...');
+        const file = this.fileSelected.getValue();
+        if (!file) {
+          throw new Error('No file selected');
+        }
+        await firstValueFrom(
+          this.teacherService.uploadTeacherProfilePicture(
+            addedTeacher.id,
+            file
+          )
+        );
+        console.debug('Profile Picture uploaded successfully');
+      } else {
+        console.debug('Profile Picture not provided, continuing...');
+      }
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        icon: 'pi pi-check',
+        detail: 'Teacher added successfully',
+      });
+      this.showDialog = false;
+      this.refreshTeachersSignal();
+      this.addTeacherFormGroup.reset();
+    } catch (error) {
+      console.error('Error adding teacher:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        icon: 'pi pi-times',
+        detail: 'Failed to add teacher',
+      });
+    }
   }
 
   protected onProfilePictureChange(event: FileSelectEvent) {
@@ -162,13 +166,11 @@ export class CreateTeacherDialogComponent {
     console.debug('Profile Picture selected');
     const file = event.currentFiles[0];
     console.debug(`Profile Picture: ${file.name}`);
-
-    this.addTeacherFormGroup.patchValue({
-      pfp: file,
-    });
+    this.fileSelected.next(file);
+    // Get the current value of the fileSelected BehaviorSubject
   }
 
   private refreshTeachersSignal() {
-    this.refreshTeachersEmitter.emit();
+    this.refreshTeachersTable.emit();
   }
 }

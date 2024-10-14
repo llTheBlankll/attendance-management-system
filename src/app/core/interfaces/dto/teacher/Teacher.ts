@@ -5,7 +5,7 @@ export interface Teacher {
   firstName: string;
   lastName: string;
   middleInitial?: string;
-  teacherPhoto?: string;
+  profilePicture?: string;
   age: number;
   contactNumber?: string;
   emergencyContact: string;

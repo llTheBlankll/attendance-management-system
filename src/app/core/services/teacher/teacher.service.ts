@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { SortRequest } from '../../interfaces/SortRequest';
 import { Teacher } from '../../interfaces/dto/teacher/Teacher';
 import { PageRequest } from '../../interfaces/PageRequest';
@@ -13,6 +13,10 @@ import { environment } from '../../../../environments/environment';
 export class TeacherService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
+
+  public addTeacher(teacher: Teacher): Observable<Teacher> {
+    return this.http.post<Teacher>(`${this.apiUrl}/teachers/create`, teacher);
+  }
 
   public getAllTeachers(
     pageRequest?: PageRequest,
@@ -28,7 +32,7 @@ export class TeacherService {
           sortBy: sortRequest.sortBy,
           sortDirection: sortRequest.sortDirection,
         }),
-      }
+      },
     });
   }
 
@@ -56,5 +60,47 @@ export class TeacherService {
         },
       }
     );
+  }
+
+  public getTeacherProfilePicture(teacherId: number): Observable<Blob> {
+    return this.http
+      .get(`${this.apiUrl}/uploads/teacher/${teacherId}/profile-picture`, {
+        responseType: 'blob'
+      });
+  }
+
+  public uploadTeacherProfilePicture(
+    teacherId: number,
+    file: File
+  ): Observable<MessageDTO> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http
+      .post<MessageDTO>(
+        `${this.apiUrl}/uploads/teacher/${teacherId}/profile-picture`,
+        formData,
+        {
+          headers: new HttpHeaders({ Accept: 'application/json' }),
+        }
+      )
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            return throwError(() => new Error('Teacher not found'));
+          } else if (error.status === 400) {
+            return throwError(
+              () => new Error('Invalid file or no file received')
+            );
+          } else {
+            return throwError(
+              () =>
+                new Error(
+                  'An error occurred while uploading the profile picture'
+                )
+            );
+          }
+        })
+      );
   }
 }

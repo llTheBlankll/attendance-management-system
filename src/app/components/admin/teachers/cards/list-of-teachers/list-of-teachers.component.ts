@@ -78,10 +78,9 @@ export class ListOfTeachersComponent implements OnInit {
    */
   protected retrieveListOfTeachers() {
     console.debug('Retrieving list of teachers...');
-    this.teachers = [];
     this.teacherService.getAllTeachers().subscribe((teachers: Teacher[]) => {
-      this.teachers = teachers;
-      console.debug('List of teachers retrieved.');
+      this.teachers = teachers; // Directly assign the new list
+      console.debug(`List of ${this.teachers.length} teachers retrieved.`);
     });
   }
 

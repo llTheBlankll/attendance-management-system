@@ -1,15 +1,28 @@
 <p-card subheader="Additional Information" styleClass="h-full shadow-3">
   <div class="flex flex-column w-full text-center justify-content-center mb-2">
     <div class="align-items-center">
-      <img [ngSrc]="this.teacher?.teacherPhoto ?? '/school-logo.png'" width="256" height="256" class="border-circle"
-           style="object-fit: cover;" alt="PFP">
+      @if (this.profilePictureUrl) {
+      <p-image
+        [src]="this.profilePictureUrl"
+        width="256"
+        height="256"
+        imageClass="border-circle"
+        alt="PFP"
+      />
+      } @else {
+        <p-image
+          src="/school-logo.png"
+          width="256"
+          height="256"
+          imageClass="border-circle"
+          alt="PFP"
+        />
+      }
     </div>
     <h2>
       @if (this.teacher) {
-        {{ this.teacher.firstName }}&nbsp;{{ this.teacher.lastName }}
-      } @else {
-        Teacher
-      }
+      {{ this.teacher.firstName }}&nbsp;{{ this.teacher.lastName }}
+      } @else { Teacher }
     </h2>
   </div>
   <div class="grid">
