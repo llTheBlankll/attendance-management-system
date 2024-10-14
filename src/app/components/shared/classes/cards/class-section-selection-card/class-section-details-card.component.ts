@@ -66,6 +66,7 @@ export class ClassSectionDetailsCardComponent implements OnInit {
   // The class that is currently selected
   public _classroom?: ClassroomDTO;
   protected currentUser?: User;
+  protected classroomProfilePictureUrl?: string;
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe({
@@ -89,7 +90,6 @@ export class ClassSectionDetailsCardComponent implements OnInit {
   }
 
   private debounceTimeout: any;
-
   protected onClassroomFilter(event: DropdownFilterEvent) {
     const classroomNameSearch = event.filter as string;
     if (classroomNameSearch === '') {
@@ -124,6 +124,16 @@ export class ClassSectionDetailsCardComponent implements OnInit {
   public onClassSelect(event: DropdownChangeEvent) {
     this._classroom = event.value;
     this.classroomSelected.emit(event.value);
+    this.classroomService.getClassroomProfilePicture(event.value.id).subscribe({
+      next: (picture) => {
+        this.classroomProfilePictureUrl = URL.createObjectURL(picture);
+      },
+      error: (error) => {
+        // Reset the profile picture url
+        this.classroomProfilePictureUrl = undefined;
+        console.error(error);
+      },
+    });
   }
 
   /**

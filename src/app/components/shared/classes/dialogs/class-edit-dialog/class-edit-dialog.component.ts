@@ -2,7 +2,7 @@ import {Component, inject, Input} from '@angular/core';
 import {DialogModule} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {TooltipModule} from "primeng/tooltip";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MessageService} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {FloatLabelModule} from "primeng/floatlabel";
@@ -38,7 +38,7 @@ export class ClassEditDialogComponent {
   isVisible: boolean = false;
 
   classroomForm: FormGroup = new FormGroup({
-    classroomName: new FormControl(''),
+    classroomName: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     schoolYear: new FormControl(''),
     teacher: new FormControl({} as Teacher),

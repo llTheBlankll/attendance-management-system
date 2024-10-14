@@ -6,7 +6,7 @@
 
       <div class="grid h-full">
         <div class="col-12 xl:col-3 flex align-items-center justify-content-center">
-          <p-avatar [image]="this._classroom?.classroomPhoto ?? '/school-logo.png'" shape="circle" size="xlarge"
+          <p-avatar [image]="this.classroomProfilePictureUrl ?? '/school-logo.png'" [style]="{'object-fit': 'cover'}" shape="circle" size="xlarge"
                     styleClass="h-10rem w-10rem"/>
         </div>
         <div class="col-12 xl:col-9 flex-column align-self-center">

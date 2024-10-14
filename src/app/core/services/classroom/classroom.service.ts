@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { MessageDTO } from '../../interfaces/MessageDTO';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ClassroomDTO } from '../../interfaces/dto/classroom/ClassroomDTO';
 import { PageRequest } from '../../interfaces/PageRequest';
 import { SortRequest } from '../../interfaces/SortRequest';
@@ -75,25 +75,9 @@ export class ClassroomService {
 
   public getClassroomProfilePicture(classroomId: number): Observable<Blob> {
     return this.http
-      .get(`${this.apiUrl}/classroom/${classroomId}/profile-picture`, {
+      .get(`${this.apiUrl}/uploads/classroom/${classroomId}/profile-picture`, {
         responseType: 'blob',
-        observe: 'response',
-      })
-      .pipe(
-        map((response) => {
-          if (response.status === 200) {
-            return response.body as Blob;
-          } else {
-            throw new Error('Profile picture not found');
-          }
-        }),
-        catchError((error) => {
-          if (error.status === 404) {
-            throw new Error('Classroom or profile picture not found');
-          }
-          throw error;
-        })
-      );
+      });
   }
 
   public uploadClassroomProfilePicture(

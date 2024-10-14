@@ -82,12 +82,17 @@ export class AppComponent implements OnInit {
         }
       },
       error: (error: HttpErrorResponse) => {
-        this.authenticated.authenticated = false;
-        this.authenticated.role = 'GUEST';
+        const message = error.error as MessageDTO;
+        // * Failed status is a expired token
+        if (message.status === CodeStatus.FAILED) {
+          console.info('Token expired');
+          this.authenticated.authenticated = false;
+          this.authenticated.role = 'GUEST';
+        }
+
         this.router
           .navigate(['/auth'])
           .then((r) => console.debug(`Navigating to error: ${r}`));
-        console.error(error.error);
       },
       complete: () => console.debug('Authentication check completed'),
     });

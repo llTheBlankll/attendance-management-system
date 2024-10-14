@@ -33,7 +33,9 @@
     @if (this.absentStudents !== undefined && this.absentStudents.length > 0) {
       <div class="col-12">
         <div class="border-1 border-round border-green-300 p-3 w-full flex flex-row justify-content-center">
-          <span class="block font-medium">A total of {{ this.absentStudents.length }}</span>
+          <span class="block font-medium">Male: {{ this.maleAbsentCount }}, </span>
+          <span class="block font-medium">Female: {{ this.femaleAbsentCount }}, </span>
+          <span class="block font-medium">Total: {{ this.absentStudents.length }}</span>
         </div>
       </div>
     }

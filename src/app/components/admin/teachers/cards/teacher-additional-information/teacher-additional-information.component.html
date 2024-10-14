@@ -2,21 +2,27 @@
   <div class="flex flex-column w-full text-center justify-content-center mb-2">
     <div class="align-items-center">
       @if (this.profilePictureUrl) {
-      <p-image
+      <img
         [src]="this.profilePictureUrl"
-        width="256"
-        height="256"
-        imageClass="border-circle"
-        alt="PFP"
+        [style]="{
+          width: '256px',
+          height: '256px',
+          'object-fit': 'cover',
+          'border-radius': '50%'
+        }"
+        alt="Teacher Profile Picture"
       />
       } @else {
-        <p-image
-          src="/school-logo.png"
-          width="256"
-          height="256"
-          imageClass="border-circle"
-          alt="PFP"
-        />
+      <img
+        src="/school-logo.png"
+        [style]="{
+          width: '256px',
+          height: '256px',
+          'object-fit': 'contain',
+          'border-radius': '50%'
+        }"
+        alt="Default Profile Picture"
+      />
       }
     </div>
     <h2>
