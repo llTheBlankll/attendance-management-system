@@ -15,6 +15,17 @@ import { DateRange } from '../../../../core/interfaces/DateRange';
 import { Student } from '../../../../core/interfaces/dto/student/Student';
 import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
 import { UtilService } from '../../../../core/services/util/util.service';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FileUploadModule } from 'primeng/fileupload';
+import { TableModule } from 'primeng/table';
+import { FormsModule } from '@angular/forms';
+import { Dialog } from 'primeng/dialog';
+import { AssignSectionDialogComponent } from '../dialogs/assign-section-dialog/assign-section-dialog.component';
+import { BulkAssignDialogComponent } from '../dialogs/bulk-assign-dialog/bulk-assign-dialog.component';
+import { BulkAddDialogComponent } from '../dialogs/bulk-add-dialog/bulk-add-dialog.component';
 
 @Component({
   selector: 'app-students-page',
@@ -27,6 +38,16 @@ import { UtilService } from '../../../../core/services/util/util.service';
     StudentAttendanceDistributionComponent,
     StudentProfileInformationComponent,
     StudentDetailsAndSelectionCardComponent,
+    DialogModule,
+    ButtonModule,
+    DropdownModule,
+    MultiSelectModule,
+    FileUploadModule,
+    TableModule,
+    FormsModule,
+    AssignSectionDialogComponent,
+    BulkAssignDialogComponent,
+    BulkAddDialogComponent,
   ],
   templateUrl: './students-page.component.html',
   styleUrl: './students-page.component.css',
@@ -192,5 +213,85 @@ export class StudentsPageComponent {
         ),
       };
     });
+  }
+
+  assignSectionDialogVisible = false;
+  bulkAssignDialogVisible = false;
+  bulkAddDialogVisible = false;
+  sections: any[] = []; // Populate this with actual section data
+  allStudents: Student[] = []; // Populate this with all students
+
+  openAssignSectionDialog() {
+    this.assignSectionDialogVisible = true;
+    this.loadSections();
+  }
+
+  openBulkAssignDialog() {
+    this.bulkAssignDialogVisible = true;
+    this.loadSections();
+    this.loadAllStudents();
+  }
+
+  openBulkAddDialog() {
+    this.bulkAddDialogVisible = true;
+  }
+
+  onAssignSection(section: any) {
+    if (this.selectedStudent) {
+      console.log(`Assigning student ${this.selectedStudent.id} to section ${section.id}`);
+      // Implement the actual assignment logic here
+    }
+  }
+
+  onBulkAssignStudents(data: {section: any, students: any[]}) {
+    console.log(`Assigning ${data.students.length} students to section ${data.section.id}`);
+    // Implement the actual bulk assignment logic here
+  }
+
+  onBulkAddStudents(students: any[]) {
+    console.log('Adding students from CSV:', students);
+    // Implement the actual bulk add logic here
+  }
+
+  private loadSections() {
+    // Call your service to get sections
+    // this.sectionService.getSections().subscribe(sections => this.sections = sections);
+  }
+
+  private loadAllStudents() {
+    // Call your service to get all students
+    // this.studentService.getAllStudents().subscribe(students => this.allStudents = students);
+  }
+
+  onMultiSelectShow(dialog: Dialog) {
+    setTimeout(() => {
+      if (dialog) {
+        dialog.maximized = true;
+      }
+    }, 0);
+  }
+
+  onMultiSelectHide(dialog: Dialog) {
+    setTimeout(() => {
+      if (dialog) {
+        dialog.maximized = false;
+      }
+    }, 0);
+  }
+
+  onDropdownShow(dialog: Dialog) {
+    setTimeout(() => {
+      if (dialog) {
+        dialog.maximized = true;
+      }
+    }, 0);
+  }
+
+  onDropdownHide(dialog: Dialog) {
+    setTimeout(() => {
+      if (dialog) {
+        dialog.maximized = false;
+      }
+    }, 0);
   }
 }

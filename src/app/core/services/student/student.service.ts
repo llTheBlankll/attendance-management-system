@@ -13,6 +13,10 @@ export class StudentService {
   private readonly apiUrl = environment.apiUrl;
   private readonly http = inject(HttpClient);
 
+  public assignStudentToClassroom(studentId: number, sectionId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/students/${studentId}/assign-classroom/${sectionId}`, {});
+  }
+
   public getAllStudents(pageRequest?: PageRequest, sortRequest?: SortRequest): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiUrl}/students/all`, {
       params: {
