@@ -18,11 +18,20 @@
       </ng-template>
       <ng-template pTemplate="body" let-student>
         <tr>
-          <td>{{ student.lastName }}, {{ student.firstName }}, {{ student.middleInitial }}</td>
+          <td>
+            {{ student.lastName }}, {{ student.firstName }},
+            {{ student.middleInitial }}
+          </td>
           <td>{{ student.sex }}</td>
           <td>
-            <p-button icon="pi pi-eye" (onClick)="this.viewStudent(student)" size="small" severity="success" outlined
-                      rounded>
+            <p-button
+              icon="pi pi-eye"
+              (onClick)="this.viewStudent(student)"
+              size="small"
+              severity="success"
+              outlined
+              rounded
+            >
             </p-button>
           </td>
         </tr>
@@ -35,3 +44,10 @@
     </p-table>
   </div>
 </p-card>
+
+<app-student-view-dialog
+  [student]="selectedStudent"
+  [visible]="showStudentDialog"
+  (visibleChange)="closeStudentDialog()"
+>
+</app-student-view-dialog>

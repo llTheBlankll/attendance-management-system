@@ -31,6 +31,7 @@ export interface Student {
   firstName: string;
   middleInitial?: string;
   lastName: string;
+  profilePicture?: string;
   prefix?: string;
   address?: string;
   sex: Sex;
