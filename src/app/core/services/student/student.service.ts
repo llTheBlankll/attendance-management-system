@@ -28,7 +28,7 @@ export class StudentService {
   }
 
   public getAllStudents(
-    pageRequest?: PageRequest,
+    pageRequest?: PageRequest & { search?: string },
     sortRequest?: SortRequest
   ): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiUrl}/students/all`, {
@@ -47,5 +47,13 @@ export class StudentService {
     } else {
       return this.http.get<number>(`${this.apiUrl}/students/count`);
     }
+  }
+
+  public getStudent(studentId: number): Observable<Student> {
+    return this.http.get<Student>(`${this.apiUrl}/students/${studentId}`);
+  }
+
+  public searchStudentsByName(name: string): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl}/students/search/name/${name}`);
   }
 }

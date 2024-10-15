@@ -12,6 +12,7 @@ import { PageRequest } from '../../interfaces/PageRequest';
 import { SortRequest } from '../../interfaces/SortRequest';
 import { UtilService } from '../util/util.service';
 import { environment } from '../../../../environments/environment';
+import { AttendanceInput } from '../../interfaces/dto/forms/AttendanceInput';
 
 @Injectable({
   providedIn: 'root',
@@ -154,21 +155,19 @@ export class AttendanceService {
     );
   }
 
-  getTodayAttendances(classroom?: string, gradeLevel?: string, strand?: string): Observable<Attendance[]> {
-    let params = new HttpParams();
-    if (classroom) params = params.append('classroom', classroom);
-    if (gradeLevel) params = params.append('gradeLevel', gradeLevel);
-    if (strand) params = params.append('strand', strand);
-
-    return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/today`, { params });
-  }
-
-  addAttendance(attendance: Attendance): Observable<Attendance> {
-    return this.http.post<Attendance>(`${this.apiUrl}/attendances`, attendance);
+  addAttendance(attendance: AttendanceInput): Observable<Attendance> {
+    return this.http.post<Attendance>(
+      `${this.apiUrl}/attendances/create`,
+      attendance,
+      { responseType: 'json' }
+    );
   }
 
   updateAttendance(attendance: Attendance): Observable<Attendance> {
-    return this.http.put<Attendance>(`${this.apiUrl}/attendances/${attendance.id}`, attendance);
+    return this.http.put<Attendance>(
+      `${this.apiUrl}/attendances/${attendance.id}`,
+      attendance
+    );
   }
 
   // Add methods to fetch classrooms, grade levels, and strands if needed

@@ -2,20 +2,65 @@
   <div class="col-12 xl:col-9">
     <p-card header="Today's Attendance" styleClass="shadow-3">
       <div class="p-fluid grid">
-        <div class="col-12 md:col-4">
-          <p-dropdown [options]="classrooms"
-                      (onChange)="onFilterChange($event)" placeholder="Select Classroom"
-                      [showClear]="true"></p-dropdown>
+        <div class="col-12 md:col-3">
+          <p-dropdown
+            [options]="classrooms"
+            (onChange)="onFilterChange($event)"
+            placeholder="Select Classroom"
+            [showClear]="true"
+          >
+            <ng-template let-classroom pTemplate="item">
+              {{ classroom.classroomName }}
+            </ng-template>
+            <ng-template let-classroom pTemplate="selectedItem">
+              {{ classroom.classroomName }}
+            </ng-template>
+          </p-dropdown>
         </div>
-        <div class="col-12 md:col-4">
-          <p-dropdown [options]="gradeLevels"
-                      (onChange)="onFilterChange($event)" placeholder="Select Grade Level"
-                      [showClear]="true"></p-dropdown>
+        <div class="col-12 md:col-3">
+          <p-dropdown
+            [options]="gradeLevels"
+            (onChange)="onFilterChange($event)"
+            placeholder="Select Grade Level"
+            [showClear]="true"
+          >
+            <ng-template let-gradeLevel pTemplate="item">
+              {{ gradeLevel.name }}
+            </ng-template>
+            <ng-template let-gradeLevel pTemplate="selectedItem">
+              {{ gradeLevel.name }}
+            </ng-template>
+          </p-dropdown>
         </div>
-        <div class="col-12 md:col-4">
-          <p-dropdown [options]="strands"
-                      (onChange)="onFilterChange($event)" placeholder="Select Strand"
-                      [showClear]="true"></p-dropdown>
+        <div class="col-12 md:col-3">
+          <p-dropdown
+            [options]="strands"
+            (onChange)="onFilterChange($event)"
+            placeholder="Select Strand"
+            [showClear]="true"
+          >
+            <ng-template let-strand pTemplate="item">
+              {{ strand.name }}
+            </ng-template>
+            <ng-template let-strand pTemplate="selectedItem">
+              {{ strand.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-12 md:col-3">
+          <p-autoComplete
+            [(ngModel)]="selectedStudent"
+            [suggestions]="filteredStudents"
+            (completeMethod)="onStudentSearch($event)"
+            (onSelect)="onStudentSelect($event)"
+            field="firstName"
+            [dropdown]="true"
+            placeholder="Search Student"
+          >
+            <ng-template let-student pTemplate="item">
+              {{ student.firstName }} {{ student.lastName }}
+            </ng-template>
+          </p-autoComplete>
         </div>
       </div>
       <app-attendance-table

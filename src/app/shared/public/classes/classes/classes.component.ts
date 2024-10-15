@@ -104,7 +104,16 @@ export class ClassesComponent implements OnInit {
     }
     console.debug(`New Classroom Selected: ${classSelected.classroomName}`);
     this._classroomSelected = classSelected;
-    this.students = classSelected.students;
+    // Convert the classroom students to students
+    this.students = this.students.map((student) => {
+      return {
+        ...student,
+        id: student.id,
+        firstName: student.firstName,
+        middleInitial: student.middleInitial,
+        lastName: student.lastName,
+      };
+    });
 
     // * Update the components
     this.updateMonthlyAttendance(classSelected.id);

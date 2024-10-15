@@ -1,22 +1,111 @@
-<p-dialog [visible]="this.isVisible" styleClass="w-30rem" [header]="'Edit Classroom ' + this.classroom?.classroomName"
-          closable="false">
-  <br>
-  <div class="grid">
-    <form (ngSubmit)="this.editClassroom()" [formGroup]="this.classroomForm" action="" class="w-full">
-      <div class="col-12 flex justify-content-center">
-        <p-floatLabel>
-          <input id="classroomName" type="text" pInputText formControlName="classroomName"/>
+<p-dialog
+  [visible]="isVisible"
+  styleClass="w-30rem"
+  [header]="'Edit Classroom ' + classroom?.classroomName"
+  [closable]="false"
+  (onHide)="closeDialog()"
+>
+  <div class="grid p-fluid mt-2">
+    <form [formGroup]="classroomForm" class="col-12">
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <input
+            id="classroomName"
+            type="text"
+            [maxLength]="50"
+            [minLength]="3"
+            [required]="true"
+            [value]="classroom?.classroomName ?? ''"
+            pInputText
+            formControlName="classroomName"
+          />
           <label for="classroomName">Classroom Name</label>
-        </p-floatLabel>
+        </span>
       </div>
-      <div class="col-12 flex justify-content-center">
-        <p-button (onClick)="this.isVisible = false" pTooltip="Close" class="mr-2" rounded severity="danger">
-          Close
-        </p-button>
-        <p-button (onClick)="this.editClassroom()" [disabled]="this.classroomForm.invalid" pTooltip="Save" rounded severity="success">
-          Save
-        </p-button>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <input
+            id="room"
+            pInputText
+            formControlName="room"
+            [value]="classroom?.room ?? ''"
+          />
+          <label for="room">Room</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            id="schoolYear"
+            [options]="schoolYearOptions"
+            formControlName="schoolYear"
+            [showClear]="true"
+          ></p-dropdown>
+          <label for="schoolYear">School Year</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            id="teacher"
+            [options]="teacherOptions"
+            formControlName="teacher"
+            [showClear]="true"
+            [group]="true"
+            [filter]="true"
+            filterBy="label"
+            appendTo="body"
+          >
+            <ng-template let-group pTemplate="group">
+              <div class="flex align-items-center">
+                <span>{{ group.label }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-teacher pTemplate="item">
+              {{ teacher.value.lastName }}, {{ teacher.value.firstName }} {{ teacher.value.middleInitial }}
+            </ng-template>
+            <ng-template let-teacher pTemplate="selectedItem">
+              {{ teacher.value.lastName }}, {{ teacher.value.firstName }} {{ teacher.value.middleInitial }}
+            </ng-template>
+          </p-dropdown>
+          <label for="teacher">Teacher</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            id="gradeLevel"
+            [options]="gradeLevelOptions"
+            [ngModel]="classroom?.gradeLevel"
+            [showClear]="true"
+            formControlName="gradeLevel"
+            optionLabel="name"
+            appendTo="body"
+          ></p-dropdown>
+          <label for="gradeLevel">Grade Level</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="Upload Profile Picture"
+          accept="image/*"
+          [maxFileSize]="10000000"
+          (onSelect)="onProfilePictureSelect($event)"
+        ></p-fileUpload>
       </div>
     </form>
   </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      (onClick)="closeDialog()"
+      label="Close"
+      styleClass="p-button-text"
+    ></p-button>
+    <p-button
+      (onClick)="editClassroom()"
+      [disabled]="classroomForm.invalid"
+      label="Save"
+    ></p-button>
+  </ng-template>
 </p-dialog>

@@ -6,6 +6,7 @@ import { Teacher } from '../../interfaces/dto/teacher/Teacher';
 import { PageRequest } from '../../interfaces/PageRequest';
 import { MessageDTO } from '../../interfaces/MessageDTO';
 import { environment } from '../../../../environments/environment';
+import { SelectItemGroup } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -63,10 +64,12 @@ export class TeacherService {
   }
 
   public getTeacherProfilePicture(teacherId: number): Observable<Blob> {
-    return this.http
-      .get(`${this.apiUrl}/uploads/teacher/${teacherId}/profile-picture`, {
-        responseType: 'blob'
-      });
+    return this.http.get(
+      `${this.apiUrl}/uploads/teacher/${teacherId}/profile-picture`,
+      {
+        responseType: 'blob',
+      }
+    );
   }
 
   public uploadTeacherProfilePicture(
@@ -102,5 +105,28 @@ export class TeacherService {
           }
         })
       );
+  }
+
+  // ! UTILITY METHODS
+  public loadTeacherDropdownOptions(): Observable<SelectItemGroup[]> {
+    return this.getAllTeachers().pipe(
+      map((teachers) => {
+        const groupedTeachers: { [key: string]: Teacher[] } = {};
+        teachers.forEach((teacher) => {
+          if (!groupedTeachers[teacher.position]) {
+            groupedTeachers[teacher.position] = [];
+          }
+          groupedTeachers[teacher.position].push(teacher);
+        });
+
+        return Object.keys(groupedTeachers).map((position) => ({
+          label: position,
+          items: groupedTeachers[position].map((teacher) => ({
+            label: `${teacher.lastName}, ${teacher.firstName}`,
+            value: teacher,
+          })),
+        }));
+      })
+    );
   }
 }

@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+
 <p-card header="Manual Attendance Input" styleClass="shadow-3">
   <form [formGroup]="attendanceForm" (ngSubmit)="submitAttendance()">
     <div class="p-fluid">
@@ -11,7 +14,15 @@
       </div>
       <div class="p-field mb-3">
         <label for="date">Date</label>
-        <p-calendar id="date" formControlName="date" [showIcon]="true" [showTime]="true"></p-calendar>
+        <p-calendar id="date" formControlName="date" [showIcon]="true"></p-calendar>
+      </div>
+      <div class="p-field mb-3">
+        <label for="timeIn">Time In</label>
+        <p-calendar id="timeIn" formControlName="timeIn" [showIcon]="true" timeOnly="true" [showTime]="true"></p-calendar>
+      </div>
+      <div class="p-field mb-3">
+        <label for="timeOut">Time Out</label>
+        <p-calendar id="timeOut" formControlName="timeOut" [showIcon]="true" timeOnly="true"></p-calendar>
       </div>
       <div class="p-field mb-3">
         <label for="notes">Notes</label>

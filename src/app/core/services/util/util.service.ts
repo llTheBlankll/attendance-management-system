@@ -12,6 +12,19 @@ export class UtilService {
     return Math.ceil((date.getDate() + firstDayOfMonth.getDay() - 1) / 7);
   }
 
+  public loadSchoolYearOptions() {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 5;
+    const endYear = currentYear + 1;
+    const schoolYearOptions = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+      schoolYearOptions.push({ label: `${year}-${year + 1}`, value: `${year}-${year + 1}` });
+    }
+
+    return schoolYearOptions;
+  }
+
   public attendanceStatusListToString(statusList: AttendanceStatus[]): string {
     return statusList.join(',');
   }

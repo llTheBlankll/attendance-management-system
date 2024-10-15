@@ -1,71 +1,146 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {CardModule} from "primeng/card";
-import {DialogModule} from 'primeng/dialog';
-import {DropdownChangeEvent, DropdownModule} from 'primeng/dropdown';
-import {AttendanceService} from '../../../../core/services/attendance/attendance.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FormsModule } from '@angular/forms';
+import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
 import { AttendanceTableComponent } from '../../../../components/shared/attendances/attendance-table/attendance-table.component';
 import { EditAttendanceFormComponent } from '../../../../components/shared/attendances/edit-attendance-form/edit-attendance-form.component';
 import { ManualAttendanceInputComponent } from '../../../../components/shared/attendances/manual-attendance-input/manual-attendance-input.component';
 import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
+import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
+import { GradeLevelService } from '../../../../core/services/grade-level/grade-level.service';
+import { StrandService } from '../../../../core/services/strand/strand.service';
+import { StudentService } from '../../../../core/services/student/student.service';
+import { Student } from '../../../../core/interfaces/dto/student/Student';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { AttendanceInput } from '../../../../core/interfaces/dto/forms/AttendanceInput';
 
 @Component({
   selector: 'app-attendance',
+  templateUrl: './attendance.component.html',
+  styleUrls: ['./attendance.component.css'],
   standalone: true,
   imports: [
     CardModule,
     DialogModule,
     DropdownModule,
-    ManualAttendanceInputComponent,
+    AutoCompleteModule,
+    FormsModule,
     AttendanceTableComponent,
-    EditAttendanceFormComponent
+    EditAttendanceFormComponent,
+    ManualAttendanceInputComponent,
   ],
-  templateUrl: './attendance.component.html',
-  styleUrl: './attendance.component.css'
 })
 export class AttendanceComponent implements OnInit {
+  private attendanceService = inject(AttendanceService);
+  private classroomService = inject(ClassroomService);
+  private gradeLevelService = inject(GradeLevelService);
+  private strandService = inject(StrandService);
+  private studentService = inject(StudentService);
+
   todayAttendances: Attendance[] = [];
+  classrooms: any[] = [];
+  gradeLevels: any[] = [];
+  strands: any[] = [];
+  filteredStudents: Student[] = [];
+
+  selectedClassroom: any;
+  selectedGradeLevel: any;
+  selectedStrand: any;
+  selectedStudent: Student | null = null;
+
   editDialogVisible = false;
   selectedAttendance: Attendance | null = null;
 
-  classrooms: string[] = []; // You'll need to populate this
-  gradeLevels: string[] = []; // You'll need to populate this
-  strands: string[] = []; // You'll need to populate this
-
-  selectedClassroom: string | null = null;
-  selectedGradeLevel: string | null = null;
-  selectedStrand: string | null = null;
-
-  private readonly attendanceService = inject(AttendanceService);
+  private studentSearchSubject = new Subject<string>();
 
   ngOnInit() {
-    this.loadTodayAttendances();
-    // Load filter options (you'll need to implement these methods)
+    this.loadAttendances();
     this.loadClassrooms();
     this.loadGradeLevels();
     this.loadStrands();
+
+    this.studentSearchSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((searchTerm) => {
+        this.searchStudents(searchTerm);
+      });
   }
 
-  loadTodayAttendances() {
-    // Implement the logic to load attendances with filters
-    // this.attendanceService.getTodayAttendances(this.selectedClassroom, this.selectedGradeLevel, this.selectedStrand).subscribe(
+  loadAttendances() {
+    // this.attendanceService.getTodayAttendances().subscribe(
     //   (attendances) => {
     //     this.todayAttendances = attendances;
     //   },
     //   (error) => {
-    //     console.error('Error loading today\'s attendances:', error);
+    //     console.error('Error fetching attendances:', error);
     //   }
     // );
   }
 
-  addAttendance(newAttendance: Attendance) {
-    // this.attendanceService.addAttendance(newAttendance).subscribe(
-    //   (addedAttendance) => {
-    //     this.todayAttendances.push(addedAttendance);
-    //   },
-    //   (error) => {
-    //     console.error('Error adding attendance:', error);
-    //   }
-    // );
+  loadClassrooms() {
+    this.classroomService.getAllClassrooms().subscribe(
+      (classrooms) => {
+        this.classrooms = classrooms;
+      },
+      (error) => {
+        console.error('Error fetching classrooms:', error);
+      }
+    );
+  }
+
+  loadGradeLevels() {
+    this.gradeLevelService.getAllGradeLevels().subscribe(
+      (gradeLevels) => {
+        this.gradeLevels = gradeLevels;
+      },
+      (error) => {
+        console.error('Error fetching grade levels:', error);
+      }
+    );
+  }
+
+  loadStrands() {
+    this.strandService.getAllStrands().subscribe({
+      next: (strands) => {
+        this.strands = strands;
+      },
+      error: (error) => {
+        console.error('Error fetching strands:', error);
+      },
+    });
+  }
+
+  onFilterChange(event: DropdownChangeEvent) {
+    // Implement filter logic here
+    this.loadAttendances();
+  }
+
+  searchStudents(searchTerm: string) {
+    if (searchTerm.trim() !== '') {
+      this.studentService.searchStudentsByName(searchTerm).subscribe({
+        next: (students) => {
+          this.filteredStudents = students;
+        },
+        error: (error) => {
+          console.error('Error searching students:', error);
+        },
+      });
+    } else {
+      this.filteredStudents = [];
+    }
+  }
+
+  onStudentSearch(event: { query: string }) {
+    this.studentSearchSubject.next(event.query);
+  }
+
+  onStudentSelect(event: { value: Student }) {
+    this.selectedStudent = event.value;
+    // Filter attendances based on selected student
+    this.loadAttendances();
   }
 
   openEditDialog(attendance: Attendance) {
@@ -74,34 +149,25 @@ export class AttendanceComponent implements OnInit {
   }
 
   updateAttendance(updatedAttendance: Attendance) {
-    // this.attendanceService.updateAttendance(updatedAttendance).subscribe(
-    //   (result) => {
-    //     const index = this.todayAttendances.findIndex(a => a.id === result.id);
-    //     if (index !== -1) {
-    //       this.todayAttendances[index] = result;
-    //     }
-    //     this.editDialogVisible = false;
-    //   },
-    //   (error) => {
-    //     console.error('Error updating attendance:', error);
-    //   }
-    // );
+    this.attendanceService.updateAttendance(updatedAttendance).subscribe(
+      () => {
+        this.loadAttendances();
+        this.editDialogVisible = false;
+      },
+      (error) => {
+        console.error('Error updating attendance:', error);
+      }
+    );
   }
 
-  onFilterChange(event: DropdownChangeEvent) {
-    console.log(event.value);
-    this.loadTodayAttendances();
-  }
-
-  private loadClassrooms() {
-    // Implement logic to load classrooms
-  }
-
-  private loadGradeLevels() {
-    // Implement logic to load grade levels
-  }
-
-  private loadStrands() {
-    // Implement logic to load strands
+  addAttendance(newAttendance: AttendanceInput) {
+    this.attendanceService.addAttendance(newAttendance).subscribe(
+      () => {
+        this.loadAttendances();
+      },
+      (error) => {
+        console.error('Error adding attendance:', error);
+      }
+    );
   }
 }

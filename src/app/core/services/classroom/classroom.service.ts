@@ -1,7 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { MessageDTO } from '../../interfaces/MessageDTO';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse,
+} from '@angular/common/http';
 import { ClassroomDTO } from '../../interfaces/dto/classroom/ClassroomDTO';
 import { PageRequest } from '../../interfaces/PageRequest';
 import { SortRequest } from '../../interfaces/SortRequest';
@@ -17,6 +22,13 @@ export class ClassroomService {
   public createClassroom(classroom: ClassroomDTO) {
     return this.http.post<MessageDTO>(
       `${this.apiUrl}/classrooms/create`,
+      classroom
+    );
+  }
+
+  public updateClassroom(classroom: ClassroomDTO): Observable<MessageDTO> {
+    return this.http.put<MessageDTO>(
+      `${this.apiUrl}/classrooms/update`,
       classroom
     );
   }
@@ -74,10 +86,12 @@ export class ClassroomService {
   }
 
   public getClassroomProfilePicture(classroomId: number): Observable<Blob> {
-    return this.http
-      .get(`${this.apiUrl}/uploads/classroom/${classroomId}/profile-picture`, {
+    return this.http.get(
+      `${this.apiUrl}/uploads/classroom/${classroomId}/profile-picture`,
+      {
         responseType: 'blob',
-      });
+      }
+    );
   }
 
   public uploadClassroomProfilePicture(
