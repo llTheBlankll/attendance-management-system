@@ -113,9 +113,15 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
+  private debounceTimeout: NodeJS.Timeout | undefined;
   onFilterChange(event: DropdownChangeEvent) {
     // Implement filter logic here
-    this.loadAttendances();
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
+    this.debounceTimeout = setTimeout(() => {
+      this.loadAttendances();
+    }, 300);
   }
 
   searchStudents(searchTerm: string) {
@@ -149,25 +155,26 @@ export class AttendanceComponent implements OnInit {
   }
 
   updateAttendance(updatedAttendance: Attendance) {
-    this.attendanceService.updateAttendance(updatedAttendance).subscribe(
-      () => {
+    this.attendanceService.updateAttendance(updatedAttendance).subscribe({
+      next: () => {
         this.loadAttendances();
         this.editDialogVisible = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error updating attendance:', error);
-      }
-    );
+      },
+    });
   }
 
   addAttendance(newAttendance: AttendanceInput) {
-    this.attendanceService.addAttendance(newAttendance).subscribe(
-      () => {
+    this.attendanceService.addAttendance(newAttendance).subscribe({
+      next: () => {
         this.loadAttendances();
+        this.editDialogVisible = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error adding attendance:', error);
-      }
-    );
+      },
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
-import { forkJoin } from 'rxjs';
+import { forkJoin, map, tap } from 'rxjs';
 import { ClassAbsentStudentCardComponent } from '../../../../components/shared/classes/cards/class-absent-student-card/class-absent-student-card.component';
 import { ClassAbsentStudentsListCardComponent } from '../../../../components/shared/classes/cards/class-absent-students-list-card/class-absent-students-list-card.component';
 import { ClassAttendanceDemographicsCardComponent } from '../../../../components/shared/classes/cards/class-attendance-demographics-card/class-attendance-demographics-card.component';
@@ -24,6 +24,7 @@ import { AttendanceService } from '../../../../core/services/attendance/attendan
 import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
 import { StudentService } from '../../../../core/services/student/student.service';
 import { UtilService } from '../../../../core/services/util/util.service';
+import { PageRequest } from '../../../../core/interfaces/PageRequest';
 
 @Component({
   selector: 'app-classes',
@@ -99,62 +100,57 @@ export class ClassesComponent implements OnInit {
   }
 
   public onClassroomSelected(classSelected: ClassroomDTO) {
-    if (classSelected.id === undefined) {
-      return;
-    }
+    if (!classSelected.id) return;
+
     console.debug(`New Classroom Selected: ${classSelected.classroomName}`);
     this._classroomSelected = classSelected;
-    // Convert the classroom students to students
-    this.students = this.students.map((student) => {
-      return {
-        ...student,
-        id: student.id,
-        firstName: student.firstName,
-        middleInitial: student.middleInitial,
-        lastName: student.lastName,
-      };
-    });
 
-    // * Update the components
+    // Update components in parallel
     this.updateMonthlyAttendance(classSelected.id);
     this.updateAttendanceDemographics(classSelected.id);
 
-    // * Get the class details
-    const late = this.attendanceService.countForeignEntityAttendance(
-      [AttendanceStatus.LATE],
-      new DateRange(),
-      AttendanceForeignEntity.CLASSROOM,
-      classSelected.id
-    );
-    const absent = this.attendanceService.countForeignEntityAttendance(
-      [AttendanceStatus.ABSENT],
-      new DateRange(),
-      AttendanceForeignEntity.CLASSROOM,
-      classSelected.id
-    );
-    const onTime = this.attendanceService.countForeignEntityAttendance(
-      [AttendanceStatus.ON_TIME],
-      new DateRange(),
-      AttendanceForeignEntity.CLASSROOM,
-      classSelected.id
-    );
-    const totalStudents = this.studentService.getTotalStudents(
-      classSelected.id
-    );
-    const classDetails = forkJoin([late, absent, onTime, totalStudents]);
-    classDetails.subscribe((values) => {
-      this.totalCards = {
-        ...this.totalCards,
-        late: values[0],
-        absent: values[1],
-        onTime: values[2],
-        totalStudents: values[3],
-      };
-      if (classSelected.id !== undefined) {
-        this.updateOverAllAttendance(classSelected.id);
-      }
+    forkJoin([
+      this.fetchClassDetails(classSelected.id),
+      this.fetchAbsentStudents(classSelected.id),
+    ]).subscribe(() => {
+      console.debug('All updates completed for selected classroom');
     });
-    this.attendanceService
+  }
+
+  private fetchClassDetails(classroomId: number) {
+    const attendanceTypes = [
+      { status: AttendanceStatus.LATE, key: 'late' },
+      { status: AttendanceStatus.ABSENT, key: 'absent' },
+      { status: AttendanceStatus.ON_TIME, key: 'onTime' },
+    ];
+
+    const requests = attendanceTypes.map((type) =>
+      this.attendanceService.countForeignEntityAttendance(
+        [type.status],
+        new DateRange(),
+        AttendanceForeignEntity.CLASSROOM,
+        classroomId
+      )
+    );
+
+    requests.push(this.studentService.getTotalStudents(classroomId));
+
+    return forkJoin(requests).pipe(
+      tap((values) => {
+        this.totalCards = {
+          ...this.totalCards,
+          late: values[0],
+          absent: values[1],
+          onTime: values[2],
+          totalStudents: values[3],
+        };
+        this.updateOverAllAttendance(classroomId);
+      })
+    );
+  }
+
+  private fetchAbsentStudents(classroomId: number) {
+    return this.attendanceService
       .getForeignEntityAttendances(
         [
           AttendanceStatus.ON_TIME,
@@ -163,13 +159,24 @@ export class ClassesComponent implements OnInit {
         ],
         new DateRange(),
         AttendanceForeignEntity.CLASSROOM,
-        classSelected.id
+        classroomId,
+        new PageRequest(0, 1000)
       )
-      .subscribe((attendances: Attendance[]) => {
-        this.absentStudents = attendances
-          .filter((attendance) => attendance.status === AttendanceStatus.ABSENT)
-          .map((attendance) => attendance.student);
-      });
+      .pipe(
+        map((attendances: Attendance[]) =>
+          attendances
+            .filter(
+              (attendance) => attendance.status === AttendanceStatus.ABSENT
+            )
+            .sort(
+              (a, b) =>
+                a.student.sex.localeCompare(b.student.sex) ||
+                a.student.lastName.localeCompare(b.student.lastName)
+            )
+            .map((attendance) => attendance.student)
+        ),
+        tap((absentStudents) => (this.absentStudents = absentStudents))
+      );
   }
 
   private updateOverAllAttendance(classroomId: number) {

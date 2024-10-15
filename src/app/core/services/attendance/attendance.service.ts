@@ -155,11 +155,14 @@ export class AttendanceService {
     );
   }
 
-  addAttendance(attendance: AttendanceInput): Observable<Attendance> {
+  addAttendance(
+    attendance: AttendanceInput,
+    override: boolean = false
+  ): Observable<Attendance> {
     return this.http.post<Attendance>(
       `${this.apiUrl}/attendances/create`,
       attendance,
-      { responseType: 'json' }
+      { responseType: 'json', params: { override: override } }
     );
   }
 

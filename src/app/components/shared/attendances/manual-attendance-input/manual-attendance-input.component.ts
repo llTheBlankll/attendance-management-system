@@ -3,7 +3,7 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -33,15 +33,17 @@ import { StudentService } from '../../../../core/services/student/student.servic
     InputTextareaModule,
     ButtonModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
   ],
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService],
 })
 export class ManualAttendanceInputComponent {
   // * Injections
   private readonly studentService: StudentService = inject(StudentService);
-  private readonly attendanceService: AttendanceService = inject(AttendanceService);
-  private readonly confirmationService: ConfirmationService = inject(ConfirmationService);
+  private readonly attendanceService: AttendanceService =
+    inject(AttendanceService);
+  private readonly confirmationService: ConfirmationService =
+    inject(ConfirmationService);
   private readonly messageService: MessageService = inject(MessageService);
 
   @Output() onSubmit = new EventEmitter<AttendanceInput>();
@@ -81,7 +83,11 @@ export class ManualAttendanceInputComponent {
           },
           error: (error) => {
             console.error('Error fetching student:', error);
-            this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to fetch student information.'});
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to fetch student information.',
+            });
           },
         });
     }
@@ -92,46 +98,66 @@ export class ManualAttendanceInputComponent {
       next: (addedAttendance) => {
         this.onSubmit.emit(attendanceInput);
         this.resetForm();
-        this.messageService.add({severity:'success', summary: 'Success', detail: 'Attendance added successfully.'});
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Attendance added successfully.',
+        });
       },
       error: (error) => {
         if (error.status === 409) {
           this.confirmOverride(attendanceInput);
         } else {
           console.error('Error adding attendance:', error);
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to add attendance.'});
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add attendance.',
+          });
         }
-      }
+      },
     });
   }
 
   private confirmOverride(attendanceInput: AttendanceInput) {
     this.confirmationService.confirm({
-      message: 'An attendance record already exists for this student on this date. Do you want to override it?',
+      message:
+        'An attendance record already exists for this student on this date. Do you want to override it?',
       header: 'Confirm Override',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.overrideAttendance(attendanceInput);
       },
       reject: () => {
-        this.messageService.add({severity:'info', summary: 'Cancelled', detail: 'Attendance override cancelled.'});
-      }
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Cancelled',
+          detail: 'Attendance override cancelled.',
+        });
+      },
     });
   }
 
   private overrideAttendance(attendanceInput: AttendanceInput) {
-    // Assuming your AttendanceService has an overrideAttendance method
-    // this.attendanceService.overrideAttendance(attendanceInput).subscribe({
-    //   next: (overriddenAttendance) => {
-    //     this.onSubmit.emit(attendanceInput);
-    //     this.resetForm();
-    //     this.messageService.add({severity:'success', summary: 'Success', detail: 'Attendance overridden successfully.'});
-    //   },
-    //   error: (error) => {
-    //     console.error('Error overriding attendance:', error);
-    //     this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to override attendance.'});
-    //   }
-    // });
+    this.attendanceService.addAttendance(attendanceInput, true).subscribe({
+      next: (overriddenAttendance) => {
+        this.onSubmit.emit(attendanceInput);
+        this.resetForm();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Attendance overridden successfully.',
+        });
+      },
+      error: (error) => {
+        console.error('Error overriding attendance:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to override attendance.',
+        });
+      },
+    });
   }
 
   private resetForm() {
