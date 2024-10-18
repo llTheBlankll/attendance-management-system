@@ -5,6 +5,8 @@ import { PageRequest } from '../../interfaces/PageRequest';
 import { Student } from '../../interfaces/dto/student/Student';
 import { SortRequest } from '../../interfaces/SortRequest';
 import { environment } from '../../../../environments/environment';
+import { DateRange } from '../../interfaces/DateRange';
+import { LineChartDTO } from '../../interfaces/LineChartDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -55,5 +57,30 @@ export class StudentService {
 
   public searchStudentsByName(name: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiUrl}/students/search/name/${name}`);
+  }
+
+  public getStudentCountByStrand(strandId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/students/count/strand/${strandId}`);
+  }
+
+  public getStudentCountByGradeLevel(gradeLevelId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/students/count/grade-level/${gradeLevelId}`);
+  }
+
+  public getAverageStudentsPerStrand(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/students/average-per-strand`);
+  }
+
+  public getMostPopularStrand(): Observable<{ strandId: number; strandName: string; studentCount: number }> {
+    return this.http.get<{ strandId: number; strandName: string; studentCount: number }>(`${this.apiUrl}/students/most-popular-strand`);
+  }
+
+  public getStrandDistribution(dateRange: DateRange): Observable<LineChartDTO> {
+    return this.http.get<LineChartDTO>(`${this.apiUrl}/students/strand-distribution`, {
+      params: {
+        startDate: dateRange.startDate.toISOString().split('T')[0],
+        endDate: dateRange.endDate.toISOString().split('T')[0],
+      },
+    });
   }
 }

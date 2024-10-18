@@ -70,14 +70,21 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAttendances() {
-    // this.attendanceService.getTodayAttendances().subscribe(
-    //   (attendances) => {
-    //     this.todayAttendances = attendances;
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching attendances:', error);
-    //   }
-    // );
+    const filters = {
+      classroomId: this.selectedClassroom?.id,
+      gradeLevelId: this.selectedGradeLevel?.id,
+      strandId: this.selectedStrand?.id,
+      studentId: this.selectedStudent?.id,
+    };
+
+    this.attendanceService.getTodayAttendances(filters).subscribe(
+      (attendances) => {
+        this.todayAttendances = attendances;
+      },
+      (error) => {
+        console.error('Error fetching attendances:', error);
+      }
+    );
   }
 
   loadClassrooms() {
@@ -113,15 +120,11 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  private debounceTimeout: NodeJS.Timeout | undefined;
   onFilterChange(event: DropdownChangeEvent) {
-    // Implement filter logic here
-    if (this.debounceTimeout) {
-      clearTimeout(this.debounceTimeout);
+    if (event.value !== null) {
+      this.selectedStudent = null;
     }
-    this.debounceTimeout = setTimeout(() => {
-      this.loadAttendances();
-    }, 300);
+    this.loadAttendances();
   }
 
   searchStudents(searchTerm: string) {
@@ -145,7 +148,9 @@ export class AttendanceComponent implements OnInit {
 
   onStudentSelect(event: { value: Student }) {
     this.selectedStudent = event.value;
-    // Filter attendances based on selected student
+    this.selectedClassroom = null;
+    this.selectedGradeLevel = null;
+    this.selectedStrand = null;
     this.loadAttendances();
   }
 
@@ -170,7 +175,6 @@ export class AttendanceComponent implements OnInit {
     this.attendanceService.addAttendance(newAttendance).subscribe({
       next: () => {
         this.loadAttendances();
-        this.editDialogVisible = false;
       },
       error: (error) => {
         console.error('Error adding attendance:', error);
