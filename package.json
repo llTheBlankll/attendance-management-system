@@ -18,7 +18,7 @@
     "@angular/platform-browser": "^18.2.8",
     "@angular/platform-browser-dynamic": "^18.2.8",
     "@angular/router": "^18.2.8",
-    "@types/firebase": "^2.4.32",
+    "@types/firebase": "^3.2.1",
     "attendance-management-system": "file:",
     "chart.js": "^4.4.3",
     "chartjs-adapter-moment": "^1.0.1",
