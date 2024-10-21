@@ -20,7 +20,7 @@
     "@angular/router": "^18.2.8",
     "@types/firebase": "^2.4.32",
     "attendance-management-system": "file:",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.5",
     "chartjs-adapter-moment": "^1.0.1",
     "firebase": "^10.12.5",
     "moment": "^2.30.1",
