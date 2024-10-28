@@ -1,17 +1,47 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
 import { Strand } from '../../interfaces/dto/strand/Strand';
+import { StudentService } from '../student/student.service';
+import { DateRange } from '../../interfaces/DateRange';
+import { LineChartDTO } from '../../interfaces/LineChartDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StrandService {
+  private readonly studentService = inject(StudentService);
   private readonly apiUrl = environment.apiUrl;
   private readonly http = inject(HttpClient);
 
-  getAllStrands(): Observable<Strand[]> {
+  public getAllStrands(): Observable<Strand[]> {
     return this.http.get<Strand[]>(`${this.apiUrl}/strands/all`);
+  }
+
+  public getAllStrandWithStudentCount(): Observable<{ strand: Strand; studentCount: number }[]> {
+    return this.getAllStrands().pipe(
+      switchMap(strands =>
+        forkJoin(
+          strands.map(strand =>
+            this.studentService.getStudentCountByStrand(strand.id!).pipe(
+              map(count => ({ strand, studentCount: count }))
+            )
+          )
+        )
+      )
+    );
+  }
+
+  public getMostPopularStrand(): Observable<{ strandId: number; strandName: string; studentCount: number }> {
+    return this.studentService.getMostPopularStrand();
+  }
+
+  public getAverageStudentsPerStrand(): Observable<number> {
+    return this.studentService.getAverageStudentsPerStrand();
+  }
+
+  public getStrandDistribution(dateRange: DateRange): Observable<LineChartDTO> {
+    return this.studentService.getStrandDistribution(dateRange);
   }
 }

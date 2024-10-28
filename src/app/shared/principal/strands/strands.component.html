@@ -1,16 +1,15 @@
-<div class="grid mt-2">
-  <!-- Statistics Cards -->
-  <div class="col-12 md:col-6 lg:col-3">
-    <app-total-strands-card [totalStrands]="totalStrandsCount"></app-total-strands-card>
+<div class="grid">
+  <div class="col-12 lg:col-6 xl:col-3">
+    <app-total-strands-card [totalStrands]="strands.length"></app-total-strands-card>
   </div>
-  <div class="col-12 md:col-6 lg:col-3">
-    <app-most-popular-strand-card [popularStrand]="mostPopularStrand"></app-most-popular-strand-card>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <app-most-popular-strand-card [popularStrand]="mostPopularStrand?.strandName ?? 'Unknown'"></app-most-popular-strand-card>
   </div>
-  <div class="col-12 md:col-6 lg:col-3">
-    <app-avg-students-strand-card [avgStudents]="avgStudentsPerStrand"></app-avg-students-strand-card>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <app-avg-students-strand-card [avgStudents]="averageStudentsPerStrand"></app-avg-students-strand-card>
   </div>
-  <div class="col-12 md:col-6 lg:col-3">
-    <app-new-strands-card [newStrands]="newStrandsThisYear"></app-new-strands-card>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <app-new-strands-card></app-new-strands-card>
   </div>
 
   <!-- Charts -->
@@ -21,57 +20,49 @@
   </div>
   <div class="col-12 lg:col-6">
     <p-card header="Strand Popularity Trend" styleClass="mb-2 shadow-3">
-      <div style="height: 300px;"> <!-- Adjust the height as needed -->
-        <p-chart type="line" [data]="strandPopularityData" [options]="chartOptions" style="width: 100%; height: 100%;"></p-chart>
+      <div style="height: 300px">
+        <p-chart type="line" [data]="strandPopularityData" [options]="chartOptions" style="width: 100%; height: 100%"></p-chart>
       </div>
     </p-card>
   </div>
 
-  <!-- Strand List and CRUD Operations -->
+  <!-- Strands Table -->
   <div class="col-12">
-    <p-card header="Strands" styleClass="mb-2 shadow-3">
-      <p-table [value]="strands" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Students</th>
-            <th>Actions</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-strand>
-          <tr>
-            <td>{{strand.name}}</td>
-            <td>{{strand.description}}</td>
-            <td>{{strand.studentCount}}</td>
-            <td>
-              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editStrand(strand)"></button>
-              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteStrand(strand)"></button>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-      <div class="flex justify-content-end mt-2">
-        <button pButton pRipple label="Add Strand" icon="pi pi-plus" class="p-button-success" (click)="openNewStrandDialog()"></button>
-      </div>
-    </p-card>
+    <p-table [value]="strands" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Student Count</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-strand>
+        <tr>
+          <td>{{strand.strand.name}}</td>
+          <td>{{strand.strand.description}}</td>
+          <td>{{strand.studentCount}}</td>
+          <td>
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editStrand(strand)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteStrand(strand)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </div>
 
-<!-- Edit Strand Dialog -->
+<!-- Strand Dialog -->
 <p-dialog [(visible)]="strandDialog" [style]="{width: '450px'}" header="Strand Details" [modal]="true" styleClass="p-fluid">
   <ng-template pTemplate="content">
-    <div class="field">
+    <div class="p-field">
       <label for="name">Name</label>
-      <input type="text" pInputText id="name" [(ngModel)]="strand.name" required autofocus />
-      @if (submitted && !strand.name) {
-        <small class="p-error">Name is required.</small>
-      }
+      <input type="text" pInputText id="name" [(ngModel)]="strandSelected.name" required autofocus />
+      <small class="p-error" *ngIf="submitted && !strandSelected.name">Name is required.</small>
     </div>
-    <div class="field">
+    <div class="p-field">
       <label for="description">Description</label>
-      <textarea id="description" pInputTextarea [(ngModel)]="strand.description" required rows="3" cols="20"></textarea>
+      <textarea id="description" pInputTextarea [(ngModel)]="strandSelected.description" required rows="3" cols="20"></textarea>
     </div>
   </ng-template>
 
