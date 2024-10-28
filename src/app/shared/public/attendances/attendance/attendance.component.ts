@@ -120,6 +120,7 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
+  private debounceTimeout: any;
   onFilterChange(event: DropdownChangeEvent) {
     if (event.value !== null) {
       this.selectedStudent = null;
