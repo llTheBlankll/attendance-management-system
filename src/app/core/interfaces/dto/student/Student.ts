@@ -1,7 +1,7 @@
-import { Sex } from "../../../enums/Sex";
-import { GradeLevel } from "../grade-level/GradeLevel";
-import { Strand } from "../strand/Strand";
-import { Teacher } from "../teacher/Teacher";
+import { Sex } from '../../../enums/Sex';
+import { GradeLevel } from '../grade-level/GradeLevel';
+import { Strand } from '../strand/Strand';
+import { Teacher } from '../teacher/Teacher';
 
 // Define the missing interfaces
 interface StudentClassroom {
@@ -42,4 +42,3 @@ export interface Student {
   guardian?: StudentGuardian;
   studentSchedule?: StudentSchedule;
 }
-

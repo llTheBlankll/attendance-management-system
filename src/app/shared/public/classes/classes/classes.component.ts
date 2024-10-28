@@ -104,6 +104,9 @@ export class ClassesComponent implements OnInit {
 
     console.debug(`New Classroom Selected: ${classSelected.classroomName}`);
     this._classroomSelected = classSelected;
+    this.students = classSelected.students.map((student) =>
+      this.classroomService.convertClassroomStudentDTOToStudent(student)
+    );
 
     // Update components in parallel
     this.updateMonthlyAttendance(classSelected.id);

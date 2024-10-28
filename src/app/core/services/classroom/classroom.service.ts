@@ -7,10 +7,15 @@ import {
   HttpHeaders,
   HttpResponse,
 } from '@angular/common/http';
-import { ClassroomDTO } from '../../interfaces/dto/classroom/ClassroomDTO';
+import {
+  ClassroomDTO,
+  ClassroomStudentDTO,
+} from '../../interfaces/dto/classroom/ClassroomDTO';
 import { PageRequest } from '../../interfaces/PageRequest';
 import { SortRequest } from '../../interfaces/SortRequest';
 import { environment } from '../../../../environments/environment';
+import { Student } from '../../interfaces/dto/student/Student';
+import { Sex } from '../../enums/Sex';
 
 @Injectable({
   providedIn: 'root',
@@ -127,5 +132,24 @@ export class ClassroomService {
           }
         })
       );
+  }
+
+  public convertClassroomStudentDTOToStudent(
+    classroomStudent: ClassroomStudentDTO
+  ): Student {
+    return {
+      id: classroomStudent.id!,
+      firstName: classroomStudent.firstName,
+      lastName: classroomStudent.lastName,
+      middleInitial: classroomStudent.middleInitial,
+      prefix: classroomStudent.prefix,
+      address: classroomStudent.address,
+      sex: classroomStudent.sex ?? Sex.MALE,
+      gradeLevel: classroomStudent.gradeLevel,
+      strand: classroomStudent.strand,
+      guardian: classroomStudent.guardian,
+      studentSchedule: classroomStudent.studentSchedule,
+      birthdate: new Date(classroomStudent.birthdate),
+    };
   }
 }
