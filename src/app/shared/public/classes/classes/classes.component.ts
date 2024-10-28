@@ -18,7 +18,10 @@ import { TimeStack } from '../../../../core/enums/TimeStack';
 import { ClassroomDemographicsChart } from '../../../../core/interfaces/ClassroomDemographicsChart';
 import { DateRange } from '../../../../core/interfaces/DateRange';
 import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
-import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
+import {
+  ClassroomDTO,
+  ClassroomStudentDTO,
+} from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
 import { Student } from '../../../../core/interfaces/dto/student/Student';
 import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
 import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
@@ -58,6 +61,8 @@ export class ClassesComponent implements OnInit {
 
   // * Students
   public students: Student[] = [];
+  protected absentStudents: Student[] = [];
+
   protected totalCards = {
     totalStudents: 0,
     overAllAttendance: 0,
@@ -84,16 +89,16 @@ export class ClassesComponent implements OnInit {
       },
     ],
   };
+
   protected attendanceDemographics: ClassroomDemographicsChart = {
     male: 0,
     female: 0,
   };
+
   // * Charts
   private dateRange = this.utilService.timeRangeToDateRange(
     TimeRange.LAST_365_DAYS
   );
-
-  protected absentStudents: Student[] = [];
 
   ngOnInit() {
     this.retrieveClasses();
@@ -104,6 +109,9 @@ export class ClassesComponent implements OnInit {
 
     console.debug(`New Classroom Selected: ${classSelected.classroomName}`);
     this._classroomSelected = classSelected;
+    this.students = classSelected.students.map((student) =>
+      this.classroomService.convertClassroomStudentDTOToStudent(student)
+    );
 
     // Update components in parallel
     this.updateMonthlyAttendance(classSelected.id);
@@ -134,7 +142,6 @@ export class ClassesComponent implements OnInit {
     );
 
     requests.push(this.studentService.getTotalStudents(classroomId));
-
     return forkJoin(requests).pipe(
       tap((values) => {
         this.totalCards = {

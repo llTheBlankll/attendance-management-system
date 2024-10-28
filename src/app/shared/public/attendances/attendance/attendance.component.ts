@@ -113,7 +113,7 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  private debounceTimeout: NodeJS.Timeout | undefined;
+  private debounceTimeout: any;
   onFilterChange(event: DropdownChangeEvent) {
     // Implement filter logic here
     if (this.debounceTimeout) {
