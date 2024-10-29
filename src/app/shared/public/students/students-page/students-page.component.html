@@ -51,13 +51,13 @@
 
 <app-assign-section-dialog
   [(visible)]="assignSectionDialogVisible"
-  [sections]="sections"
+  [sections]="classrooms"
   (assign)="onAssignSection($event)"
 ></app-assign-section-dialog>
 
 <app-bulk-assign-dialog
   [(visible)]="bulkAssignDialogVisible"
-  [sections]="sections"
+  [classrooms]="classrooms"
   [allStudents]="allStudents"
   (assign)="onBulkAssignStudents($event)"
 ></app-bulk-assign-dialog>

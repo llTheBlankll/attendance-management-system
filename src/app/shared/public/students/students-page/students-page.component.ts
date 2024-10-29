@@ -26,6 +26,9 @@ import { Dialog } from 'primeng/dialog';
 import { AssignSectionDialogComponent } from '../dialogs/assign-section-dialog/assign-section-dialog.component';
 import { BulkAssignDialogComponent } from '../dialogs/bulk-assign-dialog/bulk-assign-dialog.component';
 import { BulkAddDialogComponent } from '../dialogs/bulk-add-dialog/bulk-add-dialog.component';
+import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
+import { StudentService } from '../../../../core/services/student/student.service';
+import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
 
 @Component({
   selector: 'app-students-page',
@@ -55,6 +58,8 @@ import { BulkAddDialogComponent } from '../dialogs/bulk-add-dialog/bulk-add-dial
 export class StudentsPageComponent {
   // * Injections
   private readonly attendanceService = inject(AttendanceService);
+  private readonly classroomService = inject(ClassroomService);
+  private readonly studentService = inject(StudentService);
   private readonly utilService = inject(UtilService);
 
   protected attendanceCard = {
@@ -218,7 +223,7 @@ export class StudentsPageComponent {
   assignSectionDialogVisible = false;
   bulkAssignDialogVisible = false;
   bulkAddDialogVisible = false;
-  sections: any[] = []; // Populate this with actual section data
+  classrooms: ClassroomDTO[] = []; // Populate this with actual section data
   allStudents: Student[] = []; // Populate this with all students
 
   openAssignSectionDialog() {
@@ -238,13 +243,17 @@ export class StudentsPageComponent {
 
   onAssignSection(section: any) {
     if (this.selectedStudent) {
-      console.log(`Assigning student ${this.selectedStudent.id} to section ${section.id}`);
+      console.log(
+        `Assigning student ${this.selectedStudent.id} to section ${section.id}`
+      );
       // Implement the actual assignment logic here
     }
   }
 
-  onBulkAssignStudents(data: {section: any, students: any[]}) {
-    console.log(`Assigning ${data.students.length} students to section ${data.section.id}`);
+  onBulkAssignStudents(data: { section: any; students: any[] }) {
+    console.log(
+      `Assigning ${data.students.length} students to section ${data.section.id}`
+    );
     // Implement the actual bulk assignment logic here
   }
 
@@ -256,6 +265,9 @@ export class StudentsPageComponent {
   private loadSections() {
     // Call your service to get sections
     // this.sectionService.getSections().subscribe(sections => this.sections = sections);
+    this.classroomService.getAllClassrooms().subscribe((classrooms) => {
+      this.classrooms = classrooms;
+    });
   }
 
   private loadAllStudents() {

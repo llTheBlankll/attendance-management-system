@@ -116,11 +116,7 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     this.loading = true;
     const lineChartObservable = this.attendanceService.getLineChart(
       this.dateRange,
-      [
-        AttendanceStatus.ABSENT,
-        AttendanceStatus.LATE,
-        AttendanceStatus.ON_TIME,
-      ],
+      [AttendanceStatus.LATE, AttendanceStatus.ON_TIME],
       timeStack
     );
     lineChartObservable.subscribe((lineChartDTO) => {

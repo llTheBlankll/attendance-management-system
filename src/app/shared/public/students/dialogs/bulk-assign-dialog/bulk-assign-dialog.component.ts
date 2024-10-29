@@ -5,11 +5,20 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
+import { ClassroomDTO } from '../../../../../core/interfaces/dto/classroom/ClassroomDTO';
+import { Student } from '../../../../../core/interfaces/dto/student/Student';
 
 @Component({
   selector: 'app-bulk-assign-dialog',
   standalone: true,
-  imports: [CommonModule, DialogModule, ButtonModule, DropdownModule, MultiSelectModule, FormsModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    DropdownModule,
+    MultiSelectModule,
+    FormsModule,
+  ],
   template: `
     <p-dialog
       header="Bulk Assign Students to Section"
@@ -23,15 +32,21 @@ import { FormsModule } from '@angular/forms';
           <label for="bulkSection" class="font-bold">Section</label>
           <p-dropdown
             id="bulkSection"
-            [options]="sections"
-            [(ngModel)]="selectedSection"
-            optionLabel="name"
-            placeholder="Select a section"
+            [options]="classrooms"
+            [(ngModel)]="selectedClassroom"
+            optionLabel="sectionName"
+            placeholder="Select a Clasroom"
             [style]="{ width: '100%' }"
-          ></p-dropdown>
+          >
+            <ng-template let-option pTemplate="item">
+              {{ option.sectionName }}
+            </ng-template>
+          </p-dropdown>
         </div>
         <div class="p-field">
-          <label for="studentSelection" class="font-bold">Select Students</label>
+          <label for="studentSelection" class="font-bold"
+            >Select Students</label
+          >
           <p-multiSelect
             id="studentSelection"
             [options]="allStudents"
@@ -57,17 +72,20 @@ import { FormsModule } from '@angular/forms';
         ></p-button>
       </ng-template>
     </p-dialog>
-  `
+  `,
 })
 export class BulkAssignDialogComponent {
   @Input() visible: boolean = false;
-  @Input() sections: any[] = [];
-  @Input() allStudents: any[] = [];
+  @Input() classrooms: ClassroomDTO[] = [];
+  @Input() allStudents: Student[] = [];
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() assign = new EventEmitter<{section: any, students: any[]}>();
+  @Output() assign = new EventEmitter<{
+    section: ClassroomDTO;
+    students: Student[];
+  }>();
 
-  selectedSection: any;
-  selectedStudents: any[] = [];
+  selectedClassroom?: ClassroomDTO;
+  selectedStudents: Student[] = [];
 
   onMultiSelectShow(dialog: any) {
     setTimeout(() => {
@@ -86,7 +104,10 @@ export class BulkAssignDialogComponent {
   }
 
   bulkAssignStudentsToSection() {
-    this.assign.emit({section: this.selectedSection, students: this.selectedStudents});
+    this.assign.emit({
+      section: this.selectedClassroom!,
+      students: this.selectedStudents,
+    });
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }

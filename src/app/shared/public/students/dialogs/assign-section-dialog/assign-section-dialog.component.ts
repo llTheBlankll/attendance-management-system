@@ -8,7 +8,13 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-assign-section-dialog',
   standalone: true,
-  imports: [CommonModule, DialogModule, ButtonModule, DropdownModule, FormsModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    DropdownModule,
+    FormsModule,
+  ],
   template: `
     <p-dialog
       header="Assign Student to Section"
@@ -32,7 +38,11 @@ import { FormsModule } from '@angular/forms';
             [filter]="true"
             [virtualScroll]="true"
             [virtualScrollItemSize]="34"
-          ></p-dropdown>
+          >
+            <ng-template let-option pTemplate="item">
+              {{ option.sectionName }}
+            </ng-template>
+          </p-dropdown>
         </div>
       </div>
       <ng-template pTemplate="footer">
@@ -44,7 +54,7 @@ import { FormsModule } from '@angular/forms';
         ></p-button>
       </ng-template>
     </p-dialog>
-  `
+  `,
 })
 export class AssignSectionDialogComponent {
   @Input() visible: boolean = false;
