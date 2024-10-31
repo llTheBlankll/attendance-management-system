@@ -39,7 +39,7 @@ export class ClassTodaysActivitiesCardComponent implements OnChanges {
           new DateRange(),
           AttendanceForeignEntity.CLASSROOM,
           this.classroom.id,
-          new PageRequest(0, 500000)
+          new PageRequest(0, 999)
         )
         .subscribe((attendances) => {
           this.activities = attendances

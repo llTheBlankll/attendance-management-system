@@ -175,16 +175,25 @@ export class AttendanceService {
 
   // Add methods to fetch classrooms, grade levels, and strands if needed
 
-  getTodayAttendances(filters: any, pageRequest?: PageRequest, sortRequest?: SortRequest): Observable<Attendance[]> {
+  getTodayAttendances(
+    filters: any,
+    pageRequest?: PageRequest,
+    sortRequest?: SortRequest
+  ): Observable<Attendance[]> {
     let params = new HttpParams();
-    if (filters.classroomId) params = params.set('classroomId', filters.classroomId);
-    if (filters.gradeLevelId) params = params.set('gradeLevelId', filters.gradeLevelId);
+    if (filters.classroomId)
+      params = params.set('classroomId', filters.classroomId);
+    if (filters.gradeLevelId)
+      params = params.set('gradeLevelId', filters.gradeLevelId);
     if (filters.strandId) params = params.set('strandId', filters.strandId);
     if (filters.studentId) params = params.set('studentId', filters.studentId);
-    if (pageRequest) params = params.set('page', pageRequest.pageNumber.toString());
-    if (pageRequest) params = params.set('size', pageRequest.pageSize.toString());
+    if (pageRequest)
+      params = params.set('page', pageRequest.pageNumber.toString());
+    if (pageRequest)
+      params = params.set('size', pageRequest.pageSize.toString());
     if (sortRequest) params = params.set('sortBy', sortRequest.sortBy);
-    if (sortRequest) params = params.set('sortDirection', sortRequest.sortDirection);
+    if (sortRequest)
+      params = params.set('sortDirection', sortRequest.sortDirection);
 
     return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/today`, {
       params: params,

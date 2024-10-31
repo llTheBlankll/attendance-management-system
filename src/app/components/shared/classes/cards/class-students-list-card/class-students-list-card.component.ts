@@ -9,7 +9,14 @@ import { StudentViewDialogComponent } from '../../../students/dialogs/student-vi
 @Component({
   selector: 'classes-students-list-card',
   standalone: true,
-  imports: [CardModule, TableModule, ButtonDirective, Ripple, Button, StudentViewDialogComponent],
+  imports: [
+    CardModule,
+    TableModule,
+    ButtonDirective,
+    Ripple,
+    Button,
+    StudentViewDialogComponent,
+  ],
   templateUrl: './class-students-list-card.component.html',
   styleUrl: './class-students-list-card.component.css',
 })

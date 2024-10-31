@@ -2,7 +2,18 @@
   <div class="p-fluid">
     <div class="p-field mb-3">
       <label for="status">Status</label>
-      <p-dropdown id="status" [options]="attendanceStatuses" formControlName="status" optionLabel="label" optionValue="value"></p-dropdown>
+      <p-dropdown id="status" [options]="attendanceStatuses" formControlName="status">
+        <ng-template pTemplate="item" let-status>
+          <div class="flex align-items-center">
+            <span>{{ status }}</span>
+          </div>
+        </ng-template>
+      <ng-template pTemplate="selectedItem" let-status>
+        <div class="flex align-items-center">
+          <span>{{ status }}</span>
+        </div>
+      </ng-template>
+      </p-dropdown>
     </div>
     <div class="p-field mb-3">
       <label for="notes">Notes</label>

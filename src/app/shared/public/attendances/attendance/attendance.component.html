@@ -87,8 +87,9 @@
 
 <p-dialog
   header="Edit Attendance"
+  styleClass="shadow-3 w-30rem"
   [(visible)]="editDialogVisible"
-  [style]="{ width: '50vw' }"
+  [contentStyle]="{ overflow: 'visible' }"
   [modal]="true"
 >
   <app-edit-attendance-form
