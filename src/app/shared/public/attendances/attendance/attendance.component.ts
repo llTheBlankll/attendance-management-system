@@ -8,7 +8,7 @@ import { AttendanceService } from '../../../../core/services/attendance/attendan
 import { AttendanceTableComponent } from '../../../../components/shared/attendances/attendance-table/attendance-table.component';
 import { EditAttendanceFormComponent } from '../../../../components/shared/attendances/edit-attendance-form/edit-attendance-form.component';
 import { ManualAttendanceInputComponent } from '../../../../components/shared/attendances/manual-attendance-input/manual-attendance-input.component';
-import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
+import { Attendance, AttendanceForeignEntity } from '../../../../core/interfaces/dto/attendance/Attendance';
 import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
 import { GradeLevelService } from '../../../../core/services/grade-level/grade-level.service';
 import { StrandService } from '../../../../core/services/strand/strand.service';
@@ -16,6 +16,13 @@ import { StudentService } from '../../../../core/services/student/student.servic
 import { Student } from '../../../../core/interfaces/dto/student/Student';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { AttendanceInput } from '../../../../core/interfaces/dto/forms/AttendanceInput';
+import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
+import { GradeLevel } from '../../../../core/interfaces/dto/grade-level/GradeLevel';
+import { Strand } from '../../../../core/interfaces/dto/strand/Strand';
+import { PaginatorState } from 'primeng/paginator';
+import { PageRequest } from '../../../../core/interfaces/PageRequest';
+import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
+import { DateRange } from '../../../../core/interfaces/DateRange';
 
 @Component({
   selector: 'app-attendance',
@@ -40,15 +47,21 @@ export class AttendanceComponent implements OnInit {
   private strandService = inject(StrandService);
   private studentService = inject(StudentService);
 
-  todayAttendances: Attendance[] = [];
-  classrooms: any[] = [];
-  gradeLevels: any[] = [];
-  strands: any[] = [];
+  attendanceData: {
+    paginatedData: Attendance[];
+    totalRecords: number;
+  } = {
+    paginatedData: [],
+    totalRecords: 0,
+  };
+  classrooms: ClassroomDTO[] = [];
+  gradeLevels: GradeLevel[] = [];
+  strands: Strand[] = [];
   filteredStudents: Student[] = [];
 
-  selectedClassroom: any;
-  selectedGradeLevel: any;
-  selectedStrand: any;
+  selectedClassroom?: ClassroomDTO;
+  selectedGradeLevel?: GradeLevel;
+  selectedStrand?: Strand;
   selectedStudent: Student | null = null;
 
   editDialogVisible = false;
@@ -57,7 +70,7 @@ export class AttendanceComponent implements OnInit {
   private studentSearchSubject = new Subject<string>();
 
   ngOnInit() {
-    this.loadAttendances();
+    this.loadAttendanceData();
     this.loadClassrooms();
     this.loadGradeLevels();
     this.loadStrands();
@@ -69,7 +82,21 @@ export class AttendanceComponent implements OnInit {
       });
   }
 
-  loadAttendances() {
+  handlePageChange(event: {event: PaginatorState, selectedDate?: Date}) {
+    console.debug('Page change:', event);
+    const pageRequest = {
+      pageNumber: event.event.first ? Math.floor(event.event.first / (event.event.rows || 10)) : 0,
+      pageSize: event.event.rows || 10
+    };
+    this.loadAttendanceData(pageRequest, event.selectedDate);
+  }
+
+  handleDateChange(event: Date) {
+    console.debug('Date change:', event);
+    this.loadAttendanceData(undefined, event);
+  }
+
+  loadAttendanceData(pageRequest?: PageRequest, date?: Date) {
     const filters = {
       classroomId: this.selectedClassroom?.id,
       gradeLevelId: this.selectedGradeLevel?.id,
@@ -77,14 +104,29 @@ export class AttendanceComponent implements OnInit {
       studentId: this.selectedStudent?.id,
     };
 
-    this.attendanceService.getTodayAttendances(filters).subscribe(
-      (attendances) => {
-        this.todayAttendances = attendances;
+    const dateRange = date ?
+      new DateRange(date, date) :
+      new DateRange(new Date(), new Date());
+
+    // First get the total count
+    this.attendanceService.countFilteredAttendances(filters, dateRange).subscribe({
+      next: (totalRecords) => {
+        this.attendanceData.totalRecords = totalRecords;
       },
-      (error) => {
+      error: (error) => {
+        console.error('Error fetching total records:', error);
+      },
+    });
+
+    // Get paginated attendance data
+    this.attendanceService.getFilteredAttendances(filters, dateRange, pageRequest).subscribe({
+      next: (attendances) => {
+        this.attendanceData.paginatedData = attendances;
+      },
+      error: (error) => {
         console.error('Error fetching attendances:', error);
-      }
-    );
+      },
+    });
   }
 
   loadClassrooms() {
@@ -124,7 +166,7 @@ export class AttendanceComponent implements OnInit {
     if (event.value !== null) {
       this.selectedStudent = null;
     }
-    this.loadAttendances();
+    this.loadAttendanceData();
   }
 
   searchStudents(searchTerm: string) {
@@ -148,10 +190,10 @@ export class AttendanceComponent implements OnInit {
 
   onStudentSelect(event: { value: Student }) {
     this.selectedStudent = event.value;
-    this.selectedClassroom = null;
-    this.selectedGradeLevel = null;
-    this.selectedStrand = null;
-    this.loadAttendances();
+    this.selectedClassroom = undefined;
+    this.selectedGradeLevel = undefined;
+    this.selectedStrand = undefined;
+    this.loadAttendanceData();
   }
 
   openEditDialog(attendance: Attendance) {
@@ -162,7 +204,7 @@ export class AttendanceComponent implements OnInit {
   updateAttendance(updatedAttendance: Attendance) {
     this.attendanceService.updateAttendance(updatedAttendance).subscribe({
       next: () => {
-        this.loadAttendances();
+        this.loadAttendanceData();
         this.editDialogVisible = false;
       },
       error: (error) => {
@@ -174,7 +216,7 @@ export class AttendanceComponent implements OnInit {
   addAttendance(newAttendance: AttendanceInput) {
     this.attendanceService.addAttendance(newAttendance).subscribe({
       next: () => {
-        this.loadAttendances();
+        this.loadAttendanceData();
       },
       error: (error) => {
         console.error('Error adding attendance:', error);

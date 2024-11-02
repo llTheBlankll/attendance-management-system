@@ -1,6 +1,6 @@
 <div class="grid">
   <div class="col-12 xl:col-9">
-    <p-card header="Today's Attendance" styleClass="shadow-3">
+    <p-card header="Attendance Log" styleClass="shadow-3">
       <div class="p-fluid grid">
         <div class="col-12 md:col-3">
           <p-dropdown
@@ -73,8 +73,10 @@
         </div>
       </div>
       <app-attendance-table
-        [attendances]="todayAttendances"
+        [attendanceData]="attendanceData"
         (onEdit)="openEditDialog($event)"
+        (onPageChange)="handlePageChange($event)"
+        (onDateChange)="handleDateChange($event)"
       ></app-attendance-table>
     </p-card>
   </div>

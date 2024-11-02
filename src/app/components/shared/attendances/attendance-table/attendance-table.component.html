@@ -1,6 +1,7 @@
-<p-table [value]="attendances" [paginator]="true" [rows]="25" [showCurrentPageReport]="true"
-         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-         [rowsPerPageOptions]="[10,25,50]" [resizableColumns]="true">
+<p-table
+  [value]="this.attendanceData.paginatedData"
+  styleClass="w-full h-30rem overflow-auto mb-2"
+>
   <ng-template pTemplate="header">
     <tr>
       <th>Student ID</th>
@@ -12,17 +13,45 @@
   </ng-template>
   <ng-template pTemplate="body" let-attendance>
     <tr>
-      <td>{{attendance.student.id}}</td>
-      <td>{{attendance.status}}</td>
-      <td>{{attendance.date | date:'MMM d, yyyy'}}</td>
+      <td>{{ attendance.student.id }}</td>
+      <td>{{ attendance.status }}</td>
+      <td>{{ attendance.date | date : "MMM d, yyyy" }}</td>
       <td>
-        <b>{{ attendance.student.firstName }}, {{ attendance.student.lastName }}</b>
-        <br>
-        {{ attendance.notes ? attendance.notes : 'N/A' }}
+        <b
+          >{{ attendance.student.firstName }},
+          {{ attendance.student.lastName }}</b
+        >
+        <br />
+        {{ attendance.notes ? attendance.notes : "N/A" }}
       </td>
       <td>
-        <p-button icon="pi pi-pencil" (onClick)="editAttendance(attendance)" styleClass="p-button-rounded p-button-text"></p-button>
+        <p-button
+          icon="pi pi-pencil"
+          (onClick)="editAttendance(attendance)"
+          styleClass="p-button-rounded p-button-text"
+        ></p-button>
       </td>
     </tr>
   </ng-template>
 </p-table>
+<div class="flex flex-row justify-content-between">
+  <p-calendar
+    [showIcon]="true"
+    dateFormat="mm/dd/yy"
+    [readonlyInput]="true"
+    placeholder="Select Date"
+    (onSelect)="handleDateChange($event)"
+  ></p-calendar>
+  <p-paginator
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="attendanceData.totalRecords"
+    (onPageChange)="handlePageChange($event)"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} of {totalRecords}"
+    [showPageLinks]="false"
+    [showFirstLastIcon]="false"
+    [rowsPerPageOptions]="[10, 20, 50, 100]"
+  >
+  </p-paginator>
+</div>

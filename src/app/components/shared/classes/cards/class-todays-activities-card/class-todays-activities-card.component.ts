@@ -75,7 +75,19 @@ export class ClassTodaysActivitiesCardComponent implements OnChanges {
                 : []),
             ])
             .flat()
-            .sort((b, a) => a.date.localeCompare(b.date));
+            .sort((b, a) => {
+              // Extract hours and AM/PM
+              const timeA = a.date.split(' ');
+              const timeB = b.date.split(' ');
+
+              // Compare AM/PM first
+              if (timeA[1] !== timeB[1]) {
+                return timeA[1] === 'AM' ? -1 : 1;
+              }
+
+              // If AM/PM is same, compare times normally
+              return a.date.localeCompare(b.date);
+            });
         });
     }
   }

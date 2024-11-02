@@ -13,6 +13,7 @@ import { SortRequest } from '../../interfaces/SortRequest';
 import { UtilService } from '../util/util.service';
 import { environment } from '../../../../environments/environment';
 import { AttendanceInput } from '../../interfaces/dto/forms/AttendanceInput';
+import { ClassroomRanking } from '../../interfaces/dto/classroom/ClassroomRanking';
 
 @Injectable({
   providedIn: 'root',
@@ -174,7 +175,6 @@ export class AttendanceService {
   }
 
   // Add methods to fetch classrooms, grade levels, and strands if needed
-
   getTodayAttendances(
     filters: any,
     pageRequest?: PageRequest,
@@ -198,6 +198,82 @@ export class AttendanceService {
     return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/today`, {
       params: params,
       responseType: 'json',
+    });
+  }
+
+  countTodayAttendances(filters?: any): Observable<number> {
+    let params = new HttpParams();
+    if (filters?.classroomId)
+      params = params.set('classroomId', filters.classroomId);
+    if (filters?.gradeLevelId)
+      params = params.set('gradeLevelId', filters.gradeLevelId);
+    if (filters?.strandId) params = params.set('strandId', filters.strandId);
+    if (filters?.studentId)
+      params = params.set('studentId', filters.studentId);
+    return this.http.get<number>(`${this.apiUrl}/attendances/today/count`, {
+      params: params,
+      responseType: 'json',
+    });
+  }
+
+  getFilteredAttendances(
+    filters: any,
+    dateRange: DateRange,
+    pageRequest?: PageRequest,
+    sortRequest?: SortRequest
+  ): Observable<Attendance[]> {
+    let params = new HttpParams()
+      .set('startDate', dateRange.startDate.toISOString().split('T')[0])
+      .set('endDate', dateRange.endDate.toISOString().split('T')[0]);
+
+    if (filters.classroomId) params = params.set('classroomId', filters.classroomId);
+    if (filters.gradeLevelId) params = params.set('gradeLevelId', filters.gradeLevelId);
+    if (filters.strandId) params = params.set('strandId', filters.strandId);
+    if (filters.studentId) params = params.set('studentId', filters.studentId);
+    if (pageRequest) {
+      params = params.set('page', pageRequest.pageNumber.toString());
+      params = params.set('size', pageRequest.pageSize.toString());
+    }
+    if (sortRequest) {
+      params = params.set('sortBy', sortRequest.sortBy);
+      params = params.set('sortDirection', sortRequest.sortDirection);
+    }
+
+    return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/filtered`, {
+      params: params,
+      responseType: 'json',
+    });
+  }
+
+  countFilteredAttendances(filters?: any, dateRange?: DateRange): Observable<number> {
+    let params = new HttpParams();
+    if (dateRange) {
+      params = params
+        .set('startDate', dateRange.startDate.toISOString().split('T')[0])
+        .set('endDate', dateRange.endDate.toISOString().split('T')[0]);
+    }
+    if (filters?.classroomId) params = params.set('classroomId', filters.classroomId);
+    if (filters?.gradeLevelId) params = params.set('gradeLevelId', filters.gradeLevelId);
+    if (filters?.strandId) params = params.set('strandId', filters.strandId);
+    if (filters?.studentId) params = params.set('studentId', filters.studentId);
+
+    return this.http.get<number>(`${this.apiUrl}/attendances/filtered/count`, {
+      params: params,
+      responseType: 'json',
+    });
+  }
+
+  getClassroomRanking(dateRange?: DateRange, limit: number = 5): Observable<ClassroomRanking[]> {
+    let params = new HttpParams().set('limit', limit.toString());
+
+    if (dateRange) {
+      params = params
+        .set('startDate', dateRange.startDate.toISOString().split('T')[0])
+        .set('endDate', dateRange.endDate.toISOString().split('T')[0]);
+    }
+
+    return this.http.get<ClassroomRanking[]>(`${this.apiUrl}/attendances/classroom/ranking`, {
+      params: params
     });
   }
 }
