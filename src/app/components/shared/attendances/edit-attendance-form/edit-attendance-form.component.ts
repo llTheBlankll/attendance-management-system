@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-edit-attendance-form',
@@ -16,11 +17,16 @@ import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendanc
     DropdownModule,
     InputTextareaModule,
     ButtonModule
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class EditAttendanceFormComponent implements OnInit {
   @Input() attendance: Attendance | null = null;
   @Output() onSave = new EventEmitter<Attendance>();
+
+  private messageService = inject(MessageService);
 
   editForm: FormGroup;
   attendanceStatuses = Object.values(AttendanceStatus);
@@ -48,6 +54,12 @@ export class EditAttendanceFormComponent implements OnInit {
         ...this.editForm.value,
       };
       this.onSave.emit(updatedAttendance);
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill in all required fields',
+      });
     }
   }
 }

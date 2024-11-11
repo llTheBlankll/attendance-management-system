@@ -1,10 +1,10 @@
-<p-card subheader="Classroom Ranking" styleClass="h-full w-full shadow-3">
+<p-card subheader="Classroom Ranking" styleClass="h-full w-full shadow-3 p-2">
   @if (loading) {
     <div class="flex justify-content-center">
       <p-progressSpinner />
     </div>
   } @else {
-    <p-table [value]="rankings" [scrollable]="true" scrollHeight="280px">
+    <p-table [value]="rankings" [scrollable]="true" scrollHeight="280px" styleClass="w-full p-datatable-gridlines p-datatable-striped">
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 3rem">Rank</th>
@@ -14,14 +14,9 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-ranking>
-        <tr>
+        <tr [className]="ranking.rank === 1 ? 'bg-primary' : ranking.rank === 2 ? 'bg-yellow-500 text-white' : ranking.rank === 3 ? 'bg-orange-500 text-white' : ''">
           <td>
-            <div class="flex align-items-center justify-content-center"
-                [classList]="{
-                  'text-yellow-500': ranking.rank === 1,
-                  'text-gray-500': ranking.rank === 2,
-                  'text-orange-500': ranking.rank === 3
-                }">
+            <div class="flex align-items-center justify-content-center">
               {{ranking.rank}}
             </div>
           </td>
@@ -29,7 +24,7 @@
           <td>{{ranking.room}}</td>
           <td>
             <div class="flex align-items-center justify-content-end">
-              {{ranking.attendanceRate.toFixed(2)}}%
+              {{(ranking.attendanceRate * 100).toFixed(2)}}%
             </div>
           </td>
         </tr>

@@ -170,7 +170,10 @@ export class AttendanceService {
   updateAttendance(attendance: Attendance): Observable<Attendance> {
     return this.http.put<Attendance>(
       `${this.apiUrl}/attendances/${attendance.id}`,
-      attendance
+      attendance,
+      {
+        responseType: 'json',
+      }
     );
   }
 

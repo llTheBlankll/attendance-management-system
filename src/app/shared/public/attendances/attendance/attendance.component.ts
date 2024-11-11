@@ -23,6 +23,8 @@ import { PaginatorState } from 'primeng/paginator';
 import { PageRequest } from '../../../../core/interfaces/PageRequest';
 import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
 import { DateRange } from '../../../../core/interfaces/DateRange';
+import { SortRequest } from '../../../../core/interfaces/SortRequest';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-attendance',
@@ -39,6 +41,9 @@ import { DateRange } from '../../../../core/interfaces/DateRange';
     EditAttendanceFormComponent,
     ManualAttendanceInputComponent,
   ],
+  providers: [
+    MessageService
+  ]
 })
 export class AttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
@@ -46,6 +51,7 @@ export class AttendanceComponent implements OnInit {
   private gradeLevelService = inject(GradeLevelService);
   private strandService = inject(StrandService);
   private studentService = inject(StudentService);
+  private messageService = inject(MessageService);
 
   attendanceData: {
     paginatedData: Attendance[];
@@ -119,7 +125,7 @@ export class AttendanceComponent implements OnInit {
     });
 
     // Get paginated attendance data
-    this.attendanceService.getFilteredAttendances(filters, dateRange, pageRequest).subscribe({
+    this.attendanceService.getFilteredAttendances(filters, dateRange, pageRequest, new SortRequest("status", "Descending")).subscribe({
       next: (attendances) => {
         this.attendanceData.paginatedData = attendances;
       },
@@ -141,14 +147,14 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadGradeLevels() {
-    this.gradeLevelService.getAllGradeLevels().subscribe(
-      (gradeLevels) => {
+    this.gradeLevelService.getAllGradeLevels().subscribe({
+      next: (gradeLevels) => {
         this.gradeLevels = gradeLevels;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching grade levels:', error);
       }
-    );
+    });
   }
 
   loadStrands() {
@@ -206,9 +212,19 @@ export class AttendanceComponent implements OnInit {
       next: () => {
         this.loadAttendanceData();
         this.editDialogVisible = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Attendance updated successfully',
+        });
       },
       error: (error) => {
         console.error('Error updating attendance:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to update attendance',
+        });
       },
     });
   }

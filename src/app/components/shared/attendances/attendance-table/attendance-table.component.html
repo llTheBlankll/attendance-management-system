@@ -1,20 +1,44 @@
 <p-table
   [value]="this.attendanceData.paginatedData"
-  styleClass="w-full h-30rem overflow-auto mb-2"
+  styleClass="w-full h-30rem overflow-auto mb-2 p-datatable-gridlines p-datatable-striped"
 >
   <ng-template pTemplate="header">
     <tr>
-      <th>Student ID</th>
-      <th>Status</th>
-      <th>Date</th>
-      <th>Notes</th>
-      <th>Actions</th>
+      <th>
+        <i class="pi pi-id-card mr-2"></i>Student ID
+      </th>
+      <th>
+        <i class="pi pi-flag mr-2"></i>Status
+      </th>
+      <th>
+        <i class="pi pi-calendar mr-2"></i>Date
+      </th>
+      <th>
+        <i class="pi pi-comment mr-2"></i>Notes
+      </th>
+      <th>
+        <i class="pi pi-cog mr-2"></i>Actions
+      </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-attendance>
     <tr>
       <td>{{ attendance.student.id }}</td>
-      <td>{{ attendance.status }}</td>
+      <td>
+        @if (attendance.status === "ON_TIME") {
+          <span class="text-green-500">
+            <i class="pi pi-check mr-2"></i>ON TIME
+          </span>
+        } @else if (attendance.status === "LATE") {
+          <span class="text-orange-500">
+            <i class="pi pi-clock mr-2"></i>LATE
+          </span>
+        } @else {
+          <span class="text-red-500">
+            <i class="pi pi-times mr-2"></i>ABSENT
+          </span>
+        }
+      </td>
       <td>{{ attendance.date | date : "MMM d, yyyy" }}</td>
       <td>
         <b
