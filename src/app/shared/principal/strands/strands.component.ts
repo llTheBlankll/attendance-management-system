@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DateRange } from '../../../core/interfaces/DateRange';
 import { Strand } from '../../../core/interfaces/dto/strand/Strand';
@@ -16,8 +16,11 @@ import { TableModule } from 'primeng/table';
 
 import { AvgStudentsStrandCardComponent } from '../../../components/admin/strands/cards/avg-students-strand-card/avg-students-strand-card.component';
 import { MostPopularStrandCardComponent } from '../../../components/admin/strands/cards/most-popular-strand-card/most-popular-strand-card.component';
-import { NewStrandsCardComponent } from '../../../components/admin/strands/cards/new-strands-card/new-strands-card.component';
 import { TotalStrandsCardComponent } from '../../../components/admin/strands/cards/total-strands-card/total-strands-card.component';
+import { MessageService } from 'primeng/api';
+import { MessageDTO } from '../../../core/interfaces/MessageDTO';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CodeStatus } from '../../../core/enums/CodeStatus';
 
 @Component({
   selector: 'app-strands',
@@ -37,12 +40,18 @@ import { TotalStrandsCardComponent } from '../../../components/admin/strands/car
     TotalStrandsCardComponent,
     MostPopularStrandCardComponent,
     AvgStudentsStrandCardComponent,
-    NewStrandsCardComponent
-  ]
+  ],
+  providers: [MessageService],
 })
 export class StrandsComponent implements OnInit {
+  private readonly strandService = inject(StrandService);
+  private readonly messageService = inject(MessageService);
   strands: { strand: Strand; studentCount: number }[] = [];
-  mostPopularStrand: { strandId: number; strandName: string; studentCount: number } | null = null;
+  mostPopularStrand: {
+    strandId: number;
+    strandName: string;
+    studentCount: number;
+  } | null = null;
   averageStudentsPerStrand: number = 0;
   strandDistributionData: any;
   strandPopularityData: any;
@@ -50,8 +59,6 @@ export class StrandsComponent implements OnInit {
   strandDialog: boolean = false;
   strandSelected: Partial<Strand> = {};
   submitted: boolean = false;
-
-  constructor(private strandService: StrandService) { }
 
   ngOnInit() {
     this.loadStrands();
@@ -68,24 +75,24 @@ export class StrandsComponent implements OnInit {
       plugins: {
         legend: {
           display: true,
-          position: 'bottom'
-        }
+          position: 'bottom',
+        },
       },
       scales: {
         x: {
           display: true,
           grid: {
-            display: false
+            display: false,
           },
           ticks: {
-            display: false
-          }
+            display: false,
+          },
         },
         y: {
           display: true,
-          beginAtZero: true
-        }
-      }
+          beginAtZero: true,
+        },
+      },
     };
   }
 
@@ -95,7 +102,7 @@ export class StrandsComponent implements OnInit {
         this.strands = data;
         this.updateStrandDistributionChart();
       },
-      error: (error) => console.error('Error fetching strands:', error)
+      error: (error) => console.error('Error fetching strands:', error),
     });
   }
 
@@ -104,7 +111,8 @@ export class StrandsComponent implements OnInit {
       next: (data) => {
         this.mostPopularStrand = data;
       },
-      error: (error) => console.error('Error fetching most popular strand:', error)
+      error: (error) =>
+        console.error('Error fetching most popular strand:', error),
     });
   }
 
@@ -113,42 +121,55 @@ export class StrandsComponent implements OnInit {
       next: (data) => {
         this.averageStudentsPerStrand = data;
       },
-      error: (error) => console.error('Error fetching average students per strand:', error)
+      error: (error) =>
+        console.error('Error fetching average students per strand:', error),
     });
   }
 
   loadStrandDistribution() {
     const dateRange: DateRange = {
       startDate: new Date(new Date().getFullYear(), 0, 1),
-      endDate: new Date()
+      endDate: new Date(),
     };
     this.strandService.getStrandDistribution(dateRange).subscribe({
       next: (data: LineChartDTO) => {
         this.updateStrandPopularityChart(data);
       },
-      error: (error) => console.error('Error fetching strand distribution:', error)
+      error: (error) =>
+        console.error('Error fetching strand distribution:', error),
     });
   }
 
   updateStrandDistributionChart() {
     this.strandDistributionData = {
-      labels: this.strands.map(s => s.strand.name),
-      datasets: [{
-        data: this.strands.map(s => s.studentCount),
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-      }]
+      labels: this.strands.map((s) => s.strand.name),
+      datasets: [
+        {
+          data: this.strands.map((s) => s.studentCount),
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+            '#FF9F40',
+          ],
+        },
+      ],
     };
   }
 
   updateStrandPopularityChart(data: LineChartDTO) {
     this.strandPopularityData = {
       labels: data.labels,
-      datasets: [{
-        label: 'Number of Students',
-        data: data.data,
-        fill: false,
-        borderColor: '#4bc0c0'
-      }]
+      datasets: [
+        {
+          label: 'Number of Students',
+          data: data.data,
+          fill: false,
+          borderColor: '#4bc0c0',
+        },
+      ],
     };
   }
 
@@ -169,8 +190,57 @@ export class StrandsComponent implements OnInit {
 
   saveStrand() {
     this.submitted = true;
-    // Implement save functionality
-    console.log('Save strand:', this.strandSelected);
-    this.hideDialog();
+    const result = this.strandService.createStrand(
+      this.strandSelected as Strand
+    );
+    result.subscribe({
+      next: (message: MessageDTO) => {
+        switch (message.status) {
+          case CodeStatus.OK: {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: message.message,
+            });
+            break;
+          }
+          case CodeStatus.BAD_REQUEST: {
+            this.messageService.add({
+              severity: 'warning',
+              summary: 'Warning',
+              detail: message.message,
+            });
+            break;
+          }
+          case CodeStatus.FAILED: {
+            this.messageService.add({
+              severity: 'failed',
+              summary: 'Failed',
+              detail: message.message,
+            });
+            break;
+          }
+          default: {
+            console.error(
+              'INVALID RESPONSE FROM THE SERVER. DEVELOPERS, PLEASE CHECK MY REQUEST!'
+            );
+            break;
+          }
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail:
+            error.error.message || 'An error occurred while saving the strand',
+        });
+      },
+      complete: () => {
+        // This will refresh the strand.
+        this.loadStrands();
+        this.hideDialog();
+      },
+    });
   }
 }

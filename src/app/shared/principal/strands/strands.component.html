@@ -1,31 +1,51 @@
 <div class="grid">
   <div class="col-12 lg:col-6 xl:col-4">
-    <app-total-strands-card [totalStrands]="strands.length"></app-total-strands-card>
+    <app-total-strands-card
+      [totalStrands]="strands.length"
+    ></app-total-strands-card>
   </div>
   <div class="col-12 lg:col-6 xl:col-4">
-    <app-most-popular-strand-card [popularStrand]="mostPopularStrand?.strandName ?? 'Unknown'"></app-most-popular-strand-card>
+    <app-most-popular-strand-card
+      [popularStrand]="mostPopularStrand?.strandName ?? 'Unknown'"
+    ></app-most-popular-strand-card>
   </div>
   <div class="col-12 lg:col-6 xl:col-4">
-    <app-avg-students-strand-card [avgStudents]="averageStudentsPerStrand"></app-avg-students-strand-card>
+    <app-avg-students-strand-card
+      [avgStudents]="averageStudentsPerStrand"
+    ></app-avg-students-strand-card>
   </div>
 
   <!-- Charts -->
   <div class="col-12 lg:col-6">
     <p-card header="Strand Distribution" styleClass="mb-2 shadow-3">
-      <p-chart type="pie" [data]="strandDistributionData" [options]="chartOptions"></p-chart>
+      <p-chart
+        type="pie"
+        [data]="strandDistributionData"
+        [options]="chartOptions"
+      ></p-chart>
     </p-card>
   </div>
   <div class="col-12 lg:col-6">
     <p-card header="Strand Popularity Trend" styleClass="mb-2 shadow-3">
       <div style="height: 300px">
-        <p-chart type="line" [data]="strandPopularityData" [options]="chartOptions" style="width: 100%; height: 100%"></p-chart>
+        <p-chart
+          type="line"
+          [data]="strandPopularityData"
+          [options]="chartOptions"
+          style="width: 100%; height: 100%"
+        ></p-chart>
       </div>
     </p-card>
   </div>
 
   <!-- Strands Table -->
   <div class="col-12">
-    <p-table [value]="strands" [paginator]="true" [rows]="10" styleClass="p-datatable-striped">
+    <p-table
+      [value]="strands"
+      [paginator]="true"
+      [rows]="10"
+      styleClass="p-datatable-striped"
+    >
       <ng-template pTemplate="header">
         <tr>
           <th>Name</th>
@@ -36,12 +56,22 @@
       </ng-template>
       <ng-template pTemplate="body" let-strand>
         <tr>
-          <td>{{strand.strand.name}}</td>
-          <td>{{strand.strand.description}}</td>
-          <td>{{strand.studentCount}}</td>
+          <td>{{ strand.strand.name }}</td>
+          <td>{{ strand.strand.description }}</td>
+          <td>{{ strand.studentCount }}</td>
           <td>
-            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editStrand(strand)"></button>
-            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteStrand(strand)"></button>
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success mr-2"
+              (click)="editStrand(strand)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-danger"
+              (click)="deleteStrand(strand)"
+            ></button>
           </td>
         </tr>
       </ng-template>
@@ -50,21 +80,57 @@
 </div>
 
 <!-- Strand Dialog -->
-<p-dialog [(visible)]="strandDialog" [style]="{width: '450px'}" header="Strand Details" [modal]="true" styleClass="p-fluid">
+<p-dialog
+  [(visible)]="strandDialog"
+  [style]="{ width: '450px' }"
+  header="Strand Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
   <ng-template pTemplate="content">
     <div class="p-field">
       <label for="name">Name</label>
-      <input type="text" pInputText id="name" [(ngModel)]="strandSelected.name" required autofocus />
-      <small class="p-error" *ngIf="submitted && !strandSelected.name">Name is required.</small>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="strandSelected.name"
+        required
+        autofocus
+      />
+      @if (submitted && !strandSelected.name) {
+      <small class="p-error" *ngIf="submitted && !strandSelected.name"
+        >Name is required.</small
+      >
+      }
     </div>
     <div class="p-field">
       <label for="description">Description</label>
-      <textarea id="description" pInputTextarea [(ngModel)]="strandSelected.description" required rows="3" cols="20"></textarea>
+      <textarea
+        id="description"
+        pInputTextarea
+        [(ngModel)]="strandSelected.description"
+        required
+        rows="3"
+        cols="20"
+      ></textarea>
     </div>
   </ng-template>
 
   <ng-template pTemplate="footer">
-    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveStrand()"></button>
+    <p-button
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></p-button>
+    <p-button
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+      (click)="saveStrand()"
+    ></p-button>
   </ng-template>
 </p-dialog>

@@ -45,6 +45,7 @@ export class ClassAttendanceDemographicsCardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes["sex"]) {
+      console.debug("Attendance Demographics Card - Sex: ", this.sex);
       this.data = {
         ...this.data,
         datasets: [

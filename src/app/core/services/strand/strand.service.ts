@@ -6,6 +6,7 @@ import { Strand } from '../../interfaces/dto/strand/Strand';
 import { StudentService } from '../student/student.service';
 import { DateRange } from '../../interfaces/DateRange';
 import { LineChartDTO } from '../../interfaces/LineChartDTO';
+import { MessageDTO } from '../../interfaces/MessageDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,12 @@ export class StrandService {
   private readonly studentService = inject(StudentService);
   private readonly apiUrl = environment.apiUrl;
   private readonly http = inject(HttpClient);
+
+  public createStrand(strand: Strand) {
+    return this.http.post<MessageDTO>(`${this.apiUrl}/strands/create`, strand, {
+      responseType: 'json'
+    });
+  }
 
   public getAllStrands(): Observable<Strand[]> {
     return this.http.get<Strand[]>(`${this.apiUrl}/strands/all`);
