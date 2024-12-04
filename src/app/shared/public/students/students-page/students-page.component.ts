@@ -9,7 +9,7 @@ import { StudentOverallAttendanceCardComponent } from '../../../../components/sh
 import { StudentProfileInformationComponent } from '../../../../components/shared/students/student-profile-information/student-profile-information.component';
 import { AttendanceForeignEntity } from '../../../../core/enums/AttendanceForeignEntity';
 import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
-import { TimeRange } from '../../../../core/enums/TimeRange';
+import { TimeRangeConstants } from '../../../../core/enums/TimeRange';
 import { TimeStack } from '../../../../core/enums/TimeStack';
 import { TimeRange } from '../../../../core/interfaces/DateRange';
 import { Student } from '../../../../core/interfaces/dto/student/Student';
@@ -68,11 +68,11 @@ export class StudentsPageComponent {
     absent: 0,
     overAllAttendance: 0,
   };
-  protected monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_180_DAYS
+  protected monthlyAttendanceTimeRange = this.utilService.timeRangeConstantToDateRange(
+    TimeRangeConstants.LAST_180_DAYS
   );
-  protected attendanceCardDateRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_30_DAYS
+  protected attendanceCardDateRange = this.utilService.timeRangeConstantToDateRange(
+    TimeRangeConstants.LAST_30_DAYS
   );
 
   public monthlyAttendanceChartData = {
@@ -97,29 +97,29 @@ export class StudentsPageComponent {
     this.updateMonthlyAttendanceChart(event);
   }
 
-  public onTimeRangeChange(event: TimeRange) {
+  public onTimeRangeChange(event: TimeRangeConstants) {
     switch (event) {
-      case TimeRange.LAST_90_DAYS: {
-        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_90_DAYS
+      case TimeRangeConstants.LAST_90_DAYS: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_90_DAYS
         );
         break;
       }
-      case TimeRange.LAST_30_DAYS: {
-        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_30_DAYS
+      case TimeRangeConstants.LAST_30_DAYS: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_30_DAYS
         );
         break;
       }
-      case TimeRange.LAST_180_DAYS: {
-        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_180_DAYS
+      case TimeRangeConstants.LAST_180_DAYS: {
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_180_DAYS
         );
         break;
       }
       default: {
-        this.monthlyAttendanceTimeRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_90_DAYS
+        this.monthlyAttendanceTimeRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_90_DAYS
         );
       }
     }

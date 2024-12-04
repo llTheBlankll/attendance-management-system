@@ -13,18 +13,18 @@ import { ClassTodaysActivitiesCardComponent } from '../../../../components/share
 import { ClassOverAllAttendanceComponent } from '../../../../components/shared/classes/cards/class-total-student-card/class-over-all-attendance.component';
 import { AttendanceForeignEntity } from '../../../../core/enums/AttendanceForeignEntity';
 import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
-import { TimeRange } from '../../../../core/enums/TimeRange';
+import { TimeRangeConstants } from '../../../../core/enums/TimeRange';
 import { TimeStack } from '../../../../core/enums/TimeStack';
 import { ClassroomDemographicsChart } from '../../../../core/interfaces/ClassroomDemographicsChart';
-import { TimeRange } from '../../../../core/interfaces/DateRange';
 import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
 import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
 import { Student } from '../../../../core/interfaces/dto/student/Student';
+import { PageRequest } from '../../../../core/interfaces/PageRequest';
 import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
 import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
 import { StudentService } from '../../../../core/services/student/student.service';
 import { UtilService } from '../../../../core/services/util/util.service';
-import { PageRequest } from '../../../../core/interfaces/PageRequest';
+import { TimeRange } from '../../../../core/interfaces/DateRange';
 
 @Component({
   selector: 'app-classes',
@@ -89,8 +89,8 @@ export class ClassesComponent implements OnInit {
     female: 0,
   };
   // * Charts
-  private dateRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_365_DAYS
+  private dateRange = this.utilService.timeRangeConstantToDateRange(
+    TimeRangeConstants.LAST_365_DAYS
   );
 
   protected absentStudents: Student[] = [];
@@ -184,8 +184,8 @@ export class ClassesComponent implements OnInit {
 
   private updateOverAllAttendance(classroomId: number) {
     // * Over all attendance
-    const dateRange = this.utilService.timeRangeToDateRange(
-      TimeRange.LAST_30_DAYS
+    const dateRange = this.utilService.timeRangeConstantToDateRange(
+      TimeRangeConstants.LAST_30_DAYS
     );
     this.attendanceService
       .countForeignEntityAttendance(

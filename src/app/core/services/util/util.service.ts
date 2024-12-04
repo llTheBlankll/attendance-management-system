@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {TimeRange} from '../../enums/TimeRange';
+import {TimeRangeConstants} from '../../enums/TimeRange';
 import {TimeRange} from '../../interfaces/DateRange';
 import {AttendanceStatus} from '../../enums/AttendanceStatus';
 
@@ -54,15 +54,15 @@ export class UtilService {
    *
    * @param timeRange
    */
-  public timeRangeToDateRange(timeRange: TimeRange) {
+  public timeRangeConstantToDateRange(timeRange: TimeRangeConstants) {
     const currentDate = new Date();
     const dateRanges = {
-      [TimeRange.TODAY]: 0,
-      [TimeRange.LAST_7_DAYS]: 7,
-      [TimeRange.LAST_30_DAYS]: 30,
-      [TimeRange.LAST_90_DAYS]: 90,
-      [TimeRange.LAST_180_DAYS]: 180,
-      [TimeRange.LAST_365_DAYS]: 365,
+      [TimeRangeConstants.TODAY]: 0,
+      [TimeRangeConstants.LAST_7_DAYS]: 7,
+      [TimeRangeConstants.LAST_30_DAYS]: 30,
+      [TimeRangeConstants.LAST_90_DAYS]: 90,
+      [TimeRangeConstants.LAST_180_DAYS]: 180,
+      [TimeRangeConstants.LAST_365_DAYS]: 365,
     };
 
     const daysToSubtract = dateRanges[timeRange] ?? 0;

@@ -11,7 +11,7 @@ import { DailyAttendanceReportCardComponent } from '../../components/admin/dashb
 import { SectionRankingCardComponent } from '../../components/admin/dashboard/cards/section-ranking-card/section-ranking-card.component';
 import { AnnouncementsCardsComponent } from '../../components/admin/dashboard/cards/admin-announcements-card/announcements-cards.component';
 import { UtilService } from '../../core/services/util/util.service';
-import { TimeRange } from '../../core/enums/TimeRange';
+import { TimeRangeConstants } from '../../core/enums/TimeRange';
 
 @Component({
   selector: 'app-admin',
@@ -36,7 +36,7 @@ export class AdminComponent {
   // Injections
   private readonly utilService = inject(UtilService);
 
-  public dailyAttendanceReportDateRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_30_DAYS
+  public dailyAttendanceReportDateRange = this.utilService.timeRangeConstantToDateRange(
+    TimeRangeConstants.LAST_30_DAYS
   );
 }

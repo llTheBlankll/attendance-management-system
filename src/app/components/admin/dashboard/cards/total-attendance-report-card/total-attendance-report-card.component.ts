@@ -6,7 +6,7 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
-import { TimeRange } from '../../../../../core/enums/TimeRange';
+import { TimeRangeConstants } from '../../../../../core/enums/TimeRange';
 import { TimeStack } from '../../../../../core/enums/TimeStack';
 import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
 import { UtilService } from '../../../../../core/services/util/util.service';
@@ -54,8 +54,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
   };
 
   @Input()
-  public dateRange = this.utilService.timeRangeToDateRange(
-    TimeRange.LAST_30_DAYS
+  public dateRange = this.utilService.timeRangeConstantToDateRange(
+    TimeRangeConstants.LAST_30_DAYS
   );
 
   public chartDaysOptions: MenuItem[] = [
@@ -65,8 +65,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
         this.options = {
           ...this.options,
         };
-        this.dateRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_365_DAYS
+        this.dateRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_365_DAYS
         );
         this.updateTotalAttendanceReport(TimeStack.MONTH);
       },
@@ -79,8 +79,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
         this.options = {
           ...this.options,
         };
-        this.dateRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_90_DAYS
+        this.dateRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_90_DAYS
         );
         this.updateTotalAttendanceReport(TimeStack.MONTH);
       },
@@ -90,8 +90,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 30 Days',
       command: () => {
-        this.dateRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_30_DAYS
+        this.dateRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_30_DAYS
         );
         this.updateTotalAttendanceReport(TimeStack.DAY);
       },
@@ -101,8 +101,8 @@ export class TotalAttendanceReportCardComponent implements OnInit {
     {
       label: 'Last 7 Days',
       command: () => {
-        this.dateRange = this.utilService.timeRangeToDateRange(
-          TimeRange.LAST_7_DAYS
+        this.dateRange = this.utilService.timeRangeConstantToDateRange(
+          TimeRangeConstants.LAST_7_DAYS
         );
         this.updateTotalAttendanceReport(TimeStack.DAY);
       },

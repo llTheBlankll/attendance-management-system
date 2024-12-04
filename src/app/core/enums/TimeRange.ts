@@ -1,4 +1,4 @@
-export enum TimeRange {
+export enum TimeRangeConstants {
   TODAY = "TODAY",
   LAST_7_DAYS = "LAST_7_DAYS",
   LAST_30_DAYS = "LAST_30_DAYS",
