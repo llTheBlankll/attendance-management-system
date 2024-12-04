@@ -5,7 +5,7 @@ import { PageRequest } from '../../interfaces/PageRequest';
 import { Student } from '../../interfaces/dto/student/Student';
 import { SortRequest } from '../../interfaces/SortRequest';
 import { environment } from '../../../../environments/environment';
-import { DateRange } from '../../interfaces/DateRange';
+import { TimeRange } from '../../interfaces/DateRange';
 import { LineChartDTO } from '../../interfaces/LineChartDTO';
 
 @Injectable({
@@ -75,7 +75,7 @@ export class StudentService {
     return this.http.get<{ strandId: number; strandName: string; studentCount: number }>(`${this.apiUrl}/students/most-popular-strand`);
   }
 
-  public getStrandDistribution(dateRange: DateRange): Observable<LineChartDTO> {
+  public getStrandDistribution(dateRange: TimeRange): Observable<LineChartDTO> {
     return this.http.get<LineChartDTO>(`${this.apiUrl}/students/strand-distribution`, {
       params: {
         startDate: dateRange.startDate.toISOString().split('T')[0],

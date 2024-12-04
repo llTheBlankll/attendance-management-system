@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, map, switchMap } from 'rxjs';
 import { Strand } from '../../interfaces/dto/strand/Strand';
 import { StudentService } from '../student/student.service';
-import { DateRange } from '../../interfaces/DateRange';
+import { TimeRange } from '../../interfaces/DateRange';
 import { LineChartDTO } from '../../interfaces/LineChartDTO';
 import { MessageDTO } from '../../interfaces/MessageDTO';
 
@@ -48,7 +48,7 @@ export class StrandService {
     return this.studentService.getAverageStudentsPerStrand();
   }
 
-  public getStrandDistribution(dateRange: DateRange): Observable<LineChartDTO> {
+  public getStrandDistribution(dateRange: TimeRange): Observable<LineChartDTO> {
     return this.studentService.getStrandDistribution(dateRange);
   }
 }

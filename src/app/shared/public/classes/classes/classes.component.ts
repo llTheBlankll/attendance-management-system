@@ -16,7 +16,7 @@ import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
 import { TimeRange } from '../../../../core/enums/TimeRange';
 import { TimeStack } from '../../../../core/enums/TimeStack';
 import { ClassroomDemographicsChart } from '../../../../core/interfaces/ClassroomDemographicsChart';
-import { DateRange } from '../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../core/interfaces/DateRange';
 import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
 import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
 import { Student } from '../../../../core/interfaces/dto/student/Student';
@@ -130,7 +130,7 @@ export class ClassesComponent implements OnInit {
     const requests = attendanceTypes.map((type) =>
       this.attendanceService.countForeignEntityAttendance(
         [type.status],
-        new DateRange(),
+        new TimeRange(),
         AttendanceForeignEntity.CLASSROOM,
         classroomId
       )
@@ -160,7 +160,7 @@ export class ClassesComponent implements OnInit {
           AttendanceStatus.LATE,
           AttendanceStatus.ABSENT,
         ],
-        new DateRange(),
+        new TimeRange(),
         AttendanceForeignEntity.CLASSROOM,
         classroomId,
         new PageRequest(0, 1000)
@@ -266,7 +266,7 @@ export class ClassesComponent implements OnInit {
   private updateAttendanceDemographics(classroomId: number) {
     this.attendanceService
       .getClassroomAttendanceDemographics(
-        new DateRange(),
+        new TimeRange(),
         [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
         classroomId
       )

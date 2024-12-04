@@ -10,7 +10,7 @@ import { PrimeTemplate } from 'primeng/api';
 import { TimelineModule } from 'primeng/timeline';
 import { AttendanceForeignEntity } from '../../../../../core/enums/AttendanceForeignEntity';
 import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
-import { DateRange } from '../../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../../core/interfaces/DateRange';
 import { ClassroomDTO } from '../../../../../core/interfaces/dto/classroom/ClassroomDTO';
 import { EventItem } from '../../../../../core/interfaces/EventItem';
 import { PageRequest } from '../../../../../core/interfaces/PageRequest';
@@ -36,7 +36,7 @@ export class ClassTodaysActivitiesCardComponent implements OnChanges {
       this.attendanceService
         .getForeignEntityAttendances(
           [AttendanceStatus.ON_TIME, AttendanceStatus.LATE],
-          new DateRange(),
+          new TimeRange(),
           AttendanceForeignEntity.CLASSROOM,
           this.classroom.id,
           new PageRequest(0, 999)

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {TimeRange} from '../../enums/TimeRange';
-import {DateRange} from '../../interfaces/DateRange';
+import {TimeRange} from '../../interfaces/DateRange';
 import {AttendanceStatus} from '../../enums/AttendanceStatus';
 
 @Injectable({
@@ -41,7 +41,7 @@ export class UtilService {
    * @param dateRange Date range
    * @returns The number of days between the start and end dates
    */
-  public getDaysCount(dateRange: DateRange) {
+  public getDaysCount(dateRange: TimeRange) {
     return Math.ceil(
       Math.abs(dateRange.endDate.getTime() - dateRange.startDate.getTime()) /
         (1000 * 60 * 60 * 24)
@@ -69,6 +69,6 @@ export class UtilService {
     const startDate = new Date(currentDate);
     startDate.setDate(currentDate.getDate() - daysToSubtract);
 
-    return new DateRange(startDate, currentDate);
+    return new TimeRange(startDate, currentDate);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
-import { DateRange } from '../../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../../core/interfaces/DateRange';
 import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
 
 @Component({
@@ -23,13 +23,43 @@ export class OntimeStudentsCardComponent implements OnInit {
   public status = AttendanceStatus.ON_TIME;
 
   ngOnInit() {
+    // Count total attendance for given status and date range
     this.attendanceService
       .countTotalAttendanceByStatus(
         [this.status],
-        new DateRange(this.date, this.date)
+        new TimeRange(this.date, this.date)
       )
-      .subscribe((count) => {
-        this.onTimeStudents = count;
+      .subscribe({
+        next: (count) => {
+          this.onTimeStudents = count;
+        },
+        error: (error) => {
+          console.error('Error fetching attendance count:', error);
+          this.onTimeStudents = 0; // Set default value on error
+        },
+      });
+  }
+
+  public getLastHourAttendance() {
+    // The Date Range should be the current time minus 1 hour
+    const oneHourAgo = new Date(this.date.getTime() - 60 * 60 * 1000);
+    this.attendanceService
+      .countTotalAttendanceByStatus(
+        [AttendanceStatus.ON_TIME],
+        new TimeRange(oneHourAgo, this.date)
+      )
+      .subscribe({
+        next: (count) => {
+          this.onTimeStudents = count;
+          console.debug('Last hour attendance count:', count);
+        },
+        error: (error) => {
+          console.error('Error fetching last hour attendance count:', error);
+          this.onTimeStudents = 0; // Set default value on error
+        },
+        complete: () => {
+          console.log('Last hour attendance count fetched');
+        },
       });
   }
 }

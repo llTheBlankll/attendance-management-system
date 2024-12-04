@@ -6,7 +6,7 @@ import { CardModule } from "primeng/card";
 import { TableModule } from 'primeng/table';
 import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
 import { ClassroomRanking } from '../../../../../core/interfaces/dto/classroom/ClassroomRanking';
-import { DateRange } from '../../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../../core/interfaces/DateRange';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -36,7 +36,7 @@ export class SectionRankingCardComponent implements OnInit {
   loadRankings() {
     this.loading = true;
     const today = new Date();
-    const dateRange = new DateRange(today, today);
+    const dateRange = new TimeRange(today, today);
 
     this.attendanceService.getClassroomRanking(dateRange, 10)
       .subscribe({

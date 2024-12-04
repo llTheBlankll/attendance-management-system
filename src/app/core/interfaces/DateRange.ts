@@ -1,4 +1,4 @@
-export class DateRange {
+export class TimeRange {
   startDate: Date;
   endDate: Date;
 

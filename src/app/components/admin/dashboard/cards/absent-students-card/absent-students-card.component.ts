@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
-import { DateRange } from '../../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../../core/interfaces/DateRange';
 import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class AbsentStudentsCardComponent implements OnInit {
     this.attendanceService
       .countTotalAttendanceByStatus(
         [this.status],
-        new DateRange(this.date, this.date)
+        new TimeRange(this.date, this.date)
       )
       .subscribe((count) => {
         this.absentStudents = count;

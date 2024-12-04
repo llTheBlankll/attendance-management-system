@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DateRange } from '../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../core/interfaces/DateRange';
 import { Strand } from '../../../core/interfaces/dto/strand/Strand';
 import { LineChartDTO } from '../../../core/interfaces/LineChartDTO';
 import { StrandService } from '../../../core/services/strand/strand.service';
@@ -127,7 +127,7 @@ export class StrandsComponent implements OnInit {
   }
 
   loadStrandDistribution() {
-    const dateRange: DateRange = {
+    const dateRange: TimeRange = {
       startDate: new Date(new Date().getFullYear(), 0, 1),
       endDate: new Date(),
     };

@@ -22,7 +22,7 @@ import { Strand } from '../../../../core/interfaces/dto/strand/Strand';
 import { PaginatorState } from 'primeng/paginator';
 import { PageRequest } from '../../../../core/interfaces/PageRequest';
 import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
-import { DateRange } from '../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../core/interfaces/DateRange';
 import { SortRequest } from '../../../../core/interfaces/SortRequest';
 import { MessageService } from 'primeng/api';
 
@@ -111,8 +111,8 @@ export class AttendanceComponent implements OnInit {
     };
 
     const dateRange = date ?
-      new DateRange(date, date) :
-      new DateRange(new Date(), new Date());
+      new TimeRange(date, date) :
+      new TimeRange(new Date(), new Date());
 
     // First get the total count
     this.attendanceService.countFilteredAttendances(filters, dateRange).subscribe({

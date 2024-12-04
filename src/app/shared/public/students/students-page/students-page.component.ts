@@ -11,7 +11,7 @@ import { AttendanceForeignEntity } from '../../../../core/enums/AttendanceForeig
 import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
 import { TimeRange } from '../../../../core/enums/TimeRange';
 import { TimeStack } from '../../../../core/enums/TimeStack';
-import { DateRange } from '../../../../core/interfaces/DateRange';
+import { TimeRange } from '../../../../core/interfaces/DateRange';
 import { Student } from '../../../../core/interfaces/dto/student/Student';
 import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
 import { UtilService } from '../../../../core/services/util/util.service';
@@ -134,7 +134,7 @@ export class StudentsPageComponent {
 
   public updateMonthlyAttendanceChart(
     student: Student,
-    date: DateRange = this.monthlyAttendanceTimeRange
+    date: TimeRange = this.monthlyAttendanceTimeRange
   ) {
     if (this.selectedStudent) {
       const onTimeLineChart = this.attendanceService.getLineChart(

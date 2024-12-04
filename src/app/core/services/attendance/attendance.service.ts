@@ -5,7 +5,7 @@ import { AttendanceForeignEntity } from '../../enums/AttendanceForeignEntity';
 import { AttendanceStatus } from '../../enums/AttendanceStatus';
 import { TimeStack } from '../../enums/TimeStack';
 import { ClassroomDemographicsChart } from '../../interfaces/ClassroomDemographicsChart';
-import { DateRange } from '../../interfaces/DateRange';
+import { TimeRange } from '../../interfaces/DateRange';
 import { Attendance } from '../../interfaces/dto/attendance/Attendance';
 import { LineChartDTO } from '../../interfaces/LineChartDTO';
 import { PageRequest } from '../../interfaces/PageRequest';
@@ -25,7 +25,7 @@ export class AttendanceService {
 
   public countForeignEntityAttendance(
     attendanceStatuses: AttendanceStatus[],
-    dateRange: DateRange,
+    dateRange: TimeRange,
     foreignEntity: AttendanceForeignEntity,
     id: number
   ) {
@@ -44,7 +44,7 @@ export class AttendanceService {
 
   public countTotalAttendanceByStatus(
     attendanceStatuses: AttendanceStatus[],
-    dateRange: DateRange
+    dateRange: TimeRange
   ): Observable<number> {
     const listString =
       this.utilService.attendanceStatusListToString(attendanceStatuses);
@@ -60,7 +60,7 @@ export class AttendanceService {
   }
 
   public getLineChart(
-    dateRange: DateRange,
+    dateRange: TimeRange,
     statuses: AttendanceStatus[],
     timeStack: TimeStack,
     attendanceForeignEntity?: AttendanceForeignEntity,
@@ -88,7 +88,7 @@ export class AttendanceService {
   }
 
   public getClassroomAttendanceDemographics(
-    dateRange: DateRange,
+    dateRange: TimeRange,
     attendanceStatus: AttendanceStatus[],
     classroomId: number
   ) {
@@ -109,7 +109,7 @@ export class AttendanceService {
 
   public totalStudentAttendance(
     studentId: number,
-    dateRange: DateRange,
+    dateRange: TimeRange,
     statuses: AttendanceStatus[]
   ): Observable<number> {
     return this.http.get<number>(
@@ -127,7 +127,7 @@ export class AttendanceService {
 
   public getForeignEntityAttendances(
     attendanceStatuses: AttendanceStatus[],
-    dateRange: DateRange,
+    dateRange: TimeRange,
     foreignEntity: AttendanceForeignEntity,
     id: number,
     pageRequest?: PageRequest,
@@ -221,7 +221,7 @@ export class AttendanceService {
 
   getFilteredAttendances(
     filters: any,
-    dateRange: DateRange,
+    dateRange: TimeRange,
     pageRequest?: PageRequest,
     sortRequest?: SortRequest
   ): Observable<Attendance[]> {
@@ -248,7 +248,7 @@ export class AttendanceService {
     });
   }
 
-  countFilteredAttendances(filters?: any, dateRange?: DateRange): Observable<number> {
+  countFilteredAttendances(filters?: any, dateRange?: TimeRange): Observable<number> {
     let params = new HttpParams();
     if (dateRange) {
       params = params
@@ -266,7 +266,7 @@ export class AttendanceService {
     });
   }
 
-  getClassroomRanking(dateRange?: DateRange, limit: number = 5): Observable<ClassroomRanking[]> {
+  getClassroomRanking(dateRange?: TimeRange, limit: number = 5): Observable<ClassroomRanking[]> {
     let params = new HttpParams().set('limit', limit.toString());
 
     if (dateRange) {
