@@ -15,6 +15,7 @@ export class OntimeStudentsCardComponent implements OnInit {
   private readonly attendanceService = inject(AttendanceService);
 
   onTimeStudents = 0;
+  lastHourOnTimeStudents = 0;
 
   @Input()
   public date = new Date();
@@ -37,28 +38,27 @@ export class OntimeStudentsCardComponent implements OnInit {
           console.error('Error fetching attendance count:', error);
           this.onTimeStudents = 0; // Set default value on error
         },
+        complete: () => {
+          console.log('Attendance count fetched');
+          this.getLastHourAttendance();
+        },
       });
   }
 
   public getLastHourAttendance() {
-    // The Date Range should be the current time minus 1 hour
-    const oneHourAgo = new Date(this.date.getTime() - 60 * 60 * 1000);
     this.attendanceService
-      .countTotalAttendanceByStatus(
-        [AttendanceStatus.ON_TIME],
-        new TimeRange(oneHourAgo, this.date)
-      )
+      .getLastHourAttendance([AttendanceStatus.ON_TIME])
       .subscribe({
         next: (count) => {
-          this.onTimeStudents = count;
-          console.debug('Last hour attendance count:', count);
+          this.lastHourOnTimeStudents = count;
+          console.debug('Last hour ON TIME attendance count:', count);
         },
         error: (error) => {
-          console.error('Error fetching last hour attendance count:', error);
-          this.onTimeStudents = 0; // Set default value on error
+          console.error('Error fetching last hour ON TIME attendance count:', error);
+          this.lastHourOnTimeStudents = 0; // Set default value on error
         },
         complete: () => {
-          console.log('Last hour attendance count fetched');
+          console.log('Last hour ON TIME attendance count fetched');
         },
       });
   }

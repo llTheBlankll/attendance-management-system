@@ -2,6 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { AttendanceStatus } from '../../../../../core/enums/AttendanceStatus';
 import { TimeRange } from '../../../../../core/interfaces/DateRange';
 import { AttendanceService } from '../../../../../core/services/attendance/attendance.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-late-students-card',
@@ -16,6 +17,7 @@ export class LateStudentsCardComponent implements OnInit {
     inject(AttendanceService);
 
   lateStudents = 0;
+  lastHourLateStudents = 0;
 
   @Input()
   public date: Date = new Date();
@@ -29,8 +31,34 @@ export class LateStudentsCardComponent implements OnInit {
         [this.status],
         new TimeRange(this.date, this.date)
       )
-      .subscribe((count) => {
-        this.lateStudents = count;
+      .subscribe({
+        next: (count: number) => {
+          this.lateStudents = count;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error(error.message);
+        },
+        complete: () => {
+          this.getLastHourAttendance();
+        }
+      })
+  }
+
+  public getLastHourAttendance() {
+    this.attendanceService
+      .getLastHourAttendance([AttendanceStatus.LATE])
+      .subscribe({
+        next: (count) => {
+          this.lastHourLateStudents = count;
+          console.debug('Last hour LATE attendance count:', count);
+        },
+        error: (error) => {
+          console.error('Error fetching last hour LATE attendance count:', error);
+          this.lastHourLateStudents = 0;
+        },
+        complete: () => {
+          console.log('Last hour LATE attendance count fetched');
+        },
       });
   }
 }

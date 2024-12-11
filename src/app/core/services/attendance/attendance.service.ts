@@ -279,4 +279,13 @@ export class AttendanceService {
       params: params
     });
   }
+
+  public getLastHourAttendance(attendanceStatuses: AttendanceStatus[]) {
+    return this.http.get<number>(`${this.apiUrl}/attendances/count/last-hour`, {
+      params: {
+        attendanceStatuses: this.utilService.attendanceStatusListToString(attendanceStatuses),
+      },
+    });
+  }
 }
+
