@@ -36,7 +36,8 @@ export class AdminComponent {
   // Injections
   private readonly utilService = inject(UtilService);
 
-  public dailyAttendanceReportDateRange = this.utilService.timeRangeConstantToDateRange(
-    TimeRangeConstants.LAST_30_DAYS
-  );
+  public dailyAttendanceReportDateRange =
+    this.utilService.timeRangeConstantToDateRange(
+      TimeRangeConstants.LAST_30_DAYS
+    );
 }
