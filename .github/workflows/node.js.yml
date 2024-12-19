@@ -28,8 +28,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./attendance-management-system
 
       - name: Build Angular Project
         run: npm run build --if-present
-        working-directory: ./attendance-management-system
