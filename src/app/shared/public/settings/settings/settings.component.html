@@ -8,22 +8,24 @@
       <form [formGroup]="userForm" class="flex flex-column gap-3 flex-grow-1">
         <div class="field flex flex-column align-items-center">
           <p-avatar
-            [image]="currentUser.profilePicture || 'assets/default-avatar.png'"
+            [image]="currentUser.profilePicture || '/school-logo.png'"
             size="xlarge"
             shape="circle"
             [style]="{ width: '150px', height: '150px' }"
           ></p-avatar>
           <p-fileUpload
+          #fu
             mode="basic"
-            chooseLabel="Change Picture"
+            chooseLabel="Change Profile Picture"
             name="profilePicture"
-            accept="image/*"
-            [maxFileSize]="1000000"
-            (onUpload)="onProfilePictureUpload($event)"
-            [auto]="true"
+            (onSelect)="onProfilePictureSelect($event)"
             chooseIcon="pi pi-upload"
+            customUpload
             styleClass="mt-2"
           ></p-fileUpload>
+          <p-button label="Upload" (onClick)="fu.upload()" class="mt-2">
+
+          </p-button>
         </div>
         <div class="field">
           <label for="username" class="block font-bold mb-2">Username</label>
@@ -73,9 +75,7 @@
   </div>
 
   <!-- Teacher Information Card -->
-  <div
-    class="col-12 lg:col-6 flex-auto flex-column teacher-info-container"
-  >
+  <div class="col-12 lg:col-6 flex-auto flex-column teacher-info-container">
     <p-card header="Teacher Information" styleClass="h-full flex-fill shadow-3">
       <form [formGroup]="teacherForm" class="flex flex-column gap-3">
         <div class="grid">

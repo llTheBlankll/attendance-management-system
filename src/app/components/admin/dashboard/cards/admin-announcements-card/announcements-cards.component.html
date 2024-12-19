@@ -1,37 +1,46 @@
 <p-panel header="Announcements" styleClass="h-full">
   <ng-template pTemplate="icons">
     <!-- cog icon button -->
-    <button class="p-panel-header-icon p-link mr-2"
-            (click)="menu.toggle($event)">
+    <button
+      class="p-panel-header-icon p-link mr-2"
+      (click)="menu.toggle($event)"
+    >
       <span class="pi pi-list"></span>
     </button>
     <p-menu #menu [popup]="true" [model]="this.options"></p-menu>
   </ng-template>
   <div class="container-fluid h-full">
-    @for (announcement of announcements; track $index) {
-      <div class="card">
-        <div class="profile-header flex-row align-items-center">
-          <p-avatar [image]="'/school-logo.png'" class="mr-2">
-          </p-avatar>
-          <strong>{{ announcement.user.teacher?.lastName }}, {{ announcement.user.teacher?.firstName }}</strong>
-        </div>
-        <div class="title">
-          {{ announcement.title }}
-          <div class="subtitle">
-            <sub>
-              Date created: <strong>{{ announcement.createdAt | date: 'yyyy-MM-dd, HH:MM:SS' }}</strong>
-            </sub>
-          </div>
-        </div>
-        <div class="body">
-          <p style="text-align: justify;">
-            {{ announcement.content }}
-          </p>
-        </div>
-        <div class="footer">
-          By <strong>{{ announcement.user.username }}</strong>
+    @for (announcement of processedAnnouncement; track $index) {
+    <div class="card">
+      <div class="profile-header flex-row align-items-center">
+        <p-image [src]="announcement.profilePicture">
+
+        </p-image>
+        <strong
+          >{{ announcement.user.teacher?.lastName }},
+          {{ announcement.user.teacher?.firstName }}</strong
+        >
+      </div>
+      <div class="title">
+        {{ announcement.title }}
+        <div class="subtitle">
+          <sub>
+            Date created:
+            <strong>{{
+              announcement.createdAt | date : "yyyy-MM-dd, HH:MM:SS"
+            }}</strong>
+          </sub>
         </div>
       </div>
+      <div class="body">
+        <p style="text-align: justify">
+          {{ announcement.content }}
+        </p>
+      </div>
+      <div class="footer">
+        By <strong>{{ announcement.user.username }}</strong>
+      </div>
+    </div>
     }
   </div>
 </p-panel>

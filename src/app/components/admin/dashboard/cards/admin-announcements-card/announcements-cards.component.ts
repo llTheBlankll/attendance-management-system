@@ -1,16 +1,17 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {CardModule} from 'primeng/card';
-import {PanelModule} from 'primeng/panel';
-import {MenuModule} from 'primeng/menu';
-import {MenuItem, MessageService} from 'primeng/api';
-import {AnnouncementService} from "../../../../../core/services/announcement/announcement.service";
-import {Announcement} from "../../../../../core/interfaces/dto/announcement/announcement";
-import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import {User} from "../../../../../core/interfaces/dto/user/user";
-import {DatePipe} from "@angular/common";
-import {AvatarModule} from "primeng/avatar";
-import {TeacherService} from "../../../../../core/services/teacher/teacher.service";
-import {firstValueFrom} from "rxjs";
+import { DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
+import { MenuItem, MessageService } from 'primeng/api';
+import { AvatarModule } from 'primeng/avatar';
+import { CardModule } from 'primeng/card';
+import { MenuModule } from 'primeng/menu';
+import { PanelModule } from 'primeng/panel';
+import { catchError, forkJoin, of, tap } from 'rxjs';
+import { Announcement } from '../../../../../core/interfaces/dto/announcement/announcement';
+import { User } from '../../../../../core/interfaces/dto/user/user';
+import { AnnouncementService } from '../../../../../core/services/announcement/announcement.service';
+import { TeacherService } from '../../../../../core/services/teacher/teacher.service';
+import { ImageModule } from 'primeng/image';
 
 interface ProcessedAnnouncement {
   id?: number;
@@ -25,7 +26,7 @@ interface ProcessedAnnouncement {
 @Component({
   selector: 'app-announcement-card',
   standalone: true,
-  imports: [CardModule, PanelModule, MenuModule, DatePipe, AvatarModule],
+  imports: [CardModule, PanelModule, MenuModule, DatePipe, ImageModule],
   templateUrl: './announcements-cards.component.html',
   styleUrl: './announcements-cards.component.css',
 })
@@ -40,23 +41,48 @@ export class AnnouncementsCardsComponent implements OnInit {
 
   ngOnInit(): void {
     // get user role for checking if user is admin
-    const role = localStorage.getItem("role");
+    const role = localStorage.getItem('role');
 
     // Retrieve all announcements
     this.announcementService.getAllAnnouncement().subscribe({
       next: (response: HttpResponse<Announcement[]>) => {
         // this.announcements = response.body ?? [];
         const announcements = response.body ?? [];
-        announcements.forEach((announcement) => {
-          if (announcement.user.teacher !== undefined) {
-            const teacherPictureBlob = this.teacherService.getTeacherProfilePicture(announcement.user.teacher.id);
-            teacherPictureBlob.subscribe((pic) => {
-              this.processedAnnouncement.push({
-                ...announcement,
-                profilePicture: pic
-              });
-            });
-          }
+        // Loop each announcement and add the teacher profile.
+        const observables = announcements
+          .filter(
+            (announcement) => announcement.user && announcement.user.teacher
+          )
+          .map((announcement: Announcement) =>
+            // Get teacher profile picture
+            this.teacherService
+              .getTeacherProfilePicture(announcement.user.teacher?.id ?? 0)
+              .pipe(
+                tap((picture: Blob) => {
+                  this.processedAnnouncement.push({
+                    ...announcement,
+                    profilePicture: picture,
+                  });
+                }),
+                catchError((error: HttpErrorResponse) => {
+                  if (error.status !== 404) {
+                    console.error(
+                      'Error fetching teacher profile picture:',
+                      error
+                    );
+                  }
+                  return of(null); // Return a fallback value
+                })
+              )
+          );
+        forkJoin(observables).subscribe({
+          next: () => {
+
+            console.log('Announcements fetched');
+          },
+          error: (error) => {
+            console.error('Error fetching announcements:', error);
+          },
         });
       },
       error: (error: HttpErrorResponse) => {
@@ -66,8 +92,8 @@ export class AnnouncementsCardsComponent implements OnInit {
           summary: 'Error Loading Announcements',
           detail: 'Failed to fetch announcements. Please try again later.',
         });
-      }
-    })
+      },
+    });
 
     this.options = [
       {
@@ -75,7 +101,7 @@ export class AnnouncementsCardsComponent implements OnInit {
         icon: 'pi pi-fw pi-plus',
         routerLink: ['/dashboard/admin/announcements'],
         tooltip: 'Create a new announcement',
-        visible: role === "ADMIN" || role === "TEACHER" // Only show this menu item if user is admin
+        visible: role === 'ADMIN' || role === 'TEACHER', // Only show this menu item if user is admin
       },
       {
         label: 'View All Announcements',
@@ -109,4 +135,3 @@ export class AnnouncementsCardsComponent implements OnInit {
     ];
   }
 }
-

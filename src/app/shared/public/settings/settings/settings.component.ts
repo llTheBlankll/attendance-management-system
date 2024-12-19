@@ -1,10 +1,20 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
-import { FileUploadModule } from 'primeng/fileupload';
+import {
+  FileProgressEvent,
+  FileSelectEvent,
+  FileUploadEvent,
+  FileUploadModule,
+} from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -12,6 +22,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { MessageService } from 'primeng/api';
 import { User } from '../../../../core/interfaces/dto/user/user';
 import { AuthenticationService } from '../../../../auth/authentication.service';
+import { consumerPollProducersForChange } from '@angular/core/primitives/signals';
 
 @Component({
   selector: 'app-settings',
@@ -26,14 +37,13 @@ import { AuthenticationService } from '../../../../auth/authentication.service';
     ButtonModule,
     ToastModule,
     InputMaskModule,
-    AvatarModule
+    AvatarModule,
   ],
-  providers: [MessageService],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css'
+  styleUrl: './settings.component.css',
 })
 export class SettingsComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private authService = inject(AuthenticationService);
   private messageService = inject(MessageService);
 
@@ -43,25 +53,36 @@ export class SettingsComponent implements OnInit {
 
   sexOptions = ['Male', 'Female', 'Other'];
   positionOptions = [
-    'Teacher I', 'Teacher II', 'Teacher III', 'Teacher IV', 'Teacher V',
-    'Master Teacher I', 'Master Teacher II', 'Master Teacher III', 'Master Teacher IV',
-    'Head Teacher I', 'Head Teacher II', 'Head Teacher III',
-    'Principal I', 'Principal II', 'Principal III'
+    'Teacher I',
+    'Teacher II',
+    'Teacher III',
+    'Teacher IV',
+    'Teacher V',
+    'Master Teacher I',
+    'Master Teacher II',
+    'Master Teacher III',
+    'Master Teacher IV',
+    'Head Teacher I',
+    'Head Teacher II',
+    'Head Teacher III',
+    'Principal I',
+    'Principal II',
+    'Principal III',
   ];
 
   ngOnInit() {
-    this.initializeForms();
     this.loadUserData();
+    this.initializeForms();
   }
 
   initializeForms() {
-    this.userForm = this.fb.group({
+    this.userForm = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      profilePicture: ['']
+      profilePicture: [''],
     });
 
-    this.teacherForm = this.fb.group({
+    this.teacherForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       middleInitial: ['', [Validators.maxLength(1)]],
@@ -69,18 +90,20 @@ export class SettingsComponent implements OnInit {
       contactNumber: ['', Validators.pattern(/^\+?[0-9]{10,12}$/)],
       emergencyContact: ['', Validators.required],
       sex: ['', Validators.required],
-      position: ['', Validators.required]
+      position: ['', Validators.required],
     });
   }
 
   loadUserData() {
     this.authService.getCurrentUser().subscribe({
       next: (user: User) => {
+        console.debug('Current User data fetched successfully.');
         this.currentUser = user;
+        console.debug(this.currentUser);
         this.userForm.patchValue({
           username: user.username,
           email: user.email,
-          profilePicture: user.profilePicture
+          profilePicture: user.profilePicture,
         });
 
         if (user.teacher) {
@@ -92,14 +115,18 @@ export class SettingsComponent implements OnInit {
             contactNumber: user.teacher.contactNumber,
             emergencyContact: user.teacher.emergencyContact,
             sex: user.teacher.sex,
-            position: user.teacher.position
+            position: user.teacher.position,
           });
         }
       },
       error: (error) => {
         console.error('Error loading user data:', error);
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to load user data'});
-      }
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load user data',
+        });
+      },
     });
   }
 
@@ -107,14 +134,22 @@ export class SettingsComponent implements OnInit {
     if (this.userForm.valid) {
       const updatedUserInfo = {
         ...this.currentUser,
-        ...this.userForm.value
+        ...this.userForm.value,
       };
 
       // Here you would typically call a service to update the user data
       console.log('Updated user account info:', updatedUserInfo);
-      this.messageService.add({severity:'success', summary: 'Success', detail: 'Account information updated successfully'});
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Account information updated successfully',
+      });
     } else {
-      this.messageService.add({severity:'error', summary: 'Error', detail: 'Please fill all required fields correctly'});
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields correctly',
+      });
     }
   }
 
@@ -122,23 +157,35 @@ export class SettingsComponent implements OnInit {
     if (this.teacherForm.valid) {
       const updatedTeacherInfo = {
         ...this.currentUser.teacher,
-        ...this.teacherForm.value
+        ...this.teacherForm.value,
       };
 
       // Here you would typically call a service to update the teacher data
       console.log('Updated teacher info:', updatedTeacherInfo);
-      this.messageService.add({severity:'success', summary: 'Success', detail: 'Teacher information updated successfully'});
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Teacher information updated successfully',
+      });
     } else {
-      this.messageService.add({severity:'error', summary: 'Error', detail: 'Please fill all required fields correctly'});
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields correctly',
+      });
     }
   }
 
-  onProfilePictureUpload(event: any) {
+  onProfilePictureSelect(event: FileSelectEvent) {
     // Handle profile picture upload
     // You would typically upload the file to your server here
     const file = event.files[0];
     console.log('Profile picture to upload:', file);
-    this.messageService.add({severity:'info', summary: 'File Uploaded', detail: 'Profile picture updated'});
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Picture Selected',
+      detail: 'Profile picture was selected',
+    });
   }
 
   // Add this method to get form control
