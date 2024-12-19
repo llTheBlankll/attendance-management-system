@@ -1,8 +1,9 @@
+<p-toast/>
 @if (this.authenticated) {
   <app-topbar></app-topbar>
   <app-sidebar>
     <p-breadcrumb [model]="this.breadcrumbService.breadcrumbs" styleClass="mb-3"/>
-    <router-outlet>
+    <router-outlet>`
 
     </router-outlet>
   </app-sidebar>

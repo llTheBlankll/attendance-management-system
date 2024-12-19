@@ -1,4 +1,3 @@
-<p-toast/>
 <div class="background-overlay">
   <div class="container">
     <div class="grid">
@@ -17,13 +16,13 @@
                   <p-iconField>
                     <p-inputIcon styleClass="pi pi-user">
                     </p-inputIcon>
-                    <input type="text" formControlName="username" pInputText class="w-23rem" placeholder="Username">
+                    <input type="text" formControlName="username" autocomplete="username" pInputText class="w-23rem" placeholder="Username">
                   </p-iconField>
                 </div>
                 <div class="col-12 mb-2">
                   <p-iconField>
                     <p-inputIcon styleClass="pi pi-lock"></p-inputIcon>
-                    <input type="password" formControlName="password" pInputText class="w-23rem" placeholder="Password">
+                    <input type="password" autocomplete="current-password" formControlName="password" pInputText class="w-23rem" placeholder="Password">
                   </p-iconField>
                 </div>
                 <div class="col-12">

@@ -1,23 +1,23 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import {NgIf, NgTemplateOutlet} from '@angular/common';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {Component, inject, OnInit} from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   NavigationEnd,
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { MenuItem, PrimeNGConfig } from 'primeng/api';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { ToastModule } from 'primeng/toast';
-import { filter, Subject } from 'rxjs';
-import { AuthComponent } from './auth/auth.component';
-import { AuthenticationService } from './auth/authentication.service';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { TopbarComponent } from './components/topbar/topbar.component';
-import { CodeStatus } from './core/enums/CodeStatus';
-import { MessageDTO } from './core/interfaces/MessageDTO';
-import { BreadcrumbService } from './core/services/breadcrumbs/breadcrumb.service';
+import {MenuItem, MessageService, PrimeNGConfig} from 'primeng/api';
+import {BreadcrumbModule} from 'primeng/breadcrumb';
+import {ToastModule} from 'primeng/toast';
+import {filter, Subject} from 'rxjs';
+import {AuthComponent} from './auth/auth.component';
+import {AuthenticationService} from './auth/authentication.service';
+import {SidebarComponent} from './components/sidebar/sidebar.component';
+import {TopbarComponent} from './components/topbar/topbar.component';
+import {CodeStatus} from './core/enums/CodeStatus';
+import {MessageDTO} from './core/interfaces/MessageDTO';
+import {BreadcrumbService} from './core/services/breadcrumbs/breadcrumb.service';
 
 @Component({
   selector: 'app-root',
@@ -27,10 +27,10 @@ import { BreadcrumbService } from './core/services/breadcrumbs/breadcrumb.servic
     BreadcrumbModule,
     SidebarComponent,
     TopbarComponent,
-    NgTemplateOutlet,
-    NgIf,
-    AuthComponent,
     ToastModule,
+  ],
+  providers: [
+    MessageService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -38,8 +38,9 @@ import { BreadcrumbService } from './core/services/breadcrumbs/breadcrumb.servic
 export class AppComponent implements OnInit {
   // Injections
   private readonly authService = inject(AuthenticationService);
-  private readonly router = inject(Router);
   protected readonly breadcrumbService = inject(BreadcrumbService);
+
+  private readonly router = inject(Router);
   private primeNgConfig = inject(PrimeNGConfig);
 
   // * Authentication
@@ -49,8 +50,6 @@ export class AppComponent implements OnInit {
   };
 
   // Breadcrumbs
-  private ngUnsubscribe = new Subject<void>();
-
   ngOnInit(): void {
     this.primeNgConfig.ripple = true;
 
@@ -76,7 +75,8 @@ export class AppComponent implements OnInit {
 
     // Check if authenticated
     this.authService.isAuthenticated().subscribe({
-      next: (message: MessageDTO) => {
+      next: (response: HttpResponse<MessageDTO>) => {
+        const message = response.body ?? { status: CodeStatus.OK, message: '' };
         if (message.status === CodeStatus.OK) {
           this.authenticated.authenticated = true;
         }

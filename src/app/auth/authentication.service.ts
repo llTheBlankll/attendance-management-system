@@ -1,11 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { Login } from '../core/interfaces/dto/forms/Login';
-import { User } from '../core/interfaces/dto/user/user';
-import { JWTInformation } from '../core/interfaces/JWTInformation';
-import { MessageDTO } from '../core/interfaces/MessageDTO';
+import {HttpClient} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {Login} from '../core/interfaces/dto/forms/Login';
+import {User} from '../core/interfaces/dto/user/user';
+import {JWTInformation} from '../core/interfaces/JWTInformation';
+import {MessageDTO} from '../core/interfaces/MessageDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,6 @@ export class AuthenticationService {
   }
 
   public login(login: Login) {
-    console.log("Logging in...");
     return this.http
       .post<JWTInformation>(`${this.apiUrl}/users/login`, login, {
         headers: {
@@ -27,12 +26,12 @@ export class AuthenticationService {
       });
   }
 
-  public isAuthenticated(): Observable<MessageDTO> {
-    console.log("Checking if user is authenticated...");
+  public isAuthenticated() {
     return this.http.get<MessageDTO>(`${this.apiUrl}/users/validate`, {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")
       },
+      observe: "response"
     });
   }
 
