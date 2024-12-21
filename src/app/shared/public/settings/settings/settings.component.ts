@@ -2,27 +2,22 @@ import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-import {
-  FileProgressEvent,
-  FileSelectEvent,
-  FileUploadEvent,
-  FileUploadModule,
-} from 'primeng/fileupload';
-import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
-import { InputMaskModule } from 'primeng/inputmask';
-import { AvatarModule } from 'primeng/avatar';
 import { MessageService } from 'primeng/api';
-import { User } from '../../../../core/interfaces/dto/user/user';
+import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DropdownModule } from 'primeng/dropdown';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
 import { AuthenticationService } from '../../../../auth/authentication.service';
-import { consumerPollProducersForChange } from '@angular/core/primitives/signals';
+import { User } from '../../../../core/interfaces/dto/user/user';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -50,6 +45,7 @@ export class SettingsComponent implements OnInit {
   userForm!: FormGroup;
   teacherForm!: FormGroup;
   currentUser!: User;
+  protected profilePicture?: string;
 
   sexOptions = ['Male', 'Female', 'Other'];
   positionOptions = [
@@ -98,8 +94,18 @@ export class SettingsComponent implements OnInit {
     this.authService.getCurrentUser().subscribe({
       next: (user: User) => {
         console.debug('Current User data fetched successfully.');
+        // Set the profile picture url
+        if (user.teacher !== undefined) {
+          this.profilePicture =
+            environment.apiUrl +
+            '/uploads/teacher/' +
+            user.teacher.id +
+            '/profile-picture';
+        } else {
+          this.profilePicture = '/school-logo.png';
+        }
+
         this.currentUser = user;
-        console.debug(this.currentUser);
         this.userForm.patchValue({
           username: user.username,
           email: user.email,

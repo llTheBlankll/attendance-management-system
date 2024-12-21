@@ -12,31 +12,27 @@ import { User } from '../../../../../core/interfaces/dto/user/user';
 import { AnnouncementService } from '../../../../../core/services/announcement/announcement.service';
 import { TeacherService } from '../../../../../core/services/teacher/teacher.service';
 import { ImageModule } from 'primeng/image';
+import { environment } from '../../../../../../environments/environment';
+import { ButtonModule } from 'primeng/button';
 
 interface ProcessedAnnouncement {
-  id?: number;
-  profilePicture?: Blob;
-  title: string;
-  content: string;
-  user: User;
-  createdAt: Date;
-  updatedAt: Date;
+  announcement: Announcement;
+  profilePictureUrl: string;
 }
 
 @Component({
   selector: 'app-announcement-card',
   standalone: true,
-  imports: [CardModule, PanelModule, MenuModule, DatePipe, ImageModule],
+  imports: [CardModule, PanelModule, MenuModule, DatePipe, AvatarModule, ButtonModule],
   templateUrl: './announcements-cards.component.html',
   styleUrl: './announcements-cards.component.css',
 })
 export class AnnouncementsCardsComponent implements OnInit {
   public options: MenuItem[] = [];
   protected announcements: Announcement[] = [];
-  protected processedAnnouncement: ProcessedAnnouncement[] = [];
+  protected processedAnnouncements: ProcessedAnnouncement[] = [];
 
   private readonly announcementService = inject(AnnouncementService);
-  private readonly teacherService = inject(TeacherService);
   private readonly messageService = inject(MessageService);
 
   ngOnInit(): void {
@@ -49,41 +45,15 @@ export class AnnouncementsCardsComponent implements OnInit {
         // this.announcements = response.body ?? [];
         const announcements = response.body ?? [];
         // Loop each announcement and add the teacher profile.
-        const observables = announcements
-          .filter(
-            (announcement) => announcement.user && announcement.user.teacher
-          )
-          .map((announcement: Announcement) =>
-            // Get teacher profile picture
-            this.teacherService
-              .getTeacherProfilePicture(announcement.user.teacher?.id ?? 0)
-              .pipe(
-                tap((picture: Blob) => {
-                  this.processedAnnouncement.push({
-                    ...announcement,
-                    profilePicture: picture,
-                  });
-                }),
-                catchError((error: HttpErrorResponse) => {
-                  if (error.status !== 404) {
-                    console.error(
-                      'Error fetching teacher profile picture:',
-                      error
-                    );
-                  }
-                  return of(null); // Return a fallback value
-                })
-              )
-          );
-        forkJoin(observables).subscribe({
-          next: () => {
-
-            console.log('Announcements fetched');
-          },
-          error: (error) => {
-            console.error('Error fetching announcements:', error);
-          },
+        // Set the Picture URL to each of them
+        announcements.forEach((announcement: Announcement) => {
+          this.processedAnnouncements.push({
+            announcement: announcement,
+            profilePictureUrl: environment.apiUrl + "/uploads/teacher/" + announcement.user.teacher?.id + "/profile-picture",
+          });
         });
+
+        console.log(this.processedAnnouncements);
       },
       error: (error: HttpErrorResponse) => {
         console.error(error.message);

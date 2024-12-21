@@ -8,7 +8,7 @@
       <form [formGroup]="userForm" class="flex flex-column gap-3 flex-grow-1">
         <div class="field flex flex-column align-items-center">
           <p-avatar
-            [image]="currentUser.profilePicture || '/school-logo.png'"
+            [image]="this.profilePicture"
             size="xlarge"
             shape="circle"
             [style]="{ width: '150px', height: '150px' }"
@@ -20,12 +20,10 @@
             name="profilePicture"
             (onSelect)="onProfilePictureSelect($event)"
             chooseIcon="pi pi-upload"
-            customUpload
             styleClass="mt-2"
+            maxFileSize="5000000"
+            auto
           ></p-fileUpload>
-          <p-button label="Upload" (onClick)="fu.upload()" class="mt-2">
-
-          </p-button>
         </div>
         <div class="field">
           <label for="username" class="block font-bold mb-2">Username</label>
