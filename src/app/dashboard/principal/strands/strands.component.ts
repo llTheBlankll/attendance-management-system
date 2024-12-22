@@ -47,7 +47,6 @@ import {CodeStatus} from '../../../core/types/enums/CodeStatus';
     MostPopularStrandCardComponent,
     AvgStudentsStrandCardComponent,
   ],
-  providers: [MessageService],
 })
 export class StrandsComponent implements OnInit {
   strands: { strand: Strand; studentCount: number }[] = [];

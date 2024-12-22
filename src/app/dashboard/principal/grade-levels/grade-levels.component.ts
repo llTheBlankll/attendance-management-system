@@ -48,7 +48,7 @@ import {
     LowestAttendanceGradeCardComponent,
     HighestPerformanceGradeCardComponent
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
   templateUrl: './grade-levels.component.html',
   styleUrl: './grade-levels.component.css'
 })

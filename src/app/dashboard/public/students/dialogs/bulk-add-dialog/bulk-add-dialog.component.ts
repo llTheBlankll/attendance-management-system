@@ -71,9 +71,6 @@ import {MessageService} from 'primeng/api';
       </ng-template>
     </p-dialog>
   `,
-  providers: [
-    MessageService
-  ]
 })
 export class BulkAddDialogComponent {
   @Input() visible: boolean = false;

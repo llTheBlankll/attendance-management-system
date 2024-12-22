@@ -46,9 +46,6 @@ import {MessageService} from 'primeng/api';
     EditAttendanceFormComponent,
     ManualAttendanceInputComponent,
   ],
-  providers: [
-    MessageService
-  ]
 })
 export class AttendanceComponent implements OnInit {
   attendanceData: {
