@@ -1,0 +1,104 @@
+<p-card styleClass="h-full shadow-3" subheader="Additional Information">
+  <div class="flex flex-column w-full text-center justify-content-center mb-2">
+    <div class="align-items-center">
+      @if (this.profilePictureUrl) {
+        <img
+          [src]="this.profilePictureUrl"
+          [style]="{
+          width: '256px',
+          height: '256px',
+          'object-fit': 'cover',
+          'border-radius': '50%'
+        }"
+          alt="Teacher Profile Picture"
+        />
+      } @else {
+        <img
+          src="/school-logo.png"
+          [style]="{
+          width: '256px',
+          height: '256px',
+          'object-fit': 'contain',
+          'border-radius': '50%'
+        }"
+          alt="Default Profile Picture"
+        />
+      }
+    </div>
+    <h2>
+      @if (this.teacher) {
+        {{ this.teacher.firstName }}&nbsp;{{ this.teacher.lastName }}
+      } @else {
+        Teacher
+      }
+    </h2>
+  </div>
+  <div class="grid">
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="sex">Sex</label>
+        <input
+          [value]="this.teacher?.sex ?? 'Not Specified'"
+          id="sex"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="middleInitial">Middle Initial:</label>
+        <input
+          [value]="this.teacher?.middleInitial ?? 'None'"
+          id="middleInitial"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="age">Age:</label>
+        <input
+          [value]="this.teacher?.age ?? 'Not Specified'"
+          id="age"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="position">Position:</label>
+        <input
+          [value]="this.teacher?.position ?? 'Not Specified'"
+          id="position"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="contactNumber">Contact Number:</label>
+        <input
+          [value]="this.teacher?.contactNumber ?? 'Not Specified'"
+          id="contactNumber"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2 mb-2">
+        <label for="emergencyContact">Emergency Contact:</label>
+        <input
+          [value]="this.teacher?.emergencyContact ?? 'Not Specified'"
+          id="emergencyContact"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+</p-card>

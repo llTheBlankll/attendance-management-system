@@ -1,0 +1,94 @@
+<p-confirmPopup/>
+<p-card styleClass="h-full shadow-3" subheader="List of Teachers">
+  <div class="mb-3 flex justify-content-between align-items-center">
+    <div class="flex">
+      <form (ngSubmit)="this.filterTeacher(filterInput.value)" action="">
+        <p-iconField class="mr-3" iconPosition="left">
+          <p-inputIcon styleClass="pi pi-search"/>
+          <input
+            #filterInput
+            (keyup)="filterTeacher(filterInput.value)"
+            pInputText
+            placeholder="Search"
+            type="text"
+          />
+        </p-iconField>
+        <p-button label="Filter" styleClass="w-8rem"></p-button>
+      </form>
+    </div>
+    <div class="flex">
+      <p-button
+        (onClick)="this.retrieveListOfTeachers()"
+        [severity]="'success'"
+        icon="pi pi-fw pi-refresh"
+        pTooltip="Refresh the list of teachers"
+        rounded
+        size="small"
+      />
+    </div>
+  </div>
+  <div class="h-30rem overflow-auto">
+    <p-table [loadingIcon]="'pi pi-refresh'" [value]="teachers" scrollable>
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          Teachers
+          <p-button
+            (onClick)="
+              createTeacherDialogComponent.showDialog =
+                !createTeacherDialogComponent.showDialog
+            "
+            [text]="true"
+            icon="pi pi-plus"
+            rounded
+          />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">Full Name</th>
+          <th scope="col">Position</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template let-teacher pTemplate="body">
+        <tr>
+          <td>{{ teacher.firstName }} {{ teacher.lastName }}</td>
+          <td>{{ teacher.position }}</td>
+          <td class="">
+            <p-button
+              [rounded]="true"
+              [text]="true"
+              icon="pi pi-pencil"
+              severity="warning"
+            />
+            <p-button
+              (onClick)="this.teacherSelected.emit(teacher)"
+              [rounded]="true"
+              [text]="true"
+              icon="pi pi-eye"
+              severity="success"
+            />
+            <p-button
+              (onClick)="this.deleteTeacher(teacher, $event)"
+              [rounded]="true"
+              [text]="true"
+              icon="pi pi-times"
+              severity="danger"
+            />
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td class="text-center" colspan="3">
+            <h4>No Teachers Found</h4>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-card>
+<admin-teachers-create-teacher-dialog
+  #createTeacherDialogComponent
+  (refreshTeachersEmitter)="this.retrieveListOfTeachers()"
+/>

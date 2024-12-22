@@ -1,0 +1,35 @@
+<div class="container-fluid h-23rem w-full overflow-auto">
+  @for (processedAnnouncement of processedAnnouncements; track $index) {
+    <p-panel [toggleable]="true" styleClass="mb-2">
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-2">
+          <p-avatar
+            [image]="processedAnnouncement.profilePictureUrl"
+            shape="circle"
+            size="large"
+          />
+          <span class="font-bold">Amy Elsner</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <div class="flex flex-wrap align-items-center justify-content-between gap-4">
+          <div class="flex align-items-center gap-2">
+            <p-button icon="pi pi-user" rounded text></p-button>
+            <p-button
+              icon="pi pi-bookmark"
+              severity="secondary"
+              rounded
+              text
+            ></p-button>
+          </div>
+          <span class="text-surface-500 dark:text-surface-400"
+          >Updated 2 hours ago</span
+          >
+        </div>
+      </ng-template>
+      <p>
+        {{ processedAnnouncement.announcement.content }}
+      </p>
+    </p-panel>
+  }
+</div>

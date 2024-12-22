@@ -1,0 +1,119 @@
+<!-- ! Create Teacher Dialog -->
+<p-dialog [(visible)]="this.showDialog" [modal]="true" header="Add Teacher" styleClass="w-30rem">
+  <div class="grid">
+    <form [formGroup]="this.addTeacherFormGroup" action="" class="w-full">
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="firstName">First Name</label>
+          <input
+            class="w-full"
+            formControlName="firstName"
+            id="firstName"
+            pInputText
+            placeholder="Please enter their first name"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="middleInitial">Middle Initial:</label>
+          <input
+            formControlName="middleInitial"
+            id="middleInitial"
+            pInputText
+            placeholder="Enter middle initial (Optional)"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="lastName">Last Name:</label>
+          <input
+            formControlName="lastName"
+            id="lastName"
+            pInputText
+            placeholder="Please enter their last name"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="age">Age:</label>
+          <input
+            formControlName="age"
+            id="age"
+            pInputText
+            placeholder="Age"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="sex">Sex:</label>
+          <p-dropdown
+            [options]="['Male', 'Female']"
+            formControlName="sex"
+            id="sex"
+            styleClass="w-full"
+          ></p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="position">Position:</label>
+          <p-dropdown
+            [options]="this.teacherPositions"
+            formControlName="position"
+            id="position"
+            styleClass="w-full"
+          ></p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="contactNumber">Contact Number:</label>
+          <input
+            formControlName="contactNumber"
+            id="contactNumber"
+            pInputText
+            placeholder="Their contact number (Optional)"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="emergencyContact">Emergency Contact:</label>
+          <input
+            formControlName="emergencyContact"
+            id="emergencyContact"
+            pInputText
+            placeholder="Please enter their emergency contact"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="profilePicture">Profile Picture:</label>
+          <p-fileUpload
+            (onSelect)="this.onProfilePictureChange($event)" [accept]="'image/*'"
+            [fileLimit]="1"
+            [maxFileSize]="8000000"
+            chooseIcon="pi pi-pencil"
+            chooseLabel="Choose"
+            id="profilePicture"
+            mode="basic"
+            name="profilePicture"
+            pTooltip="Profile Picture"
+            styleClass="w-full"
+          />
+        </div>
+      </div>
+      <div class="col-12 flex justify-content-center">
+        <div class="flex justify-content-end gap-2">
+          <p-button (onClick)="this.showDialog = false" label="Cancel" severity="secondary"/>
+          <p-button (onClick)="this.addTeacher()" [disabled]="!this.addTeacherFormGroup.valid" label="Save"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</p-dialog>
