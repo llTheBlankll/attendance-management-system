@@ -81,10 +81,16 @@ export class TopbarComponent implements OnInit {
       icon: 'pi pi-fw pi-power-off',
       command: () => {
         console.log('Logout');
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("email");
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        this.router.navigate(['/login']);
       },
     },
   ];
-  private readonly authService = inject(AuthenticationService);
 
   ngOnInit() {
     // TODO: Implement profile picture

@@ -69,7 +69,7 @@ export class AuthComponent {
             localStorage.setItem("jwt", JSON.stringify(message));
 
 
-            this.router.navigate(["/dashboard/admin"]).then(r => console.debug(r));
+            this.router.navigate(["/dashboard"]).then(r => console.debug(r));
             this.messageService.add({
               severity: 'success',
               summary: 'Success',

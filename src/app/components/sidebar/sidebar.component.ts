@@ -35,12 +35,12 @@ export class SidebarComponent {
     {
       label: 'Dashboard',
       icon: 'pi pi-fw pi-home',
-      routerLink: ['/dashboard/admin'],
+      routerLink: ['/dashboard'],
     },
     {
       label: 'Teachers',
       icon: 'pi pi-fw pi-users',
-      routerLink: ['/dashboard/admin/teachers']
+      routerLink: ['/dashboard/teachers']
     },
     {
       label: 'Students',
@@ -65,7 +65,7 @@ export class SidebarComponent {
     {
       label: "Grade Levels",
       icon: 'pi pi-fw pi-list',
-      routerLink: ['/dashboard/admin/grade-levels']
+      routerLink: ['/dashboard/grade-levels']
     },
     {
       label: "Reports",
