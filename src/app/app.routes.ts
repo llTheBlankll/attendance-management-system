@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
 import { authGuard } from './core/guards/auth/auth.guard';
-import { AdminComponent } from './shared/principal/admin.component';
-import { StrandsComponent } from './shared/principal/strands/strands.component';
-import { AdminTeachersComponent } from './shared/principal/teachers/admin-teachers/admin-teachers.component';
-import { AttendanceComponent } from './shared/public/attendances/attendance/attendance.component';
-import { ClassesComponent } from './shared/public/classes/classes/classes.component';
-import { StudentsPageComponent } from './shared/public/students/students-page/students-page.component';
-import { TeacherComponent } from './shared/teacher/teacher.component';
-import { GradeLevelsComponent } from './shared/principal/grade-levels/grade-levels.component';
-import { SettingsComponent } from './shared/public/settings/settings/settings.component';
-import { ReportsComponent } from './shared/public/reports/reports.component';
+import { AdminComponent } from './dashboard/principal/admin.component';
+import { StrandsComponent } from './dashboard/principal/strands/strands.component';
+import { AdminTeachersComponent } from './dashboard/principal/teachers/admin-teachers/admin-teachers.component';
+import { AttendanceComponent } from './dashboard/public/attendances/attendance/attendance.component';
+import { ClassesComponent } from './dashboard/public/classes/classes/classes.component';
+import { StudentsPageComponent } from './dashboard/public/students/students-page/students-page.component';
+import { TeacherComponent } from './dashboard/teacher/teacher.component';
+import { GradeLevelsComponent } from './dashboard/principal/grade-levels/grade-levels.component';
+import { SettingsComponent } from './dashboard/public/settings/settings/settings.component';
+import { ReportsComponent } from './dashboard/public/reports/reports.component';
 
 export const routes: Routes = [
   {

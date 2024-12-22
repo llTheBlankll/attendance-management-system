@@ -1,17 +1,10 @@
-import {NgIf, NgTemplateOutlet} from '@angular/common';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Component, inject, OnInit} from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  NavigationEnd,
-  Router,
-  RouterOutlet,
-} from '@angular/router';
+import {ActivatedRouteSnapshot, NavigationEnd, Router, RouterOutlet,} from '@angular/router';
 import {MenuItem, MessageService, PrimeNGConfig} from 'primeng/api';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
 import {ToastModule} from 'primeng/toast';
-import {filter, Subject} from 'rxjs';
-import {AuthComponent} from './auth/auth.component';
+import {filter} from 'rxjs';
 import {AuthenticationService} from './auth/authentication.service';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {TopbarComponent} from './components/topbar/topbar.component';
@@ -27,7 +20,7 @@ import {BreadcrumbService} from './core/services/breadcrumbs/breadcrumb.service'
     BreadcrumbModule,
     SidebarComponent,
     TopbarComponent,
-    ToastModule,
+    ToastModule
   ],
   providers: [
     MessageService
@@ -36,18 +29,16 @@ import {BreadcrumbService} from './core/services/breadcrumbs/breadcrumb.service'
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  // Injections
-  private readonly authService = inject(AuthenticationService);
-  protected readonly breadcrumbService = inject(BreadcrumbService);
-
-  private readonly router = inject(Router);
-  private primeNgConfig = inject(PrimeNGConfig);
-
   // * Authentication
   public authenticated = {
     authenticated: false,
     role: sessionStorage.getItem('role') ?? 'GUEST',
   };
+  protected readonly breadcrumbService = inject(BreadcrumbService);
+  // Injections
+  private readonly authService = inject(AuthenticationService);
+  private readonly router = inject(Router);
+  private primeNgConfig = inject(PrimeNGConfig);
 
   // Breadcrumbs
   ngOnInit(): void {
@@ -76,7 +67,7 @@ export class AppComponent implements OnInit {
     // Check if authenticated
     this.authService.isAuthenticated().subscribe({
       next: (response: HttpResponse<MessageDTO>) => {
-        const message = response.body ?? { status: CodeStatus.OK, message: '' };
+        const message = response.body ?? {status: CodeStatus.OK, message: ''};
         if (message.status === CodeStatus.OK) {
           this.authenticated.authenticated = true;
         }
