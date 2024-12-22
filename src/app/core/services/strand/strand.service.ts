@@ -1,12 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, switchMap } from 'rxjs';
-import { Strand } from '../../interfaces/dto/strand/Strand';
-import { StudentService } from '../student/student.service';
-import { TimeRange } from '../../interfaces/DateRange';
-import { LineChartDTO } from '../../interfaces/LineChartDTO';
-import { MessageDTO } from '../../interfaces/MessageDTO';
+import {inject, Injectable} from '@angular/core';
+import {environment} from '../../../../environments/environment';
+import {HttpClient} from '@angular/common/http';
+import {forkJoin, map, Observable, switchMap} from 'rxjs';
+import {Strand} from '../../types/dto/strand/Strand';
+import {StudentService} from '../student/student.service';
+import {TimeRange} from '../../types/other/DateRange';
+import {LineChartDTO} from '../../types/other/LineChartDTO';
+import {MessageDTO} from '../../types/other/MessageDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class StrandService {
         forkJoin(
           strands.map(strand =>
             this.studentService.getStudentCountByStrand(strand.id!).pipe(
-              map(count => ({ strand, studentCount: count }))
+              map(count => ({strand, studentCount: count}))
             )
           )
         )

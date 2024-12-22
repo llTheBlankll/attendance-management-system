@@ -1,10 +1,10 @@
 import {inject, Injectable} from '@angular/core';
 import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import {SortRequest} from "../../interfaces/SortRequest";
-import {PageRequest} from "../../interfaces/PageRequest";
-import {Announcement} from "../../interfaces/dto/announcement/announcement";
-import {MessageDTO} from "../../interfaces/MessageDTO";
+import {SortRequest} from "../../types/other/SortRequest";
+import {PageRequest} from "../../types/other/PageRequest";
+import {Announcement} from "../../types/dto/announcement/announcement";
+import {MessageDTO} from "../../types/other/MessageDTO";
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import {Injectable} from '@angular/core';
+import {MenuItem} from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -7,10 +7,11 @@ import { MenuItem } from 'primeng/api';
 export class BreadcrumbService {
   breadcrumbs: MenuItem[] = [];
 
-  constructor() {}
+  constructor() {
+  }
 
   addBreadcrumb(label: string, url: string = '', icon: string = '') {
-    this.breadcrumbs.push({ label: label, url: url, icon: icon });
+    this.breadcrumbs.push({label: label, url: url, icon: icon});
   }
 
   clearBreadcrumbs() {

@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PageRequest } from '../../interfaces/PageRequest';
-import { SortRequest } from '../../interfaces/SortRequest';
-import { GradeLevel } from '../../interfaces/dto/grade-level/GradeLevel';
-import { environment } from '../../../../environments/environment';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {PageRequest} from '../../types/other/PageRequest';
+import {SortRequest} from '../../types/other/SortRequest';
+import {GradeLevel} from '../../types/dto/grade-level/GradeLevel';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

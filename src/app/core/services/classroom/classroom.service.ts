@@ -1,21 +1,13 @@
-import { inject, Injectable } from '@angular/core';
-import { MessageDTO } from '../../interfaces/MessageDTO';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpResponse,
-} from '@angular/common/http';
-import {
-  ClassroomDTO,
-  ClassroomStudentDTO,
-} from '../../interfaces/dto/classroom/ClassroomDTO';
-import { PageRequest } from '../../interfaces/PageRequest';
-import { SortRequest } from '../../interfaces/SortRequest';
-import { environment } from '../../../../environments/environment';
-import { Student } from '../../interfaces/dto/student/Student';
-import { Sex } from '../../enums/Sex';
+import {inject, Injectable} from '@angular/core';
+import {MessageDTO} from '../../types/other/MessageDTO';
+import {catchError, Observable, throwError} from 'rxjs';
+import {HttpClient, HttpHeaders,} from '@angular/common/http';
+import {ClassroomDTO, ClassroomStudentDTO,} from '../../types/dto/classroom/ClassroomDTO';
+import {PageRequest} from '../../types/other/PageRequest';
+import {SortRequest} from '../../types/other/SortRequest';
+import {environment} from '../../../../environments/environment';
+import {Student} from '../../types/dto/student/Student';
+import {Sex} from '../../types/enums/Sex';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +103,7 @@ export class ClassroomService {
         `${this.apiUrl}/classroom/${classroomId}/profile-picture`,
         formData,
         {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({Accept: 'application/json'}),
         }
       )
       .pipe(

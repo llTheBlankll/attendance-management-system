@@ -1,19 +1,19 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AttendanceForeignEntity} from '../../enums/AttendanceForeignEntity';
-import {AttendanceStatus} from '../../enums/AttendanceStatus';
-import {TimeStack} from '../../enums/TimeStack';
-import {ClassroomDemographicsChart} from '../../interfaces/ClassroomDemographicsChart';
-import {TimeRange} from '../../interfaces/DateRange';
-import {Attendance} from '../../interfaces/dto/attendance/Attendance';
-import {LineChartDTO} from '../../interfaces/LineChartDTO';
-import {PageRequest} from '../../interfaces/PageRequest';
-import {SortRequest} from '../../interfaces/SortRequest';
+import {AttendanceForeignEntity} from '../../types/enums/AttendanceForeignEntity';
+import {AttendanceStatus} from '../../types/enums/AttendanceStatus';
+import {TimeStack} from '../../types/enums/TimeStack';
+import {ClassroomDemographicsChart} from '../../types/other/ClassroomDemographicsChart';
+import {TimeRange} from '../../types/other/DateRange';
+import {Attendance} from '../../types/dto/attendance/Attendance';
+import {LineChartDTO} from '../../types/other/LineChartDTO';
+import {PageRequest} from '../../types/other/PageRequest';
+import {SortRequest} from '../../types/other/SortRequest';
 import {UtilService} from '../util/util.service';
 import {environment} from '../../../../environments/environment';
-import {AttendanceInput} from '../../interfaces/dto/forms/AttendanceInput';
-import {ClassroomRanking} from '../../interfaces/dto/classroom/ClassroomRanking';
+import {AttendanceInput} from '../../types/dto/forms/AttendanceInput';
+import {ClassroomRanking} from '../../types/dto/classroom/ClassroomRanking';
 
 @Injectable({
   providedIn: 'root',

@@ -1,12 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { PageRequest } from '../../interfaces/PageRequest';
-import { Student } from '../../interfaces/dto/student/Student';
-import { SortRequest } from '../../interfaces/SortRequest';
-import { environment } from '../../../../environments/environment';
-import { TimeRange } from '../../interfaces/DateRange';
-import { LineChartDTO } from '../../interfaces/LineChartDTO';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {PageRequest} from '../../types/other/PageRequest';
+import {Student} from '../../types/dto/student/Student';
+import {SortRequest} from '../../types/other/SortRequest';
+import {environment} from '../../../../environments/environment';
+import {TimeRange} from '../../types/other/DateRange';
+import {LineChartDTO} from '../../types/other/LineChartDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -72,7 +72,11 @@ export class StudentService {
   }
 
   public getMostPopularStrand(): Observable<{ strandId: number; strandName: string; studentCount: number }> {
-    return this.http.get<{ strandId: number; strandName: string; studentCount: number }>(`${this.apiUrl}/students/most-popular-strand`);
+    return this.http.get<{
+      strandId: number;
+      strandName: string;
+      studentCount: number
+    }>(`${this.apiUrl}/students/most-popular-strand`);
   }
 
   public getStrandDistribution(dateRange: TimeRange): Observable<LineChartDTO> {
