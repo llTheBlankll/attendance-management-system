@@ -1,5 +1,14 @@
-<div class="container-fluid h-23rem w-full overflow-auto">
-  @for (processedAnnouncement of processedAnnouncements; track $index) {
+<p-confirmPopup/>
+<div class="w-full mb-2 text-right">
+  <p-button
+    icon="pi pi-plus"
+    styleClass="p-button-success"
+    (click)="cad.visible = !cad.visible"
+    rounded
+  ></p-button>
+</div>
+<div class="container-fluid h-21rem w-full overflow-auto">
+  @for (processedAnnouncement of processedAnnouncements$ | async; track processedAnnouncement.announcement.id) {
     <p-panel [toggleable]="true" styleClass="mb-2">
       <ng-template pTemplate="header">
         <div class="flex align-items-center gap-2">
@@ -8,22 +17,30 @@
             shape="circle"
             size="normal"
           />
-          <span class="font-bold">{{ processedAnnouncement.announcement.user.teacher?.lastName }}
-            , {{ processedAnnouncement.announcement.user.teacher?.firstName }}</span>
+          <span
+            class="font-bold">{{ processedAnnouncement.announcement.user.teacher?.firstName }} {{ processedAnnouncement.announcement.user.teacher?.lastName }}</span>
+          <span class="text-500 dark:text-surface-400 text-xs"
+          >{{ processedAnnouncement.announcement.createdAt | date: 'yyyy-MM-dd hh:mm a' }}</span>
         </div>
       </ng-template>
+      <h3>
+        {{ processedAnnouncement.announcement.title }}
+      </h3>
       <ng-template pTemplate="footer">
         <div class="flex flex-wrap align-items-center justify-content-between gap-4">
           <div class="flex align-items-center gap-2">
-            <p-button icon="pi pi-user" rounded text></p-button>
+            <p-button icon="pi pi-heart" rounded text></p-button>
             <p-button
               icon="pi pi-bookmark"
               severity="secondary"
               rounded
               text
             ></p-button>
+            @if (this.userRole !== null && this.userRole === "ADMIN" && processedAnnouncement.announcement.id !== undefined) {
+              <p-button icon="pi pi-trash" severity="danger" (click)="deleteAnnouncement(processedAnnouncement.announcement.id, $event)" rounded outlined></p-button>
+            }
           </div>
-          <span class="text-surface-500 dark:text-surface-400"
+          <span class="text-500 dark:text-surface-400 text-xs"
           >Updated {{ processedAnnouncement.timeUpdatedAgo }}</span
           >
         </div>
@@ -34,3 +51,4 @@
     </p-panel>
   }
 </div>
+<app-create-announcement-dialog [user]="this.user" (savedAnnouncement)="this.addAnnouncement($event)" #cad></app-create-announcement-dialog>

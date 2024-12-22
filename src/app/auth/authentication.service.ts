@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {Login} from '../core/types/dto/forms/Login';
 import {User} from '../core/types/dto/user/user';
@@ -26,7 +26,7 @@ export class AuthenticationService {
       });
   }
 
-  public isAuthenticated() {
+  public isAuthenticatedAsync() {
     return this.http.get<MessageDTO>(`${this.apiUrl}/users/validate`, {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")
@@ -34,7 +34,7 @@ export class AuthenticationService {
     });
   }
 
-  public getCurrentUser(): Observable<User> {
+  public getCurrentUserAsync(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/me`, {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")

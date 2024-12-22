@@ -57,7 +57,7 @@ export class ClassSectionDetailsCardComponent implements OnInit {
   private debounceTimeout: any;
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe({
+    this.authService.getCurrentUserAsync().subscribe({
       next: (user: User) => {
         if (user == null) {
           console.error('Not Logged!');
