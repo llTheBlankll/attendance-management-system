@@ -18,9 +18,6 @@ import {MessageService} from 'primeng/api';
     InputTextareaModule,
     ButtonModule
   ],
-  providers: [
-    MessageService
-  ]
 })
 export class EditAttendanceFormComponent implements OnInit {
   @Input() attendance: Attendance | null = null;

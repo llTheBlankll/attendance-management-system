@@ -17,7 +17,6 @@ import {MessageService} from 'primeng/api';
     AvatarModule,
 
   ],
-  providers: [MessageService],
   templateUrl: './teacher-additional-information.component.html',
   styleUrl: './teacher-additional-information.component.css',
 })

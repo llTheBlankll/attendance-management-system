@@ -23,7 +23,6 @@ import {StudentService} from '../../../../core/services/student/student.service'
     ToastModule,
     TooltipModule,
   ],
-  providers: [MessageService, ConfirmationService],
   templateUrl: './student-details-and-selection-card.component.html',
   styleUrl: './student-details-and-selection-card.component.css',
 })

@@ -40,7 +40,7 @@ import {CreateTeacherDialogComponent} from '../../dialogs/create-teacher-dialog/
     ConfirmPopupModule,
     CreateTeacherDialogComponent,
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [ConfirmationService],
   templateUrl: './list-of-teachers.component.html',
   styleUrl: './list-of-teachers.component.css',
 })

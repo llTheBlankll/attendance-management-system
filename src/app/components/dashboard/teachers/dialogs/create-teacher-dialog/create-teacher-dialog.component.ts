@@ -28,7 +28,6 @@ import {BehaviorSubject, firstValueFrom} from 'rxjs';
     TooltipModule,
     ToastModule,
   ],
-  providers: [MessageService],
   templateUrl: './create-teacher-dialog.component.html',
   styleUrl: './create-teacher-dialog.component.css',
 })
