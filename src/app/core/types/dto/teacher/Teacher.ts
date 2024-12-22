@@ -1,4 +1,4 @@
-import { AttendanceStatus } from '../../../enums/AttendanceStatus';
+import {AttendanceStatus} from '../../enums/AttendanceStatus';
 
 export interface Teacher {
   id?: number;

@@ -1,8 +1,8 @@
-import { Sex } from '../../../enums/Sex';
-import { GradeLevel } from '../grade-level/GradeLevel';
-import { Guardian } from '../guardian/Guardian';
-import { Strand } from '../strand/Strand';
-import { Student, StudentSchedule } from '../student/Student';
+import {Sex} from '../../enums/Sex';
+import {GradeLevel} from '../grade-level/GradeLevel';
+import {Guardian} from '../guardian/Guardian';
+import {Strand} from '../strand/Strand';
+import {StudentSchedule} from '../student/Student';
 
 export interface ClassroomDTO {
   id?: number;

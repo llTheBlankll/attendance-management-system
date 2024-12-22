@@ -1,4 +1,4 @@
-import { Student } from "../student/Student";
+import {Student} from "../student/Student";
 
 export interface AttendanceInput {
   student: Student;
