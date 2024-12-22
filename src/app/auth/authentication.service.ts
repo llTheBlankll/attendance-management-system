@@ -42,4 +42,22 @@ export class AuthenticationService {
       }
     });
   }
+
+  public getUserToken() {
+    return localStorage.getItem("token");
+  }
+
+  public getUserRole() {
+    return localStorage.getItem("role");
+  }
+
+  public getUserJWT() {
+    const jwt = localStorage.getItem("jwt");
+
+    if (jwt) {
+      return JSON.parse(jwt) as JWTInformation;
+    }
+
+    return null;
+  }
 }

@@ -13,6 +13,7 @@ import {ButtonModule} from 'primeng/button';
 interface ProcessedAnnouncement {
   announcement: Announcement;
   profilePictureUrl: string;
+  timeUpdatedAgo: string;
 }
 
 @Component({
@@ -24,7 +25,6 @@ interface ProcessedAnnouncement {
 })
 export class AnnouncementsCardsComponent implements OnInit {
   public options: MenuItem[] = [];
-  protected announcements: Announcement[] = [];
   protected processedAnnouncements: ProcessedAnnouncement[] = [];
 
   private readonly announcementService = inject(AnnouncementService);
@@ -42,9 +42,12 @@ export class AnnouncementsCardsComponent implements OnInit {
         // Loop each announcement and add the teacher profile.
         // Set the Picture URL to each of them
         announcements.forEach((announcement: Announcement) => {
+          announcement.updatedAt = new Date(announcement.updatedAt);
+          announcement.createdAt = new Date(announcement.createdAt);
           this.processedAnnouncements.push({
             announcement: announcement,
             profilePictureUrl: environment.apiUrl + "/uploads/teacher/" + announcement.user.teacher?.id + "/profile-picture",
+            timeUpdatedAgo: (Math.floor(announcement.createdAt.getTime() / 1000) === Math.floor(announcement.updatedAt.getTime() / 1000)) ? 'Now' : this.getTimeAgo(announcement.updatedAt),
           });
         });
 
@@ -98,5 +101,23 @@ export class AnnouncementsCardsComponent implements OnInit {
         },
       },
     ];
+  }
+
+  private getTimeAgo(updatedAt: Date) {
+    const now = new Date();
+    const differenceInSeconds = Math.floor((now.getTime() - updatedAt.getTime()) / 1000);
+
+    if (differenceInSeconds < 60) {
+      return `${differenceInSeconds} seconds ago`;
+    } else if (differenceInSeconds < 3600) {
+      const minutes = Math.floor(differenceInSeconds / 60);
+      return `${minutes} minutes ago`;
+    } else if (differenceInSeconds < 86400) {
+      const hours = Math.floor(differenceInSeconds / 3600);
+      return `${hours} hours ago`;
+    } else {
+      const days = Math.floor(differenceInSeconds / 86400);
+      return `${days} days ago`;
+    }
   }
 }
