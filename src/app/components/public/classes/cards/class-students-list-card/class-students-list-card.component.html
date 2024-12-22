@@ -1,0 +1,53 @@
+<p-card styleClass="shadow-3 h-full" subheader="List of Students">
+  <div>
+    <p-table
+      [globalFilterFields]="['lastName', 'sex']"
+      [paginator]="true"
+      [rowHover]="true"
+      [rows]="5"
+      [showCurrentPageReport]="true"
+      [value]="this.students"
+      scrollable
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="lastName" scope="col">Name</th>
+          <th pSortableColumn="sex" scope="col">Sex</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template let-student pTemplate="body">
+        <tr>
+          <td>
+            {{ student.lastName }}, {{ student.firstName }},
+            {{ student.middleInitial }}
+          </td>
+          <td>{{ student.sex }}</td>
+          <td>
+            <p-button
+              (onClick)="this.viewStudent(student)"
+              icon="pi pi-eye"
+              outlined
+              rounded
+              severity="success"
+              size="small"
+            >
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td class="text-center" colspan="3">No records found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-card>
+
+<app-student-view-dialog
+  (visibleChange)="closeStudentDialog()"
+  [student]="selectedStudent"
+  [visible]="showStudentDialog"
+>
+</app-student-view-dialog>

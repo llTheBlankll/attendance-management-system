@@ -1,0 +1,101 @@
+<p-card styleClass="h-full" subheader="Student Profile Information">
+  <div class="flex-column flex align-items-center justify-content-center mb-3">
+    <p-image height="156" src="/school-logo.png" width="156"></p-image>
+    @if (this.studentInformation !== undefined) {
+      <span class="text-900 font-medium text-xl">
+      <b
+      >{{ this.studentInformation.prefix }}
+        {{ this.studentInformation.firstName }}&nbsp;{{
+          this.studentInformation.lastName
+        }}</b
+      >
+    </span>
+    } @else {
+      <span class="text-900 font-medium text-xl">
+      <b>Waiting for the selection of student</b>
+    </span>
+    }
+  </div>
+  <div class="grid">
+    <div class="col-12 w-full">
+      <div class="flex flex-column gap-2">
+        <label for="sex"> Sex </label>
+        <input
+          [value]="this.studentInformation?.sex ?? 'Sex is not specified'"
+          id="sex"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="flex flex-column gap-2">
+        <label for="birthDate">Birth Date</label>
+        <input
+          [value]="
+            this.studentInformation?.birthdate ?? 'Birthdate is not specified'
+          "
+          id="birthDate"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="flex flex-column gap-2">
+        <label for="guardianName"> Guardian Name </label>
+        <input
+          [value]="
+            this.studentInformation?.guardian?.fullName ??
+            'Guardian name is not specified'
+          "
+          id="guardianName"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="flex flex-column gap-2">
+        <label for="guardianContactNumber"> Guardian Contact Number </label>
+        <input
+          [value]="
+            this.studentInformation?.guardian?.contactNumber ??
+            'Guardian contact number is not specified'
+          "
+          id="guardianContactNumber"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2">
+        <label for="className">Class Name</label>
+        <input
+          [value]="
+            this.studentInformation?.classroom?.classroomName ??
+            'Class name is not specified'
+          "
+          id="className"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="flex flex-column gap-2">
+        <label for="gradeLevel">Grade Level</label>
+        <input
+          [value]="
+            this.studentInformation?.gradeLevel?.name ??
+            'Grade level is not specified'
+          "
+          id="gradeLevel"
+          pInputText
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+</p-card>

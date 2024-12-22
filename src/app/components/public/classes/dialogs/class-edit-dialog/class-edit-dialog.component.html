@@ -1,0 +1,111 @@
+<p-dialog
+  (onHide)="closeDialog()"
+  [closable]="false"
+  [header]="'Edit Classroom ' + classroom?.classroomName"
+  [visible]="isVisible"
+  styleClass="w-30rem"
+>
+  <div class="grid p-fluid mt-2">
+    <form [formGroup]="classroomForm" class="col-12">
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <input
+            [maxLength]="50"
+            [minLength]="3"
+            [required]="true"
+            [value]="classroom?.classroomName ?? ''"
+            formControlName="classroomName"
+            id="classroomName"
+            pInputText
+            type="text"
+          />
+          <label for="classroomName">Classroom Name</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <input
+            [value]="classroom?.room ?? ''"
+            formControlName="room"
+            id="room"
+            pInputText
+          />
+          <label for="room">Room</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            [options]="schoolYearOptions"
+            [showClear]="true"
+            formControlName="schoolYear"
+            id="schoolYear"
+          ></p-dropdown>
+          <label for="schoolYear">School Year</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            [filter]="true"
+            [group]="true"
+            [options]="teacherOptions"
+            [showClear]="true"
+            appendTo="body"
+            filterBy="label"
+            formControlName="teacher"
+            id="teacher"
+          >
+            <ng-template let-group pTemplate="group">
+              <div class="flex align-items-center">
+                <span>{{ group.label }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-teacher pTemplate="item">
+              {{ teacher.value.lastName }}, {{ teacher.value.firstName }} {{ teacher.value.middleInitial }}
+            </ng-template>
+            <ng-template let-teacher pTemplate="selectedItem">
+              {{ teacher.value.lastName }}, {{ teacher.value.firstName }} {{ teacher.value.middleInitial }}
+            </ng-template>
+          </p-dropdown>
+          <label for="teacher">Teacher</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            [ngModel]="classroom?.gradeLevel"
+            [options]="gradeLevelOptions"
+            [showClear]="true"
+            appendTo="body"
+            formControlName="gradeLevel"
+            id="gradeLevel"
+            optionLabel="name"
+          ></p-dropdown>
+          <label for="gradeLevel">Grade Level</label>
+        </span>
+      </div>
+      <div class="field col-12 mb-3">
+        <p-fileUpload
+          (onSelect)="onProfilePictureSelect($event)"
+          [maxFileSize]="10000000"
+          accept="image/*"
+          chooseLabel="Upload Profile Picture"
+          mode="basic"
+        ></p-fileUpload>
+      </div>
+    </form>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      (onClick)="closeDialog()"
+      label="Close"
+      styleClass="p-button-text"
+    ></p-button>
+    <p-button
+      (onClick)="editClassroom()"
+      [disabled]="classroomForm.invalid"
+      label="Save"
+    ></p-button>
+  </ng-template>
+</p-dialog>
