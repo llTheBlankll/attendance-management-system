@@ -4,9 +4,8 @@ import {ImageModule} from "primeng/image";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {AvatarModule} from "primeng/avatar";
-import {Ripple} from "primeng/ripple";
 import {BadgeModule} from "primeng/badge";
-import {NgIf, NgOptimizedImage} from "@angular/common";
+import {NgOptimizedImage} from "@angular/common";
 import {DividerModule} from "primeng/divider";
 import {TieredMenuModule} from "primeng/tieredmenu";
 import {PanelMenuModule} from "primeng/panelmenu";
@@ -20,9 +19,7 @@ import {MenubarModule} from "primeng/menubar";
     ImageModule,
     MenuModule,
     AvatarModule,
-    Ripple,
     BadgeModule,
-    NgIf,
     DividerModule,
     TieredMenuModule,
     PanelMenuModule,
