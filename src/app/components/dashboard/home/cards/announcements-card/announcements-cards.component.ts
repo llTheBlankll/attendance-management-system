@@ -1,14 +1,15 @@
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {Component, inject, OnInit} from '@angular/core';
 import {MenuItem, MessageService} from 'primeng/api';
 import {AvatarModule} from 'primeng/avatar';
 import {CardModule} from 'primeng/card';
 import {MenuModule} from 'primeng/menu';
 import {PanelModule} from 'primeng/panel';
-import {Announcement} from '../../../../../core/types/dto/announcement/announcement';
+import {Announcement, AnnouncementResponse} from '../../../../../core/types/dto/announcement/announcement';
 import {AnnouncementService} from '../../../../../core/services/announcement/announcement.service';
 import {environment} from '../../../../../../environments/environment';
 import {ButtonModule} from 'primeng/button';
+import {UtilService} from "../../../../../core/services/util/util.service";
 
 interface ProcessedAnnouncement {
   announcement: Announcement;
@@ -29,6 +30,7 @@ export class AnnouncementsCardsComponent implements OnInit {
 
   private readonly announcementService = inject(AnnouncementService);
   private readonly messageService = inject(MessageService);
+  private readonly utilService = inject(UtilService);
 
   ngOnInit(): void {
     // get user role for checking if user is admin
@@ -36,18 +38,23 @@ export class AnnouncementsCardsComponent implements OnInit {
 
     // Retrieve all announcements
     this.announcementService.getAllAnnouncement().subscribe({
-      next: (response: HttpResponse<Announcement[]>) => {
+      next: (announcements: AnnouncementResponse[]) => {
         // this.announcements = response.body ?? [];
-        const announcements = response.body ?? [];
         // Loop each announcement and add the teacher profile.
         // Set the Picture URL to each of them
-        announcements.forEach((announcement: Announcement) => {
-          announcement.updatedAt = new Date(announcement.updatedAt);
-          announcement.createdAt = new Date(announcement.createdAt);
+        announcements.forEach((announcementResponse: AnnouncementResponse) => {
+          let announcement: Announcement;
+          announcement = {
+            ...announcementResponse,
+            updatedAt: new Date(announcementResponse.updatedAt),
+            createdAt: new Date(announcementResponse.createdAt)
+          }
+          console.log(announcement.createdAt);
+          console.log(announcement.updatedAt);
           this.processedAnnouncements.push({
             announcement: announcement,
             profilePictureUrl: environment.apiUrl + "/uploads/teacher/" + announcement.user.teacher?.id + "/profile-picture",
-            timeUpdatedAgo: (Math.floor(announcement.createdAt.getTime() / 1000) === Math.floor(announcement.updatedAt.getTime() / 1000)) ? 'Now' : this.getTimeAgo(announcement.updatedAt),
+            timeUpdatedAgo: this.utilService.getTimeAgo(announcement.updatedAt)
           });
         });
 
@@ -101,23 +108,5 @@ export class AnnouncementsCardsComponent implements OnInit {
         },
       },
     ];
-  }
-
-  private getTimeAgo(updatedAt: Date) {
-    const now = new Date();
-    const differenceInSeconds = Math.floor((now.getTime() - updatedAt.getTime()) / 1000);
-
-    if (differenceInSeconds < 60) {
-      return `${differenceInSeconds} seconds ago`;
-    } else if (differenceInSeconds < 3600) {
-      const minutes = Math.floor(differenceInSeconds / 60);
-      return `${minutes} minutes ago`;
-    } else if (differenceInSeconds < 86400) {
-      const hours = Math.floor(differenceInSeconds / 3600);
-      return `${hours} hours ago`;
-    } else {
-      const days = Math.floor(differenceInSeconds / 86400);
-      return `${days} days ago`;
-    }
   }
 }

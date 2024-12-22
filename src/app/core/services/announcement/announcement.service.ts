@@ -3,7 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {SortRequest} from "../../types/other/SortRequest";
 import {PageRequest} from "../../types/other/PageRequest";
-import {Announcement} from "../../types/dto/announcement/announcement";
+import {Announcement, AnnouncementResponse} from "../../types/dto/announcement/announcement";
 import {MessageDTO} from "../../types/other/MessageDTO";
 
 @Injectable({
@@ -15,11 +15,11 @@ export class AnnouncementService {
 
   // * GET REQUESTS
   public getAnnouncement(announcementId: number) {
-    return this.http.get<Announcement>(`${this.API_URL}/announcements/${announcementId}`);
+    return this.http.get<AnnouncementResponse>(`${this.API_URL}/announcements/${announcementId}`);
   }
 
   public getAllAnnouncement(sortRequest?: SortRequest, pageRequest?: PageRequest) {
-    return this.http.get<Announcement[]>(`${this.API_URL}/announcements/all`, {
+    return this.http.get<AnnouncementResponse[]>(`${this.API_URL}/announcements/all`, {
       params: {
         ...(pageRequest && {
           page: pageRequest.pageNumber,
@@ -29,13 +29,12 @@ export class AnnouncementService {
           sortBy: sortRequest.sortBy,
           sortDirection: sortRequest.sortDirection
         })
-      },
-      observe: "response"
+      }
     })
   }
 
   public searchAnnouncement(query: string, sortRequest?: SortRequest, pageRequest?: PageRequest) {
-    return this.http.get(`${this.API_URL}/announcements/search`, {
+    return this.http.get<AnnouncementResponse[]>(`${this.API_URL}/announcements/search`, {
       params: {
         q: query,
         ...(sortRequest && {
