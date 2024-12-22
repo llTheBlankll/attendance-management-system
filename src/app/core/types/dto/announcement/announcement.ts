@@ -14,6 +14,6 @@ export interface Announcement {
   title: string;
   content: string;
   user: User;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

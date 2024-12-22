@@ -42,6 +42,8 @@ interface ProfileUpload {
 })
 export class SettingsComponent implements OnInit {
 
+  protected readonly API_URL = environment.apiUrl;
+
   userForm!: FormGroup;
   teacherForm!: FormGroup;
   currentUser!: User;
@@ -74,6 +76,8 @@ export class SettingsComponent implements OnInit {
   private authService = inject(AuthenticationService);
   private messageService = inject(MessageService);
 
+  protected teacherId?: number;
+
   ngOnInit() {
     this.loadUserData();
     this.initializeForms();
@@ -99,11 +103,12 @@ export class SettingsComponent implements OnInit {
   }
 
   loadUserData() {
-    this.authService.getCurrentUser().subscribe({
+    this.authService.getCurrentUserAsync().subscribe({
       next: (user: User) => {
         console.debug('Current User data fetched successfully.');
         // Set the profile picture url
         if (user.teacher !== undefined) {
+          this.teacherId = user.teacher.id;
           this.profilePicture =
             environment.apiUrl +
             '/uploads/teacher/' +
@@ -208,7 +213,7 @@ export class SettingsComponent implements OnInit {
 
   uploadProfilePicture() {
     console.debug("Uploading profile picture...");
-    this.authService.getCurrentUser().subscribe({
+    this.authService.getCurrentUserAsync().subscribe({
       next: (user: User) => {
         console.debug("User data fetched");
         // Check if user teacher id is null or not assigned, else do not upload.
@@ -225,12 +230,16 @@ export class SettingsComponent implements OnInit {
         if (this.profileUpload.file !== null) {
           this.teacherService.uploadTeacherProfilePicture(user.teacher.id, this.profileUpload.file).subscribe({
             next: (response: MessageDTO) => {
-              console.debug(`Profile picture uploaded successfully: ${response}`);
+              console.debug(`Profile picture was updated successfully: ${response}`);
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
                 detail: response.message
               });
+              this.profileUpload = {
+                display: true,
+                file: null
+              };
             },
             error: (error: HttpErrorResponse) => {
               const message = error.message as unknown as MessageDTO;

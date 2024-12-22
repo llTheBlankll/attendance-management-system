@@ -53,7 +53,7 @@ export class AnnouncementService {
 
   // * POST REQUESTS
   public createAnnouncement(announcement: Announcement) {
-    return this.http.post<MessageDTO>(`${this.API_URL}/announcements/create`, JSON.stringify(announcement), {
+    return this.http.post<MessageDTO>(`${this.API_URL}/announcements/create`, announcement, {
       observe: "response"
     });
   }

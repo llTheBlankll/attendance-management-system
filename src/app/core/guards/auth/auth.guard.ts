@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthenticationService);
   const router = inject(Router);
 
-  return authService.isAuthenticated().pipe(
+  return authService.isAuthenticatedAsync().pipe(
     map((message: MessageDTO) => {
       if (message.status === CodeStatus.OK) {
         return true;

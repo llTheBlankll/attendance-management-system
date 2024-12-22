@@ -14,7 +14,7 @@ export class UtilService {
     );
 
     // Add this check
-    if (differenceInSeconds < 0) {
+    if (differenceInSeconds <= 0) {
       return 'Just now'; // or 'Recently updated' or whatever makes sense
     }
 

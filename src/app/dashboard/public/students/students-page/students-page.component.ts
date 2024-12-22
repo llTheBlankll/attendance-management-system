@@ -42,6 +42,7 @@ import {BulkAddDialogComponent} from '../dialogs/bulk-add-dialog/bulk-add-dialog
 import {ClassroomService} from '../../../../core/services/classroom/classroom.service';
 import {StudentService} from '../../../../core/services/student/student.service';
 import {ClassroomDTO} from '../../../../core/types/dto/classroom/ClassroomDTO';
+import {ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'app-students-page',
@@ -64,6 +65,9 @@ import {ClassroomDTO} from '../../../../core/types/dto/classroom/ClassroomDTO';
     AssignSectionDialogComponent,
     BulkAssignDialogComponent,
     BulkAddDialogComponent,
+  ],
+  providers: [
+    ConfirmationService
   ],
   templateUrl: './students-page.component.html',
   styleUrl: './students-page.component.css',
