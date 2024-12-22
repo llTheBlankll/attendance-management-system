@@ -23,7 +23,7 @@ import {
 } from '../../components/dashboard/home/cards/section-ranking-card/section-ranking-card.component';
 import {
   AnnouncementsCardsComponent
-} from '../../components/dashboard/home/cards/admin-announcements-card/announcements-cards.component';
+} from '../../components/dashboard/home/cards/announcements-card/announcements-cards.component';
 import {UtilService} from '../../core/services/util/util.service';
 import {TimeRangeConstants} from '../../core/types/enums/TimeRange';
 
@@ -41,10 +41,10 @@ import {TimeRangeConstants} from '../../core/types/enums/TimeRange';
     SectionRankingCardComponent,
     AnnouncementsCardsComponent,
   ],
-  templateUrl: './admin.component.html',
-  styleUrl: './admin.component.css',
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css',
 })
-export class AdminComponent {
+export class DashboardComponent {
   // Injections
   private readonly utilService = inject(UtilService);
 
