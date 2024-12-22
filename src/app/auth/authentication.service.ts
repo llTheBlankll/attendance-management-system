@@ -2,10 +2,10 @@ import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {Login} from '../core/interfaces/dto/forms/Login';
-import {User} from '../core/interfaces/dto/user/user';
-import {JWTInformation} from '../core/interfaces/JWTInformation';
-import {MessageDTO} from '../core/interfaces/MessageDTO';
+import {Login} from '../core/types/dto/forms/Login';
+import {User} from '../core/types/dto/user/user';
+import {JWTInformation} from '../core/types/other/JWTInformation';
+import {MessageDTO} from '../core/types/other/MessageDTO';
 
 @Injectable({
   providedIn: 'root',
