@@ -31,7 +31,6 @@ export class AuthenticationService {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")
       },
-      observe: "response"
     });
   }
 
