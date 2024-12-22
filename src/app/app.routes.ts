@@ -1,16 +1,16 @@
-import { Routes } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';
-import { authGuard } from './core/guards/auth/auth.guard';
-import { AdminComponent } from './dashboard/principal/admin.component';
-import { StrandsComponent } from './dashboard/principal/strands/strands.component';
-import { AdminTeachersComponent } from './dashboard/principal/teachers/admin-teachers/admin-teachers.component';
-import { AttendanceComponent } from './dashboard/public/attendances/attendance/attendance.component';
-import { ClassesComponent } from './dashboard/public/classes/classes/classes.component';
-import { StudentsPageComponent } from './dashboard/public/students/students-page/students-page.component';
-import { TeacherComponent } from './dashboard/teacher/teacher.component';
-import { GradeLevelsComponent } from './dashboard/principal/grade-levels/grade-levels.component';
-import { SettingsComponent } from './dashboard/public/settings/settings/settings.component';
-import { ReportsComponent } from './dashboard/public/reports/reports.component';
+import {Routes} from '@angular/router';
+import {AuthComponent} from './auth/auth.component';
+import {authGuard} from './core/guards/auth/auth.guard';
+import {AdminComponent} from './dashboard/principal/admin.component';
+import {StrandsComponent} from './dashboard/principal/strands/strands.component';
+import {AdminTeachersComponent} from './dashboard/principal/teachers/admin-teachers/admin-teachers.component';
+import {AttendanceComponent} from './dashboard/public/attendances/attendance/attendance.component';
+import {ClassesComponent} from './dashboard/public/classes/classes/classes.component';
+import {StudentsPageComponent} from './dashboard/public/students/students-page/students-page.component';
+import {TeacherComponent} from './dashboard/teacher/teacher.component';
+import {GradeLevelsComponent} from './dashboard/principal/grade-levels/grade-levels.component';
+import {SettingsComponent} from './dashboard/public/settings/settings/settings.component';
+import {ReportsComponent} from './dashboard/public/reports/reports.component';
 
 export const routes: Routes = [
   {
@@ -24,8 +24,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
-        { label: 'Admin', url: '/dashboard/admin', icon: 'pi pi-fw pi-user' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
+        {label: 'Admin', url: '/dashboard/admin', icon: 'pi pi-fw pi-user'},
         {
           label: 'Dashboard',
           url: '/dashboard/admin',
@@ -40,8 +40,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
-        { label: 'Admin', url: '/dashboard/admin', icon: 'pi pi-fw pi-user' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
+        {label: 'Admin', url: '/dashboard/admin', icon: 'pi pi-fw pi-user'},
         {
           label: 'Dashboard',
           url: '/dashboard/admin',
@@ -63,9 +63,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/' },
-        { label: 'Teacher', url: '/dashboard/teacher' },
-        { label: 'Dashboard', url: '/dashboard/teacher' },
+        {label: 'Application', url: '/'},
+        {label: 'Teacher', url: '/dashboard/teacher'},
+        {label: 'Dashboard', url: '/dashboard/teacher'},
       ],
     },
   },
@@ -77,7 +77,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
         {
           label: 'Students',
           url: '/dashboard/students',
@@ -97,7 +97,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
         {
           label: 'Classes',
           url: '/dashboard/classes',
@@ -117,7 +117,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
         {
           label: 'Attendances',
           url: '/dashboard/attendances',
@@ -137,7 +137,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
         {
           label: 'Strands',
           url: '/dashboard/strands',
@@ -157,8 +157,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
-        { label: 'Reports', url: '/dashboard/reports', icon: 'pi pi-fw pi-chart-bar' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
+        {label: 'Reports', url: '/dashboard/reports', icon: 'pi pi-fw pi-chart-bar'},
       ],
     },
   },
@@ -168,7 +168,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
         {
           label: 'Grade Levels',
           url: '/dashboard/grade-levels',
@@ -189,8 +189,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       breadcrumb: [
-        { label: 'Application', url: '/', icon: 'pi pi-fw pi-compass' },
-        { label: 'Settings', url: '/settings', icon: 'pi pi-fw pi-cog' },
+        {label: 'Application', url: '/', icon: 'pi pi-fw pi-compass'},
+        {label: 'Settings', url: '/settings', icon: 'pi pi-fw pi-cog'},
       ],
     },
   },

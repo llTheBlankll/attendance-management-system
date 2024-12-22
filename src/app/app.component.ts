@@ -8,8 +8,8 @@ import {filter} from 'rxjs';
 import {AuthenticationService} from './auth/authentication.service';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {TopbarComponent} from './components/topbar/topbar.component';
-import {CodeStatus} from './core/enums/CodeStatus';
-import {MessageDTO} from './core/interfaces/MessageDTO';
+import {CodeStatus} from './core/types/enums/CodeStatus';
+import {MessageDTO} from './core/types/other/MessageDTO';
 import {BreadcrumbService} from './core/services/breadcrumbs/breadcrumb.service';
 
 @Component({
