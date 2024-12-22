@@ -1,23 +1,18 @@
-import { Component, OnInit, inject } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { DropdownModule } from 'primeng/dropdown';
-import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
-import { InputMaskModule } from 'primeng/inputmask';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
-import { AuthenticationService } from '../../../../auth/authentication.service';
-import { User } from '../../../../core/interfaces/dto/user/user';
-import { environment } from '../../../../../environments/environment';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {MessageService} from 'primeng/api';
+import {AvatarModule} from 'primeng/avatar';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {DropdownModule} from 'primeng/dropdown';
+import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
+import {InputMaskModule} from 'primeng/inputmask';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {InputTextModule} from 'primeng/inputtext';
+import {ToastModule} from 'primeng/toast';
+import {AuthenticationService} from '../../../../auth/authentication.service';
+import {User} from '../../../../core/types/dto/user/user';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -38,15 +33,9 @@ import { environment } from '../../../../../environments/environment';
   styleUrl: './settings.component.css',
 })
 export class SettingsComponent implements OnInit {
-  private formBuilder = inject(FormBuilder);
-  private authService = inject(AuthenticationService);
-  private messageService = inject(MessageService);
-
   userForm!: FormGroup;
   teacherForm!: FormGroup;
   currentUser!: User;
-  protected profilePicture?: string;
-
   sexOptions = ['Male', 'Female', 'Other'];
   positionOptions = [
     'Teacher I',
@@ -65,6 +54,10 @@ export class SettingsComponent implements OnInit {
     'Principal II',
     'Principal III',
   ];
+  protected profilePicture?: string;
+  private formBuilder = inject(FormBuilder);
+  private authService = inject(AuthenticationService);
+  private messageService = inject(MessageService);
 
   ngOnInit() {
     this.loadUserData();

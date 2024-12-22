@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FormsModule } from '@angular/forms';
+import {Component} from '@angular/core';
+import {CardModule} from 'primeng/card';
+import {ButtonModule} from 'primeng/button';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-student-report-card',

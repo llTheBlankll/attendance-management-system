@@ -1,9 +1,9 @@
 import {CommonModule} from '@angular/common';
 import {Component, inject, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {TimeRange} from '../../../core/interfaces/DateRange';
-import {Strand} from '../../../core/interfaces/dto/strand/Strand';
-import {LineChartDTO} from '../../../core/interfaces/LineChartDTO';
+import {TimeRange} from '../../../core/types/other/DateRange';
+import {Strand} from '../../../core/types/dto/strand/Strand';
+import {LineChartDTO} from '../../../core/types/other/LineChartDTO';
 import {StrandService} from '../../../core/services/strand/strand.service';
 
 import {ButtonModule} from 'primeng/button';
@@ -16,17 +16,17 @@ import {TableModule} from 'primeng/table';
 
 import {
   AvgStudentsStrandCardComponent
-} from '../../../components/admin/strands/cards/avg-students-strand-card/avg-students-strand-card.component';
+} from '../../../components/dashboard/strands/cards/avg-students-strand-card/avg-students-strand-card.component';
 import {
   MostPopularStrandCardComponent
-} from '../../../components/admin/strands/cards/most-popular-strand-card/most-popular-strand-card.component';
+} from '../../../components/dashboard/strands/cards/most-popular-strand-card/most-popular-strand-card.component';
 import {
   TotalStrandsCardComponent
-} from '../../../components/admin/strands/cards/total-strands-card/total-strands-card.component';
+} from '../../../components/dashboard/strands/cards/total-strands-card/total-strands-card.component';
 import {MessageService} from 'primeng/api';
-import {MessageDTO} from '../../../core/interfaces/MessageDTO';
+import {MessageDTO} from '../../../core/types/other/MessageDTO';
 import {HttpErrorResponse} from '@angular/common/http';
-import {CodeStatus} from '../../../core/enums/CodeStatus';
+import {CodeStatus} from '../../../core/types/enums/CodeStatus';
 
 @Component({
   selector: 'app-strands',
@@ -56,6 +56,7 @@ export class StrandsComponent implements OnInit {
     strandName: string;
     studentCount: number;
   } | null = null;
+
   averageStudentsPerStrand: number = 0;
   strandDistributionData: any;
   strandPopularityData: any;
@@ -63,6 +64,7 @@ export class StrandsComponent implements OnInit {
   strandDialog: boolean = false;
   strandSelected: Partial<Strand> = {};
   submitted: boolean = false;
+
   private readonly strandService = inject(StrandService);
   private readonly messageService = inject(MessageService);
 

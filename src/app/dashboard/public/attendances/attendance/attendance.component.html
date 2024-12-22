@@ -4,79 +4,79 @@
       <div class="p-fluid grid">
         <div class="col-12 md:col-3">
           <p-dropdown
-            [options]="classrooms"
-            [(ngModel)]="selectedClassroom"
             (onChange)="onFilterChange($event)"
-            placeholder="Select Classroom"
-            [showClear]="true"
+            [(ngModel)]="selectedClassroom"
             [disabled]="!!selectedStudent"
+            [options]="classrooms"
+            [showClear]="true"
+            placeholder="Select Classroom"
           >
             <ng-template let-classroom pTemplate="item">
               {{ classroom.classroomName }}
             </ng-template>
-            <ng-template pTemplate="selectedItem" let-classroom>
+            <ng-template let-classroom pTemplate="selectedItem">
               {{ classroom.classroomName }}
             </ng-template>
           </p-dropdown>
         </div>
         <div class="col-12 md:col-3">
           <p-dropdown
-            [options]="gradeLevels"
-            [(ngModel)]="selectedGradeLevel"
             (onChange)="onFilterChange($event)"
-            placeholder="Select Grade Level"
-            [showClear]="true"
+            [(ngModel)]="selectedGradeLevel"
             [disabled]="!!selectedStudent"
+            [options]="gradeLevels"
+            [showClear]="true"
+            placeholder="Select Grade Level"
           >
             <ng-template let-gradeLevel pTemplate="item">
               {{ gradeLevel.name }}
             </ng-template>
-            <ng-template pTemplate="selectedItem" let-gradeLevel>
+            <ng-template let-gradeLevel pTemplate="selectedItem">
               {{ gradeLevel.name }}
             </ng-template>
           </p-dropdown>
         </div>
         <div class="col-12 md:col-3">
           <p-dropdown
-            [options]="strands"
-            [(ngModel)]="selectedStrand"
             (onChange)="onFilterChange($event)"
-            placeholder="Select Strand"
-            [showClear]="true"
+            [(ngModel)]="selectedStrand"
             [disabled]="!!selectedStudent"
+            [options]="strands"
+            [showClear]="true"
+            placeholder="Select Strand"
           >
             <ng-template let-strand pTemplate="item">
               {{ strand.name }}
             </ng-template>
-            <ng-template pTemplate="selectedItem" let-strand>
+            <ng-template let-strand pTemplate="selectedItem">
               {{ strand.name }}
             </ng-template>
           </p-dropdown>
         </div>
         <div class="col-12 md:col-3">
           <p-autoComplete
-            [(ngModel)]="selectedStudent"
-            [suggestions]="filteredStudents"
             (completeMethod)="onStudentSearch($event)"
             (onSelect)="onStudentSelect($event)"
-            field="firstName"
+            [(ngModel)]="selectedStudent"
             [dropdown]="true"
+            [suggestions]="filteredStudents"
+            field="firstName"
             placeholder="Search Student"
           >
             <ng-template let-student pTemplate="item">
               {{ student.firstName }} {{ student.lastName }}
             </ng-template>
-            <ng-template pTemplate="selectedItem" let-student>
+            <ng-template let-student pTemplate="selectedItem">
               {{ student.firstName }} {{ student.lastName }}
             </ng-template>
           </p-autoComplete>
         </div>
       </div>
       <app-attendance-table
-        [attendanceData]="attendanceData"
+        (onDateChange)="handleDateChange($event)"
         (onEdit)="openEditDialog($event)"
         (onPageChange)="handlePageChange($event)"
-        (onDateChange)="handleDateChange($event)"
+        [attendanceData]="attendanceData"
       ></app-attendance-table>
     </p-card>
   </div>
@@ -88,14 +88,14 @@
 </div>
 
 <p-dialog
-  header="Edit Attendance"
-  styleClass="shadow-3 w-30rem"
   [(visible)]="editDialogVisible"
   [contentStyle]="{ overflow: 'visible' }"
   [modal]="true"
+  header="Edit Attendance"
+  styleClass="shadow-3 w-30rem"
 >
   <app-edit-attendance-form
-    [attendance]="selectedAttendance"
     (onSave)="updateAttendance($event)"
+    [attendance]="selectedAttendance"
   ></app-edit-attendance-form>
 </p-dialog>

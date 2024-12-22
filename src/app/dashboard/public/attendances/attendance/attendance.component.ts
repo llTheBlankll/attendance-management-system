@@ -1,30 +1,35 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { DialogModule } from 'primeng/dialog';
-import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FormsModule } from '@angular/forms';
-import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
-import { AttendanceTableComponent } from '../../../../components/shared/attendances/attendance-table/attendance-table.component';
-import { EditAttendanceFormComponent } from '../../../../components/shared/attendances/edit-attendance-form/edit-attendance-form.component';
-import { ManualAttendanceInputComponent } from '../../../../components/shared/attendances/manual-attendance-input/manual-attendance-input.component';
-import { Attendance, AttendanceForeignEntity } from '../../../../core/interfaces/dto/attendance/Attendance';
-import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
-import { GradeLevelService } from '../../../../core/services/grade-level/grade-level.service';
-import { StrandService } from '../../../../core/services/strand/strand.service';
-import { StudentService } from '../../../../core/services/student/student.service';
-import { Student } from '../../../../core/interfaces/dto/student/Student';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { AttendanceInput } from '../../../../core/interfaces/dto/forms/AttendanceInput';
-import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
-import { GradeLevel } from '../../../../core/interfaces/dto/grade-level/GradeLevel';
-import { Strand } from '../../../../core/interfaces/dto/strand/Strand';
-import { PaginatorState } from 'primeng/paginator';
-import { PageRequest } from '../../../../core/interfaces/PageRequest';
-import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
-import { TimeRange } from '../../../../core/interfaces/DateRange';
-import { SortRequest } from '../../../../core/interfaces/SortRequest';
-import { MessageService } from 'primeng/api';
+import {Component, inject, OnInit} from '@angular/core';
+import {CardModule} from 'primeng/card';
+import {DialogModule} from 'primeng/dialog';
+import {DropdownChangeEvent, DropdownModule} from 'primeng/dropdown';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {FormsModule} from '@angular/forms';
+import {AttendanceService} from '../../../../core/services/attendance/attendance.service';
+import {
+  AttendanceTableComponent
+} from '../../../../components/public/attendances/attendance-table/attendance-table.component';
+import {
+  EditAttendanceFormComponent
+} from '../../../../components/public/attendances/edit-attendance-form/edit-attendance-form.component';
+import {
+  ManualAttendanceInputComponent
+} from '../../../../components/public/attendances/manual-attendance-input/manual-attendance-input.component';
+import {Attendance} from '../../../../core/types/dto/attendance/Attendance';
+import {ClassroomService} from '../../../../core/services/classroom/classroom.service';
+import {GradeLevelService} from '../../../../core/services/grade-level/grade-level.service';
+import {StrandService} from '../../../../core/services/strand/strand.service';
+import {StudentService} from '../../../../core/services/student/student.service';
+import {Student} from '../../../../core/types/dto/student/Student';
+import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {AttendanceInput} from '../../../../core/types/dto/forms/AttendanceInput';
+import {ClassroomDTO} from '../../../../core/types/dto/classroom/ClassroomDTO';
+import {GradeLevel} from '../../../../core/types/dto/grade-level/GradeLevel';
+import {Strand} from '../../../../core/types/dto/strand/Strand';
+import {PaginatorState} from 'primeng/paginator';
+import {PageRequest} from '../../../../core/types/other/PageRequest';
+import {TimeRange} from '../../../../core/types/other/DateRange';
+import {SortRequest} from '../../../../core/types/other/SortRequest';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-attendance',
@@ -46,13 +51,6 @@ import { MessageService } from 'primeng/api';
   ]
 })
 export class AttendanceComponent implements OnInit {
-  private attendanceService = inject(AttendanceService);
-  private classroomService = inject(ClassroomService);
-  private gradeLevelService = inject(GradeLevelService);
-  private strandService = inject(StrandService);
-  private studentService = inject(StudentService);
-  private messageService = inject(MessageService);
-
   attendanceData: {
     paginatedData: Attendance[];
     totalRecords: number;
@@ -64,15 +62,18 @@ export class AttendanceComponent implements OnInit {
   gradeLevels: GradeLevel[] = [];
   strands: Strand[] = [];
   filteredStudents: Student[] = [];
-
   selectedClassroom?: ClassroomDTO;
   selectedGradeLevel?: GradeLevel;
   selectedStrand?: Strand;
   selectedStudent: Student | null = null;
-
   editDialogVisible = false;
   selectedAttendance: Attendance | null = null;
-
+  private attendanceService = inject(AttendanceService);
+  private classroomService = inject(ClassroomService);
+  private gradeLevelService = inject(GradeLevelService);
+  private strandService = inject(StrandService);
+  private studentService = inject(StudentService);
+  private messageService = inject(MessageService);
   private studentSearchSubject = new Subject<string>();
 
   ngOnInit() {
@@ -88,7 +89,7 @@ export class AttendanceComponent implements OnInit {
       });
   }
 
-  handlePageChange(event: {event: PaginatorState, selectedDate?: Date}) {
+  handlePageChange(event: { event: PaginatorState, selectedDate?: Date }) {
     console.debug('Page change:', event);
     const pageRequest = {
       pageNumber: event.event.first ? Math.floor(event.event.first / (event.event.rows || 10)) : 0,

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GradeLevelsComponent } from './grade-levels.component';
+import {GradeLevelsComponent} from './grade-levels.component';
 
 describe('GradeLevelsComponent', () => {
   let component: GradeLevelsComponent;
@@ -10,7 +10,7 @@ describe('GradeLevelsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GradeLevelsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(GradeLevelsComponent);
     component = fixture.componentInstance;

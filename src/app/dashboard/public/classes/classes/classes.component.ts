@@ -1,30 +1,50 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { forkJoin, map, tap } from 'rxjs';
-import { ClassAbsentStudentCardComponent } from '../../../../components/shared/classes/cards/class-absent-student-card/class-absent-student-card.component';
-import { ClassAbsentStudentsListCardComponent } from '../../../../components/shared/classes/cards/class-absent-students-list-card/class-absent-students-list-card.component';
-import { ClassAttendanceDemographicsCardComponent } from '../../../../components/shared/classes/cards/class-attendance-demographics-card/class-attendance-demographics-card.component';
-import { ClassLateStudentCardComponent } from '../../../../components/shared/classes/cards/class-late-student-card/class-late-student-card.component';
-import { ClassMonthlyAttendanceCardComponent } from '../../../../components/shared/classes/cards/class-monthly-attendance-card/class-monthly-attendance-card.component';
-import { ClassOnTimeStudentCardComponent } from '../../../../components/shared/classes/cards/class-on-time-student-card/class-on-time-student-card.component';
-import { ClassSectionDetailsCardComponent } from '../../../../components/shared/classes/cards/class-section-selection-card/class-section-details-card.component';
-import { ClassStudentsListCardComponent } from '../../../../components/shared/classes/cards/class-students-list-card/class-students-list-card.component';
-import { ClassTodaysActivitiesCardComponent } from '../../../../components/shared/classes/cards/class-todays-activities-card/class-todays-activities-card.component';
-import { ClassOverAllAttendanceComponent } from '../../../../components/shared/classes/cards/class-total-student-card/class-over-all-attendance.component';
-import { AttendanceForeignEntity } from '../../../../core/enums/AttendanceForeignEntity';
-import { AttendanceStatus } from '../../../../core/enums/AttendanceStatus';
-import { TimeRangeConstants } from '../../../../core/enums/TimeRange';
-import { TimeStack } from '../../../../core/enums/TimeStack';
-import { ClassroomDemographicsChart } from '../../../../core/interfaces/ClassroomDemographicsChart';
-import { Attendance } from '../../../../core/interfaces/dto/attendance/Attendance';
-import { ClassroomDTO } from '../../../../core/interfaces/dto/classroom/ClassroomDTO';
-import { Student } from '../../../../core/interfaces/dto/student/Student';
-import { PageRequest } from '../../../../core/interfaces/PageRequest';
-import { AttendanceService } from '../../../../core/services/attendance/attendance.service';
-import { ClassroomService } from '../../../../core/services/classroom/classroom.service';
-import { StudentService } from '../../../../core/services/student/student.service';
-import { UtilService } from '../../../../core/services/util/util.service';
-import { TimeRange } from '../../../../core/interfaces/DateRange';
+import {Component, inject, OnInit} from '@angular/core';
+import {CardModule} from 'primeng/card';
+import {forkJoin, map, tap} from 'rxjs';
+import {
+  ClassAbsentStudentCardComponent
+} from '../../../../components/public/classes/cards/class-absent-student-card/class-absent-student-card.component';
+import {
+  ClassAbsentStudentsListCardComponent
+} from '../../../../components/public/classes/cards/class-absent-students-list-card/class-absent-students-list-card.component';
+import {
+  ClassAttendanceDemographicsCardComponent
+} from '../../../../components/public/classes/cards/class-attendance-demographics-card/class-attendance-demographics-card.component';
+import {
+  ClassLateStudentCardComponent
+} from '../../../../components/public/classes/cards/class-late-student-card/class-late-student-card.component';
+import {
+  ClassMonthlyAttendanceCardComponent
+} from '../../../../components/public/classes/cards/class-monthly-attendance-card/class-monthly-attendance-card.component';
+import {
+  ClassOnTimeStudentCardComponent
+} from '../../../../components/public/classes/cards/class-on-time-student-card/class-on-time-student-card.component';
+import {
+  ClassSectionDetailsCardComponent
+} from '../../../../components/public/classes/cards/class-section-selection-card/class-section-details-card.component';
+import {
+  ClassStudentsListCardComponent
+} from '../../../../components/public/classes/cards/class-students-list-card/class-students-list-card.component';
+import {
+  ClassTodaysActivitiesCardComponent
+} from '../../../../components/public/classes/cards/class-todays-activities-card/class-todays-activities-card.component';
+import {
+  ClassOverAllAttendanceComponent
+} from '../../../../components/public/classes/cards/class-total-student-card/class-over-all-attendance.component';
+import {AttendanceForeignEntity} from '../../../../core/types/enums/AttendanceForeignEntity';
+import {AttendanceStatus} from '../../../../core/types/enums/AttendanceStatus';
+import {TimeRangeConstants} from '../../../../core/types/enums/TimeRange';
+import {TimeStack} from '../../../../core/types/enums/TimeStack';
+import {ClassroomDemographicsChart} from '../../../../core/types/other/ClassroomDemographicsChart';
+import {Attendance} from '../../../../core/types/dto/attendance/Attendance';
+import {ClassroomDTO} from '../../../../core/types/dto/classroom/ClassroomDTO';
+import {Student} from '../../../../core/types/dto/student/Student';
+import {PageRequest} from '../../../../core/types/other/PageRequest';
+import {AttendanceService} from '../../../../core/services/attendance/attendance.service';
+import {ClassroomService} from '../../../../core/services/classroom/classroom.service';
+import {StudentService} from '../../../../core/services/student/student.service';
+import {UtilService} from '../../../../core/services/util/util.service';
+import {TimeRange} from '../../../../core/types/other/DateRange';
 
 @Component({
   selector: 'app-classes',
@@ -46,16 +66,9 @@ import { TimeRange } from '../../../../core/interfaces/DateRange';
   styleUrl: './classes.component.css',
 })
 export class ClassesComponent implements OnInit {
-  // ! Injections
-  private readonly classroomService = inject(ClassroomService);
-  private readonly utilService = inject(UtilService);
-  private readonly attendanceService = inject(AttendanceService);
-  private readonly studentService = inject(StudentService);
-
   // * Classes
   public classrooms: ClassroomDTO[] = [];
   public _classroomSelected?: ClassroomDTO;
-
   // * Students
   public students: Student[] = [];
   protected totalCards = {
@@ -65,7 +78,6 @@ export class ClassesComponent implements OnInit {
     late: 0,
     absent: 0,
   };
-
   // * Attendance
   protected monthlyAttendance = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -88,12 +100,16 @@ export class ClassesComponent implements OnInit {
     male: 0,
     female: 0,
   };
+  protected absentStudents: Student[] = [];
+  // ! Injections
+  private readonly classroomService = inject(ClassroomService);
+  private readonly utilService = inject(UtilService);
+  private readonly attendanceService = inject(AttendanceService);
+  private readonly studentService = inject(StudentService);
   // * Charts
   private dateRange = this.utilService.timeRangeConstantToDateRange(
     TimeRangeConstants.LAST_365_DAYS
   );
-
-  protected absentStudents: Student[] = [];
 
   ngOnInit() {
     this.retrieveClasses();
@@ -120,11 +136,19 @@ export class ClassesComponent implements OnInit {
     });
   }
 
+  public retrieveClasses(): void {
+    this.classroomService
+      .getAllClassrooms()
+      .subscribe((classes: ClassroomDTO[]) => {
+        this.classrooms = classes;
+      });
+  }
+
   private fetchClassDetails(classroomId: number) {
     const attendanceTypes = [
-      { status: AttendanceStatus.LATE, key: 'late' },
-      { status: AttendanceStatus.ABSENT, key: 'absent' },
-      { status: AttendanceStatus.ON_TIME, key: 'onTime' },
+      {status: AttendanceStatus.LATE, key: 'late'},
+      {status: AttendanceStatus.ABSENT, key: 'absent'},
+      {status: AttendanceStatus.ON_TIME, key: 'onTime'},
     ];
 
     const requests = attendanceTypes.map((type) =>
@@ -272,14 +296,6 @@ export class ClassesComponent implements OnInit {
       )
       .subscribe((demographics) => {
         this.attendanceDemographics = demographics;
-      });
-  }
-
-  public retrieveClasses(): void {
-    this.classroomService
-      .getAllClassrooms()
-      .subscribe((classes: ClassroomDTO[]) => {
-        this.classrooms = classes;
       });
   }
 }

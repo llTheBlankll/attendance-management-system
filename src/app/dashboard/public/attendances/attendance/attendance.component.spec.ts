@@ -2,9 +2,15 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AttendanceComponent} from './attendance.component';
 import {CardModule} from 'primeng/card';
 import {DialogModule} from 'primeng/dialog';
-import {ManualAttendanceInputComponent} from '../../../components/shared/attendances/manual-attendance-input/manual-attendance-input.component';
-import {AttendanceTableComponent} from '../../../components/shared/attendances/attendance-table/attendance-table.component';
-import {EditAttendanceFormComponent} from '../../../components/shared/attendances/edit-attendance-form/edit-attendance-form.component';
+import {
+  ManualAttendanceInputComponent
+} from '../../../components/shared/attendances/manual-attendance-input/manual-attendance-input.component';
+import {
+  AttendanceTableComponent
+} from '../../../components/shared/attendances/attendance-table/attendance-table.component';
+import {
+  EditAttendanceFormComponent
+} from '../../../components/shared/attendances/edit-attendance-form/edit-attendance-form.component';
 import {AttendanceService} from '../../../../core/services/attendance/attendance.service';
 import {of} from 'rxjs';
 
@@ -27,7 +33,7 @@ describe('AttendanceComponent', () => {
         AttendanceComponent
       ],
       providers: [
-        { provide: AttendanceService, useValue: mockAttendanceService }
+        {provide: AttendanceService, useValue: mockAttendanceService}
       ]
     }).compileComponents();
 

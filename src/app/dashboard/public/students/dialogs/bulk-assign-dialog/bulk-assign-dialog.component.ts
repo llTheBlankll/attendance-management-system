@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { FormsModule } from '@angular/forms';
-import { ClassroomDTO } from '../../../../../core/interfaces/dto/classroom/ClassroomDTO';
-import { Student } from '../../../../../core/interfaces/dto/student/Student';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {DropdownModule} from 'primeng/dropdown';
+import {MultiSelectModule} from 'primeng/multiselect';
+import {FormsModule} from '@angular/forms';
+import {ClassroomDTO} from '../../../../../core/types/dto/classroom/ClassroomDTO';
+import {Student} from '../../../../../core/types/dto/student/Student';
 
 @Component({
   selector: 'app-bulk-assign-dialog',
@@ -45,7 +45,7 @@ import { Student } from '../../../../../core/interfaces/dto/student/Student';
         </div>
         <div class="p-field">
           <label for="studentSelection" class="font-bold"
-            >Select Students</label
+          >Select Students</label
           >
           <p-multiSelect
             id="studentSelection"

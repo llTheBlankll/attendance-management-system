@@ -1,10 +1,10 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { FileUploadModule } from 'primeng/fileupload';
-import { TableModule } from 'primeng/table';
-import { MessageService } from 'primeng/api';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {FileUploadModule} from 'primeng/fileupload';
+import {TableModule} from 'primeng/table';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-bulk-add-dialog',
@@ -47,14 +47,14 @@ import { MessageService } from 'primeng/api';
             <ng-template pTemplate="header">
               <tr>
                 @for (col of csvHeaders; track col) {
-                <th>{{ col }}</th>
+                  <th>{{ col }}</th>
                 }
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData>
               <tr>
                 @for (col of csvHeaders; track col) {
-                <td>{{ rowData[col] }}</td>
+                  <td>{{ rowData[col] }}</td>
                 }
               </tr>
             </ng-template>
@@ -76,17 +76,15 @@ import { MessageService } from 'primeng/api';
   ]
 })
 export class BulkAddDialogComponent {
-  // * Injections
-  private readonly messageService = inject(MessageService);
-
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() addStudents = new EventEmitter<
     { classroom: string; student: number }[]
   >();
-
   csvPreview: { classroom: string; student: number }[] = [];
   csvHeaders: string[] = ['classroom', 'student'];
+  // * Injections
+  private readonly messageService = inject(MessageService);
 
   onFileSelect(event: any) {
     const file = event.files[0];
@@ -121,10 +119,10 @@ export class BulkAddDialogComponent {
           .map((line: string) => {
             const [classroom, studentStr] = line.split(',');
             const student = Number(studentStr);
-            return { classroom: classroom.trim(), student };
+            return {classroom: classroom.trim(), student};
           })
           .filter(
-            ({ classroom, student }) => classroom !== '' && !isNaN(student)
+            ({classroom, student}) => classroom !== '' && !isNaN(student)
           );
         this.messageService.add({
           severity: 'info',
