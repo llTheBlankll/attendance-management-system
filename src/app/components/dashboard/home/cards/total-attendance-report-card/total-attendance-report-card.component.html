@@ -1,0 +1,18 @@
+<p-panel header="Total Attendance Report">
+  <ng-template pTemplate="icons">
+    <!-- cog icon button -->
+    <button (click)="menu.toggle($event)" class="p-panel-header-icon p-link mr-2">
+      <span class="pi pi-cog"></span>
+    </button>
+    <p-menu #menu [model]="this.chartDaysOptions" [popup]="true"></p-menu>
+  </ng-template>
+  @if (this.loading) {
+    <div class="text-center">
+      <p-progressSpinner ariaLabel="loading">
+
+      </p-progressSpinner>
+    </div>
+  } @else {
+    <p-chart type="line" [data]="this.data" [options]="this.options"></p-chart>
+  }
+</p-panel>

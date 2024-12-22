@@ -1,0 +1,101 @@
+<div class="grid">
+  <div class="col-12 xl:col-9">
+    <p-card header="Attendance Log" styleClass="shadow-3">
+      <div class="p-fluid grid">
+        <div class="col-12 md:col-3">
+          <p-dropdown
+            (onChange)="onFilterChange($event)"
+            [(ngModel)]="selectedClassroom"
+            [disabled]="!!selectedStudent"
+            [options]="classrooms"
+            [showClear]="true"
+            placeholder="Select Classroom"
+          >
+            <ng-template let-classroom pTemplate="item">
+              {{ classroom.classroomName }}
+            </ng-template>
+            <ng-template let-classroom pTemplate="selectedItem">
+              {{ classroom.classroomName }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-12 md:col-3">
+          <p-dropdown
+            (onChange)="onFilterChange($event)"
+            [(ngModel)]="selectedGradeLevel"
+            [disabled]="!!selectedStudent"
+            [options]="gradeLevels"
+            [showClear]="true"
+            placeholder="Select Grade Level"
+          >
+            <ng-template let-gradeLevel pTemplate="item">
+              {{ gradeLevel.name }}
+            </ng-template>
+            <ng-template let-gradeLevel pTemplate="selectedItem">
+              {{ gradeLevel.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-12 md:col-3">
+          <p-dropdown
+            (onChange)="onFilterChange($event)"
+            [(ngModel)]="selectedStrand"
+            [disabled]="!!selectedStudent"
+            [options]="strands"
+            [showClear]="true"
+            placeholder="Select Strand"
+          >
+            <ng-template let-strand pTemplate="item">
+              {{ strand.name }}
+            </ng-template>
+            <ng-template let-strand pTemplate="selectedItem">
+              {{ strand.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-12 md:col-3">
+          <p-autoComplete
+            (completeMethod)="onStudentSearch($event)"
+            (onSelect)="onStudentSelect($event)"
+            [(ngModel)]="selectedStudent"
+            [dropdown]="true"
+            [suggestions]="filteredStudents"
+            field="firstName"
+            placeholder="Search Student"
+          >
+            <ng-template let-student pTemplate="item">
+              {{ student.firstName }} {{ student.lastName }}
+            </ng-template>
+            <ng-template let-student pTemplate="selectedItem">
+              {{ student.firstName }} {{ student.lastName }}
+            </ng-template>
+          </p-autoComplete>
+        </div>
+      </div>
+      <app-attendance-table
+        (onDateChange)="handleDateChange($event)"
+        (onEdit)="openEditDialog($event)"
+        (onPageChange)="handlePageChange($event)"
+        [attendanceData]="attendanceData"
+      ></app-attendance-table>
+    </p-card>
+  </div>
+  <div class="col-12 xl:col-3">
+    <app-manual-attendance-input
+      (onSubmit)="addAttendance($event)"
+    ></app-manual-attendance-input>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="editDialogVisible"
+  [contentStyle]="{ overflow: 'visible' }"
+  [modal]="true"
+  header="Edit Attendance"
+  styleClass="shadow-3 w-30rem"
+>
+  <app-edit-attendance-form
+    (onSave)="updateAttendance($event)"
+    [attendance]="selectedAttendance"
+  ></app-edit-attendance-form>
+</p-dialog>

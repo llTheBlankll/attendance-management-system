@@ -1,12 +1,12 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { SortRequest } from '../../interfaces/SortRequest';
-import { Teacher } from '../../interfaces/dto/teacher/Teacher';
-import { PageRequest } from '../../interfaces/PageRequest';
-import { MessageDTO } from '../../interfaces/MessageDTO';
-import { environment } from '../../../../environments/environment';
-import { SelectItemGroup } from 'primeng/api';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {catchError, map, Observable, throwError} from 'rxjs';
+import {SortRequest} from '../../types/other/SortRequest';
+import {Teacher} from '../../types/dto/teacher/Teacher';
+import {PageRequest} from '../../types/other/PageRequest';
+import {MessageDTO} from '../../types/other/MessageDTO';
+import {environment} from '../../../../environments/environment';
+import {SelectItemGroup} from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -84,7 +84,7 @@ export class TeacherService {
         `${this.apiUrl}/uploads/teacher/${teacherId}/profile-picture`,
         formData,
         {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({Accept: 'application/json'}),
         }
       )
       .pipe(

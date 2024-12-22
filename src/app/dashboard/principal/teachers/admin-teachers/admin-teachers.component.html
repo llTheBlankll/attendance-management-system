@@ -1,0 +1,8 @@
+<div class="grid mt-2">
+  <div class="col-12 xl:col-8 mb-1">
+    <app-list-of-teachers (teacherSelected)="this.onTeacherSelect($event)" [teachers]="this.teachers"/>
+  </div>
+  <div class="col-12 xl:col-4">
+    <app-teacher-additional-information [teacher]="this.teacherSelected"/>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<p-confirmDialog [baseZIndex]="10000" [style]="{width: '50vw'}"></p-confirmDialog>
+
+<p-card header="Manual Attendance Input" styleClass="shadow-3">
+  <form (ngSubmit)="submitAttendance()" [formGroup]="attendanceForm">
+    <div class="p-fluid">
+      <div class="p-field mb-3">
+        <label for="studentId">Student ID</label>
+        <input formControlName="studentId" id="studentId" pInputText type="text">
+      </div>
+      <div class="p-field mb-3">
+        <label for="status">Status</label>
+        <p-dropdown [options]="attendanceStatuses" formControlName="status" id="status" optionLabel="label"
+                    optionValue="value"></p-dropdown>
+      </div>
+      <div class="p-field mb-3">
+        <label for="date">Date</label>
+        <p-calendar [showIcon]="true" formControlName="date" id="date"></p-calendar>
+      </div>
+      <div class="p-field mb-3">
+        <label for="timeIn">Time In</label>
+        <p-calendar [showIcon]="true" [showTime]="true" formControlName="timeIn" id="timeIn"
+                    timeOnly="true"></p-calendar>
+      </div>
+      <div class="p-field mb-3">
+        <label for="timeOut">Time Out</label>
+        <p-calendar [showIcon]="true" formControlName="timeOut" id="timeOut" timeOnly="true"></p-calendar>
+      </div>
+      <div class="p-field mb-3">
+        <label for="notes">Notes</label>
+        <textarea formControlName="notes" id="notes" pInputTextarea rows="3"></textarea>
+      </div>
+    </div>
+    <p-button [disabled]="!attendanceForm.valid" label="Submit Attendance" type="submit"></p-button>
+  </form>
+</p-card>

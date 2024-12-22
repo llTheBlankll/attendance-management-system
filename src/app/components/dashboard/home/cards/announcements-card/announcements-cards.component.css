@@ -1,0 +1,23 @@
+.card {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  border: 1px solid black;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.profile-header {
+  display: flex;
+
+}
+
+.card .title {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 24px;
+}
+
+.card .subtitle {
+  font-size: 18px;
+}

@@ -4,9 +4,8 @@ import {ImageModule} from "primeng/image";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 import {AvatarModule} from "primeng/avatar";
-import {Ripple} from "primeng/ripple";
 import {BadgeModule} from "primeng/badge";
-import {NgIf, NgOptimizedImage} from "@angular/common";
+import {NgOptimizedImage} from "@angular/common";
 import {DividerModule} from "primeng/divider";
 import {TieredMenuModule} from "primeng/tieredmenu";
 import {PanelMenuModule} from "primeng/panelmenu";
@@ -20,9 +19,7 @@ import {MenubarModule} from "primeng/menubar";
     ImageModule,
     MenuModule,
     AvatarModule,
-    Ripple,
     BadgeModule,
-    NgIf,
     DividerModule,
     TieredMenuModule,
     PanelMenuModule,
@@ -38,12 +35,12 @@ export class SidebarComponent {
     {
       label: 'Dashboard',
       icon: 'pi pi-fw pi-home',
-      routerLink: ['/dashboard/admin'],
+      routerLink: ['/dashboard'],
     },
     {
       label: 'Teachers',
       icon: 'pi pi-fw pi-users',
-      routerLink: ['/dashboard/admin/teachers']
+      routerLink: ['/dashboard/teachers']
     },
     {
       label: 'Students',
@@ -68,7 +65,7 @@ export class SidebarComponent {
     {
       label: "Grade Levels",
       icon: 'pi pi-fw pi-list',
-      routerLink: ['/dashboard/admin/grade-levels']
+      routerLink: ['/dashboard/grade-levels']
     },
     {
       label: "Reports",

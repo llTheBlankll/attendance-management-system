@@ -1,0 +1,108 @@
+<div class="grid mt-2">
+  <!-- Statistics Cards -->
+  <div class="col-12 md:col-6 xl:col-3">
+    <app-total-grade-levels-card [totalGradeLevels]="totalGradeLevelsCount"></app-total-grade-levels-card>
+  </div>
+  <div class="col-12 md:col-6 xl:col-3">
+    <app-most-populated-grade-card [mostPopulatedGrade]="mostPopulatedGrade"></app-most-populated-grade-card>
+  </div>
+  <div class="col-12 md:col-6 xl:col-3">
+    <app-avg-students-grade-card [avgStudents]="avgStudentsPerGrade"></app-avg-students-grade-card>
+  </div>
+  <div class="col-12 md:col-6 xl:col-3">
+    <app-largest-class-size-card [largestClassSize]="largestClassSize"></app-largest-class-size-card>
+  </div>
+  <div class="col-12 md:col-6 xl:col-6">
+    <app-lowest-attendance-grade-card [lowestAttendanceGrade]="lowestAttendanceGrade"
+                                      [lowestAttendanceRate]="lowestAttendanceRate"></app-lowest-attendance-grade-card>
+  </div>
+  <div class="col-12 md:col-6 xl:col-6">
+    <app-highest-performance-grade-card [highestPerformanceGrade]="highestPerformanceGrade"
+                                        [highestPerformanceScore]="highestPerformanceScore"></app-highest-performance-grade-card>
+  </div>
+
+  <!-- Charts -->
+  <div class="col-12 lg:col-6">
+    <p-card header="Grade Level Distribution" styleClass="mb-2 shadow-3">
+      <p-chart [data]="gradeLevelDistributionData" [options]="chartOptions" type="pie"></p-chart>
+    </p-card>
+  </div>
+  <div class="col-12 lg:col-6">
+    <p-card header="Grade Level Enrollment Trend" styleClass="mb-2 shadow-3">
+      <div style="height: 300px;">
+        <p-chart [data]="gradeLevelEnrollmentData" [options]="chartOptions" style="width: 100%; height: 100%;"
+                 type="line"></p-chart>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Grade Level List and CRUD Operations -->
+  <div class="col-12">
+    <p-card header="Grade Levels" styleClass="mb-2 shadow-3">
+      <p-table [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rows]="10" [showCurrentPageReport]="true"
+               [value]="gradeLevels"
+               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Students</th>
+            <th>Attendance Rate</th>
+            <th>Average Score</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template let-gradeLevel pTemplate="body">
+          <tr>
+            <td>{{ gradeLevel.name }}</td>
+            <td>{{ gradeLevel.description }}</td>
+            <td>{{ gradeLevel.studentCount }}</td>
+            <td>{{ gradeLevel.attendanceRate }}%</td>
+            <td>{{ gradeLevel.averageScore }}</td>
+            <td>
+              <p-button (onClick)="editGradeLevel(gradeLevel)" icon="pi pi-pencil"
+                        styleClass="p-button-rounded p-button-success mr-2"></p-button>
+              <p-button (onClick)="deleteGradeLevel(gradeLevel)" icon="pi pi-trash"
+                        styleClass="p-button-rounded p-button-warning mr-2"></p-button>
+              <p-button (onClick)="viewDetailedReport(gradeLevel)" icon="pi pi-file"
+                        styleClass="p-button-rounded p-button-info"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <div class="flex justify-content-between mt-2">
+        <p-button (onClick)="openNewGradeLevelDialog()" icon="pi pi-plus" label="Add Grade Level"
+                  styleClass="p-button-success"></p-button>
+        <p-button (onClick)="exportGradeLevelData()" icon="pi pi-download" label="Export Data"
+                  styleClass="p-button-info"></p-button>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<!-- Edit Grade Level Dialog -->
+<p-dialog [(visible)]="gradeLevelDialog" [modal]="true" [style]="{width: '450px'}" header="Grade Level Details"
+          styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="name">Name</label>
+      <input [(ngModel)]="gradeLevel.name" autofocus id="name" pInputText required type="text"/>
+      @if (submitted && !gradeLevel.name) {
+        <small class="p-error">Name is required.</small>
+      }
+    </div>
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea [(ngModel)]="gradeLevel.description" cols="20" id="description" pInputTextarea required
+                rows="3"></textarea>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button (onClick)="hideDialog()" icon="pi pi-times" label="Cancel" styleClass="p-button-text"></p-button>
+    <p-button (onClick)="saveGradeLevel()" icon="pi pi-check" label="Save" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-dialog>
+
+<!-- Confirm Dialog -->
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

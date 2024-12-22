@@ -1,7 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 
 import {UtilService} from './util.service';
-import {TimeRange} from "../../interfaces/DateRange";
 
 describe('UtilService', () => {
   let service: UtilService;

@@ -1,17 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ImageModule } from 'primeng/image';
-import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
-import { AvatarModule } from 'primeng/avatar';
-import { Button } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { TieredMenuModule } from 'primeng/tieredmenu';
-import { ChipsModule } from 'primeng/chips';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { Router } from '@angular/router';
-import { AuthenticationService } from '../../auth/authentication.service';
+import {Component, inject, OnInit} from '@angular/core';
+import {ToolbarModule} from 'primeng/toolbar';
+import {ImageModule} from 'primeng/image';
+import {MenubarModule} from 'primeng/menubar';
+import {MenuItem} from 'primeng/api';
+import {AvatarModule} from 'primeng/avatar';
+import {DropdownModule} from 'primeng/dropdown';
+import {TieredMenuModule} from 'primeng/tieredmenu';
+import {ChipsModule} from 'primeng/chips';
+import {IconFieldModule} from 'primeng/iconfield';
+import {InputIconModule} from 'primeng/inputicon';
+import {Router} from '@angular/router';
+import {AuthenticationService} from '../../auth/authentication.service';
 
 @Component({
   selector: 'app-topbar',
@@ -21,7 +20,6 @@ import { AuthenticationService } from '../../auth/authentication.service';
     ImageModule,
     MenubarModule,
     AvatarModule,
-    Button,
     DropdownModule,
     TieredMenuModule,
     ChipsModule,
@@ -32,13 +30,6 @@ import { AuthenticationService } from '../../auth/authentication.service';
   styleUrl: './topbar.component.css',
 })
 export class TopbarComponent implements OnInit {
-  // Injections
-  private readonly router = inject(Router);
-  private readonly authService = inject(AuthenticationService);
-
-  // Profile picture
-  protected PROFILE_PICTURE_URL = 'https://picsum.photos/id/1/256/256';
-
   adminMenu?: MenuItem[] = [
     {
       label: 'Home',
@@ -66,7 +57,10 @@ export class TopbarComponent implements OnInit {
       routerLink: ['/dashboard/admin/subjects'],
     },
   ];
-
+  // Profile picture
+  protected PROFILE_PICTURE_URL = 'https://picsum.photos/id/1/256/256';
+  // Injections
+  private readonly router = inject(Router);
   adminAvatarMenu?: MenuItem[] = [
     {
       label: 'Profile',
@@ -87,6 +81,13 @@ export class TopbarComponent implements OnInit {
       icon: 'pi pi-fw pi-power-off',
       command: () => {
         console.log('Logout');
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("email");
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        this.router.navigate(['/login']);
       },
     },
   ];

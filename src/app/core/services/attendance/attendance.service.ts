@@ -1,26 +1,26 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AttendanceForeignEntity } from '../../enums/AttendanceForeignEntity';
-import { AttendanceStatus } from '../../enums/AttendanceStatus';
-import { TimeStack } from '../../enums/TimeStack';
-import { ClassroomDemographicsChart } from '../../interfaces/ClassroomDemographicsChart';
-import { TimeRange } from '../../interfaces/DateRange';
-import { Attendance } from '../../interfaces/dto/attendance/Attendance';
-import { LineChartDTO } from '../../interfaces/LineChartDTO';
-import { PageRequest } from '../../interfaces/PageRequest';
-import { SortRequest } from '../../interfaces/SortRequest';
-import { UtilService } from '../util/util.service';
-import { environment } from '../../../../environments/environment';
-import { AttendanceInput } from '../../interfaces/dto/forms/AttendanceInput';
-import { ClassroomRanking } from '../../interfaces/dto/classroom/ClassroomRanking';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {AttendanceForeignEntity} from '../../types/enums/AttendanceForeignEntity';
+import {AttendanceStatus} from '../../types/enums/AttendanceStatus';
+import {TimeStack} from '../../types/enums/TimeStack';
+import {ClassroomDemographicsChart} from '../../types/other/ClassroomDemographicsChart';
+import {TimeRange} from '../../types/other/DateRange';
+import {Attendance} from '../../types/dto/attendance/Attendance';
+import {LineChartDTO} from '../../types/other/LineChartDTO';
+import {PageRequest} from '../../types/other/PageRequest';
+import {SortRequest} from '../../types/other/SortRequest';
+import {UtilService} from '../util/util.service';
+import {environment} from '../../../../environments/environment';
+import {AttendanceInput} from '../../types/dto/forms/AttendanceInput';
+import {ClassroomRanking} from '../../types/dto/classroom/ClassroomRanking';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AttendanceService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+  private readonly API_URL = environment.apiUrl;
   private readonly utilService = inject(UtilService);
 
   public countForeignEntityAttendance(
@@ -30,7 +30,7 @@ export class AttendanceService {
     id: number
   ) {
     return this.http.get<number>(
-      `${this.apiUrl}/attendances/${foreignEntity}/${id}/all/count`,
+      `${this.API_URL}/attendances/${foreignEntity}/${id}/all/count`,
       {
         params: {
           attendanceStatuses:
@@ -49,7 +49,7 @@ export class AttendanceService {
     const listString =
       this.utilService.attendanceStatusListToString(attendanceStatuses);
 
-    return this.http.get<number>(`${this.apiUrl}/attendances/count/status`, {
+    return this.http.get<number>(`${this.API_URL}/attendances/count/status`, {
       params: {
         attendanceStatuses: listString,
         startDate: dateRange.startDate.toISOString().split('T')[0],
@@ -69,7 +69,7 @@ export class AttendanceService {
     const statusListString =
       this.utilService.attendanceStatusListToString(statuses);
     return this.http.get<LineChartDTO>(
-      `${this.apiUrl}/attendances/chart/line`,
+      `${this.API_URL}/attendances/chart/line`,
       {
         params: {
           attendanceStatuses: statusListString,
@@ -95,7 +95,7 @@ export class AttendanceService {
     const statusListString =
       this.utilService.attendanceStatusListToString(attendanceStatus);
     return this.http.get<ClassroomDemographicsChart>(
-      `${this.apiUrl}/attendances/chart/pie/classroom/${classroomId}/demographics`,
+      `${this.API_URL}/attendances/chart/pie/classroom/${classroomId}/demographics`,
       {
         params: {
           attendanceStatuses: statusListString,
@@ -113,7 +113,7 @@ export class AttendanceService {
     statuses: AttendanceStatus[]
   ): Observable<number> {
     return this.http.get<number>(
-      `${this.apiUrl}/attendances/STUDENT/${studentId}/all/count`,
+      `${this.API_URL}/attendances/STUDENT/${studentId}/all/count`,
       {
         params: {
           startDate: dateRange.startDate.toISOString().split('T')[0],
@@ -136,7 +136,7 @@ export class AttendanceService {
     const statusListString =
       this.utilService.attendanceStatusListToString(attendanceStatuses);
     return this.http.get<Attendance[]>(
-      `${this.apiUrl}/attendances/${foreignEntity}/${id}/all`,
+      `${this.API_URL}/attendances/${foreignEntity}/${id}/all`,
       {
         params: {
           attendanceStatuses: statusListString,
@@ -161,15 +161,15 @@ export class AttendanceService {
     override: boolean = false
   ): Observable<Attendance> {
     return this.http.post<Attendance>(
-      `${this.apiUrl}/attendances/create`,
+      `${this.API_URL}/attendances/create`,
       attendance,
-      { responseType: 'json', params: { override: override } }
+      {responseType: 'json', params: {override: override}}
     );
   }
 
   updateAttendance(attendance: Attendance): Observable<Attendance> {
     return this.http.put<Attendance>(
-      `${this.apiUrl}/attendances/${attendance.id}`,
+      `${this.API_URL}/attendances/${attendance.id}`,
       attendance,
       {
         responseType: 'json',
@@ -198,7 +198,7 @@ export class AttendanceService {
     if (sortRequest)
       params = params.set('sortDirection', sortRequest.sortDirection);
 
-    return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/today`, {
+    return this.http.get<Attendance[]>(`${this.API_URL}/attendances/today`, {
       params: params,
       responseType: 'json',
     });
@@ -213,7 +213,7 @@ export class AttendanceService {
     if (filters?.strandId) params = params.set('strandId', filters.strandId);
     if (filters?.studentId)
       params = params.set('studentId', filters.studentId);
-    return this.http.get<number>(`${this.apiUrl}/attendances/today/count`, {
+    return this.http.get<number>(`${this.API_URL}/attendances/today/count`, {
       params: params,
       responseType: 'json',
     });
@@ -242,7 +242,7 @@ export class AttendanceService {
       params = params.set('sortDirection', sortRequest.sortDirection);
     }
 
-    return this.http.get<Attendance[]>(`${this.apiUrl}/attendances/filtered`, {
+    return this.http.get<Attendance[]>(`${this.API_URL}/attendances/filtered`, {
       params: params,
       responseType: 'json',
     });
@@ -260,7 +260,7 @@ export class AttendanceService {
     if (filters?.strandId) params = params.set('strandId', filters.strandId);
     if (filters?.studentId) params = params.set('studentId', filters.studentId);
 
-    return this.http.get<number>(`${this.apiUrl}/attendances/filtered/count`, {
+    return this.http.get<number>(`${this.API_URL}/attendances/filtered/count`, {
       params: params,
       responseType: 'json',
     });
@@ -275,13 +275,13 @@ export class AttendanceService {
         .set('endDate', dateRange.endDate.toISOString().split('T')[0]);
     }
 
-    return this.http.get<ClassroomRanking[]>(`${this.apiUrl}/attendances/classroom/ranking`, {
+    return this.http.get<ClassroomRanking[]>(`${this.API_URL}/attendances/classroom/ranking`, {
       params: params
     });
   }
 
   public getLastHourAttendance(attendanceStatuses: AttendanceStatus[]) {
-    return this.http.get<number>(`${this.apiUrl}/attendances/count/last-hour`, {
+    return this.http.get<number>(`${this.API_URL}/attendances/count/last-hour`, {
       params: {
         attendanceStatuses: this.utilService.attendanceStatusListToString(attendanceStatuses),
       },

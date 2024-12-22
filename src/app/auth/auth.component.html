@@ -1,13 +1,12 @@
-<p-toast/>
 <div class="background-overlay">
   <div class="container">
     <div class="grid">
       <div class="col-12 justify-content-center flex">
-        <p-card subheader="Standalone Senior High School in Valenzuela" styleClass="login-card"
-                class="flex text-center">
-          <ng-template pTemplate="header" class="justify-content-center">
+        <p-card class="flex text-center" styleClass="login-card"
+                subheader="Standalone Senior High School in Valenzuela">
+          <ng-template class="justify-content-center" pTemplate="header">
             <div class="card-header-img">
-              <img ngSrc="/school-logo.png" alt="" width="256" height="256" priority>
+              <img alt="" height="256" ngSrc="/school-logo.png" priority width="256">
             </div>
           </ng-template>
           <ng-template pTemplate="content">
@@ -17,18 +16,20 @@
                   <p-iconField>
                     <p-inputIcon styleClass="pi pi-user">
                     </p-inputIcon>
-                    <input type="text" formControlName="username" pInputText class="w-23rem" placeholder="Username">
+                    <input autocomplete="username" class="w-23rem" formControlName="username" pInputText placeholder="Username"
+                           type="text">
                   </p-iconField>
                 </div>
                 <div class="col-12 mb-2">
                   <p-iconField>
                     <p-inputIcon styleClass="pi pi-lock"></p-inputIcon>
-                    <input type="password" formControlName="password" pInputText class="w-23rem" placeholder="Password">
+                    <input autocomplete="current-password" class="w-23rem" formControlName="password" pInputText
+                           placeholder="Password" type="password">
                   </p-iconField>
                 </div>
                 <div class="col-12">
-                  <p-button icon="pi pi-sign-in" label="Sign in" type="submit" severity="success"
-                            [disabled]="!this.loginForm.valid" outlined raised></p-button>
+                  <p-button [disabled]="!this.loginForm.valid" icon="pi pi-sign-in" label="Sign in" outlined
+                            raised severity="success" type="submit"></p-button>
                 </div>
               </form>
             </div>

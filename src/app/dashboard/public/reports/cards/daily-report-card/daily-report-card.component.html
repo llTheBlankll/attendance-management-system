@@ -1,0 +1,21 @@
+<p-card styleClass="h-full">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center justify-content-between px-3 py-2">
+      <h2 class="text-xl font-semibold m-0">Daily Attendance Summary</h2>
+      <p-button icon="pi pi-info-circle" styleClass="p-button-rounded p-button-text"></p-button>
+    </div>
+  </ng-template>
+  <p class="m-0 text-secondary">View today's attendance summary for all classes. This report includes:</p>
+  <ul class="list-none p-0 m-0 mt-2">
+    <li class="flex align-items-center mb-2"><i class="pi pi-check-circle mr-2 text-green-500"></i>Total present
+      students
+    </li>
+    <li class="flex align-items-center mb-2"><i class="pi pi-times-circle mr-2 text-red-500"></i>Total absent students
+    </li>
+    <li class="flex align-items-center"><i class="pi pi-chart-bar mr-2 text-blue-500"></i>Attendance percentage by class
+    </li>
+  </ul>
+  <ng-template pTemplate="footer">
+    <p-button (onClick)="generateReport()" icon="pi pi-file-pdf" label="Generate Report"></p-button>
+  </ng-template>
+</p-card>

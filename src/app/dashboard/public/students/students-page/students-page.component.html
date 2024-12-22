@@ -1,0 +1,68 @@
+<div class="grid">
+  <div class="col-12">
+    <student-details-and-selection-card
+      (studentSelected)="this.onStudentSelect($event)"
+    />
+  </div>
+  <div class="col-12 mb-3">
+    <div class="flex flex-wrap gap-2">
+      <p-button
+        (onClick)="openAssignSectionDialog()"
+        [disabled]="!selectedStudent"
+        icon="pi pi-user"
+        label="Assign to Section"
+      ></p-button>
+      <p-button
+        (onClick)="openBulkAssignDialog()"
+        icon="pi pi-users"
+        label="Bulk Assign to Section"
+      ></p-button>
+      <p-button
+        (onClick)="openBulkAddDialog()"
+        icon="pi pi-plus"
+        label="Add Students in Bulk"
+      ></p-button>
+    </div>
+  </div>
+  <div class="col-12 md:col-6 lg:col-3">
+    <students-overall-attendance-card
+      [overAllAttendance]="this.attendanceCard.overAllAttendance"
+    />
+  </div>
+  <div class="col-12 md:col-6 lg:col-3">
+    <students-on-time-card [totalOnTime]="this.attendanceCard.onTime"/>
+  </div>
+  <div class="col-12 md:col-6 lg:col-3">
+    <students-late-card [totalLate]="this.attendanceCard.late"/>
+  </div>
+  <div class="col-12 md:col-6 lg:col-3">
+    <students-absent-card [totalAbsent]="this.attendanceCard.absent"/>
+  </div>
+  <div class="col-12 lg:col-8">
+    <students-attendance-distribution
+      (timeRange)="this.onTimeRangeChange($event)"
+      [data]="this.monthlyAttendanceChartData"
+    />
+  </div>
+  <div class="col-12 lg:col-4">
+    <students-profile-information [studentInformation]="this.selectedStudent"/>
+  </div>
+</div>
+
+<app-assign-section-dialog
+  (assign)="onAssignSection($event)"
+  [(visible)]="assignSectionDialogVisible"
+  [sections]="classrooms"
+></app-assign-section-dialog>
+
+<app-bulk-assign-dialog
+  (assign)="onBulkAssignStudents($event)"
+  [(visible)]="bulkAssignDialogVisible"
+  [allStudents]="allStudents"
+  [classrooms]="classrooms"
+></app-bulk-assign-dialog>
+
+<app-bulk-add-dialog
+  (addStudents)="onBulkAddStudents($event)"
+  [(visible)]="bulkAddDialogVisible"
+></app-bulk-add-dialog>

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {TimeRangeConstants} from '../../enums/TimeRange';
-import {TimeRange} from '../../interfaces/DateRange';
-import {AttendanceStatus} from '../../enums/AttendanceStatus';
+import {TimeRangeConstants} from '../../types/enums/TimeRange';
+import {TimeRange} from '../../types/other/DateRange';
+import {AttendanceStatus} from '../../types/enums/AttendanceStatus';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class UtilService {
     const schoolYearOptions = [];
 
     for (let year = startYear; year <= endYear; year++) {
-      schoolYearOptions.push({ label: `${year}-${year + 1}`, value: `${year}-${year + 1}` });
+      schoolYearOptions.push({label: `${year}-${year + 1}`, value: `${year}-${year + 1}`});
     }
 
     return schoolYearOptions;
@@ -33,7 +33,7 @@ export class UtilService {
     const date = new Date();
     date.setMonth(monthNumber - 1); // Adjust for 0-indexing
 
-    return date.toLocaleString('en-US', { month: 'long' });
+    return date.toLocaleString('en-US', {month: 'long'});
   }
 
   /**
@@ -44,7 +44,7 @@ export class UtilService {
   public getDaysCount(dateRange: TimeRange) {
     return Math.ceil(
       Math.abs(dateRange.endDate.getTime() - dateRange.startDate.getTime()) /
-        (1000 * 60 * 60 * 24)
+      (1000 * 60 * 60 * 24)
     );
   }
 

@@ -1,0 +1,217 @@
+<div class="grid h-full">
+  <!-- Account Information Card -->
+  <div class="col-12 lg:col-6 flex flex-column">
+    <p-card
+      header="Account Information"
+      styleClass="flex-full shadow-3 d-flex flex-column h-100"
+    >
+      <form [formGroup]="userForm" class="flex flex-column gap-3 flex-grow-1">
+        <div class="field flex flex-column align-items-center">
+          <p-avatar
+            [image]="this.profilePicture"
+            [style]="{ width: '150px', height: '150px' }"
+            shape="circle"
+            size="xlarge"
+          ></p-avatar>
+          <p-fileUpload
+            #fu
+            (onSelect)="onProfilePictureSelect($event)"
+            auto
+            chooseIcon="pi pi-upload"
+            chooseLabel="Change Profile Picture"
+            maxFileSize="5000000"
+            mode="basic"
+            name="profilePicture"
+            styleClass="mt-2"
+          ></p-fileUpload>
+        </div>
+        <div class="field">
+          <label class="block font-bold mb-2" for="username">Username</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-user"></i>
+            <input
+              class="w-full"
+              formControlName="username"
+              id="username"
+              pInputText
+              type="text"
+            />
+          </span>
+          @if (getFormControl(userForm, 'username')?.touched &&
+          getFormControl(userForm, 'username')?.invalid) {
+            <small class="p-error">Username is required</small>
+          }
+        </div>
+        <div class="field">
+          <label class="block font-bold mb-2" for="email">Email</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-envelope"></i>
+            <input
+              class="w-full"
+              formControlName="email"
+              id="email"
+              pInputText
+              type="email"
+            />
+          </span>
+          @if (getFormControl(userForm, 'email')?.touched &&
+          getFormControl(userForm, 'email')?.invalid) {
+            <small class="p-error">Valid email is required</small>
+          }
+        </div>
+        <div class="flex-grow-1"></div>
+        <div class="flex justify-content-end mt-3">
+          <p-button
+            (onClick)="onSubmitUserForm()"
+            [disabled]="userForm.invalid"
+            icon="pi pi-check"
+            label="Save Account Info"
+          ></p-button>
+        </div>
+      </form>
+    </p-card>
+  </div>
+
+  <!-- Teacher Information Card -->
+  <div class="col-12 lg:col-6 flex-auto flex-column teacher-info-container">
+    <p-card header="Teacher Information" styleClass="h-full flex-fill shadow-3">
+      <form [formGroup]="teacherForm" class="flex flex-column gap-3">
+        <div class="grid">
+          <div class="col-12 md:col-4">
+            <label class="block font-bold mb-2" for="firstName"
+            >First Name</label
+            >
+            <input
+              class="w-full"
+              formControlName="firstName"
+              id="firstName"
+              pInputText
+              type="text"
+            />
+            @if (getFormControl(teacherForm, 'firstName')?.touched &&
+            getFormControl(teacherForm, 'firstName')?.invalid) {
+              <small class="p-error">First name is required</small>
+            }
+          </div>
+          <div class="col-12 md:col-4">
+            <label class="block font-bold mb-2" for="lastName">Last Name</label>
+            <input
+              class="w-full"
+              formControlName="lastName"
+              id="lastName"
+              pInputText
+              type="text"
+            />
+            @if (getFormControl(teacherForm, 'lastName')?.touched &&
+            getFormControl(teacherForm, 'lastName')?.invalid) {
+              <small class="p-error">Last name is required</small>
+            }
+          </div>
+          <div class="col-12 md:col-4">
+            <label class="block font-bold mb-2" for="middleInitial"
+            >Middle Initial</label
+            >
+            <input
+              class="w-full"
+              formControlName="middleInitial"
+              id="middleInitial"
+              maxlength="1"
+              pInputText
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="col-12 md:col-4">
+            <div class="field">
+              <label class="block font-bold mb-2" for="age">Age</label>
+              <input
+                class="w-full"
+                formControlName="age"
+                id="age"
+                pInputText
+                type="text"
+              />
+              @if (getFormControl(teacherForm, 'age')?.touched &&
+              getFormControl(teacherForm, 'age')?.invalid) {
+                <small class="p-error">Age is required</small>
+              }
+            </div>
+          </div>
+          <div class="col-12 md:col-4">
+            <label class="block font-bold mb-2" for="sex">Sex</label>
+            <p-dropdown
+              [options]="sexOptions"
+              formControlName="sex"
+              id="sex"
+              placeholder="Select Sex"
+              styleClass="w-full"
+            ></p-dropdown>
+            @if (getFormControl(teacherForm, 'sex')?.touched &&
+            getFormControl(teacherForm, 'sex')?.invalid) {
+              <small class="p-error">Sex is required</small>
+            }
+          </div>
+          <div class="col-12 md:col-4">
+            <label class="block font-bold mb-2" for="position">Position</label>
+            <p-dropdown
+              [options]="positionOptions"
+              formControlName="position"
+              id="position"
+              placeholder="Select Position"
+              styleClass="w-full"
+            ></p-dropdown>
+            @if (getFormControl(teacherForm, 'position')?.touched &&
+            getFormControl(teacherForm, 'position')?.invalid) {
+              <small class="p-error">Position is required</small>
+            }
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <label class="block font-bold mb-2" for="contactNumber"
+            >Contact Number</label
+            >
+            <p-inputMask
+              formControlName="contactNumber"
+              id="contactNumber"
+              mask="(999) 999-9999"
+              placeholder="(999) 999-9999"
+              styleClass="w-full"
+            ></p-inputMask>
+            @if (getFormControl(teacherForm, 'contactNumber')?.touched &&
+            getFormControl(teacherForm, 'contactNumber')?.invalid) {
+              <small class="p-error">Valid contact number is required</small>
+            }
+          </div>
+          <div class="col-12 md:col-6">
+            <label class="block font-bold mb-2" for="emergencyContact"
+            >Emergency Contact</label
+            >
+            <p-inputMask
+              formControlName="emergencyContact"
+              id="emergencyContact"
+              mask="(999) 999-9999"
+              placeholder="(999) 999-9999"
+              styleClass="w-full"
+            ></p-inputMask>
+            @if (getFormControl(teacherForm, 'emergencyContact')?.touched &&
+            getFormControl(teacherForm, 'emergencyContact')?.invalid) {
+              <small class="p-error">Emergency contact is required</small>
+            }
+          </div>
+        </div>
+        <div class="flex justify-content-center mt-auto">
+          <p-button
+            (onClick)="onSubmitTeacherForm()"
+            [disabled]="teacherForm.invalid"
+            icon="pi pi-check"
+            label="Save Teacher Info"
+          ></p-button>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

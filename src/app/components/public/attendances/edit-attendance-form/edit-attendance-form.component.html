@@ -1,0 +1,24 @@
+<form (ngSubmit)="saveAttendance()" [formGroup]="editForm">
+  <div class="p-fluid">
+    <div class="p-field mb-3">
+      <label for="status">Status</label>
+      <p-dropdown [options]="attendanceStatuses" formControlName="status" id="status">
+        <ng-template let-status pTemplate="item">
+          <div class="flex align-items-center">
+            <span>{{ status }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-status pTemplate="selectedItem">
+          <div class="flex align-items-center">
+            <span>{{ status }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="p-field mb-3">
+      <label for="notes">Notes</label>
+      <textarea formControlName="notes" id="notes" pInputTextarea rows="3"></textarea>
+    </div>
+  </div>
+  <p-button [disabled]="!editForm.valid" label="Save Changes" type="submit"></p-button>
+</form>
