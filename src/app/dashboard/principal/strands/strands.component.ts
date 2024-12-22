@@ -1,26 +1,32 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TimeRange } from '../../../core/interfaces/DateRange';
-import { Strand } from '../../../core/interfaces/dto/strand/Strand';
-import { LineChartDTO } from '../../../core/interfaces/LineChartDTO';
-import { StrandService } from '../../../core/services/strand/strand.service';
+import {CommonModule} from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {TimeRange} from '../../../core/interfaces/DateRange';
+import {Strand} from '../../../core/interfaces/dto/strand/Strand';
+import {LineChartDTO} from '../../../core/interfaces/LineChartDTO';
+import {StrandService} from '../../../core/services/strand/strand.service';
 
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { ChartModule } from 'primeng/chart';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { TableModule } from 'primeng/table';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {ChartModule} from 'primeng/chart';
+import {DialogModule} from 'primeng/dialog';
+import {InputTextModule} from 'primeng/inputtext';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {TableModule} from 'primeng/table';
 
-import { AvgStudentsStrandCardComponent } from '../../../components/admin/strands/cards/avg-students-strand-card/avg-students-strand-card.component';
-import { MostPopularStrandCardComponent } from '../../../components/admin/strands/cards/most-popular-strand-card/most-popular-strand-card.component';
-import { TotalStrandsCardComponent } from '../../../components/admin/strands/cards/total-strands-card/total-strands-card.component';
-import { MessageService } from 'primeng/api';
-import { MessageDTO } from '../../../core/interfaces/MessageDTO';
-import { HttpErrorResponse } from '@angular/common/http';
-import { CodeStatus } from '../../../core/enums/CodeStatus';
+import {
+  AvgStudentsStrandCardComponent
+} from '../../../components/admin/strands/cards/avg-students-strand-card/avg-students-strand-card.component';
+import {
+  MostPopularStrandCardComponent
+} from '../../../components/admin/strands/cards/most-popular-strand-card/most-popular-strand-card.component';
+import {
+  TotalStrandsCardComponent
+} from '../../../components/admin/strands/cards/total-strands-card/total-strands-card.component';
+import {MessageService} from 'primeng/api';
+import {MessageDTO} from '../../../core/interfaces/MessageDTO';
+import {HttpErrorResponse} from '@angular/common/http';
+import {CodeStatus} from '../../../core/enums/CodeStatus';
 
 @Component({
   selector: 'app-strands',
@@ -44,8 +50,6 @@ import { CodeStatus } from '../../../core/enums/CodeStatus';
   providers: [MessageService],
 })
 export class StrandsComponent implements OnInit {
-  private readonly strandService = inject(StrandService);
-  private readonly messageService = inject(MessageService);
   strands: { strand: Strand; studentCount: number }[] = [];
   mostPopularStrand: {
     strandId: number;
@@ -59,6 +63,8 @@ export class StrandsComponent implements OnInit {
   strandDialog: boolean = false;
   strandSelected: Partial<Strand> = {};
   submitted: boolean = false;
+  private readonly strandService = inject(StrandService);
+  private readonly messageService = inject(MessageService);
 
   ngOnInit() {
     this.loadStrands();
@@ -174,7 +180,7 @@ export class StrandsComponent implements OnInit {
   }
 
   editStrand(strand: { strand: Strand; studentCount: number }) {
-    this.strandSelected = { ...strand.strand };
+    this.strandSelected = {...strand.strand};
     this.strandDialog = true;
   }
 
