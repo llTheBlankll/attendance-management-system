@@ -32,7 +32,6 @@ import {TeacherService} from '../../../../../core/services/teacher/teacher.servi
     AvatarModule,
     ToastModule,
   ],
-  providers: [MessageService],
   templateUrl: './class-create-dialog.component.html',
   styleUrl: './class-create-dialog.component.css',
 })

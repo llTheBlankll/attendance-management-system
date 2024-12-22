@@ -38,9 +38,6 @@ import {MessageDTO} from "../core/types/other/MessageDTO";
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
-  providers: [
-    MessageService
-  ]
 })
 export class AuthComponent {
 

@@ -36,7 +36,7 @@ import {ClassEditDialogComponent} from '../../dialogs/class-edit-dialog/class-ed
     ToastModule,
     ClassEditDialogComponent
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
   templateUrl: './class-section-details-card.component.html',
   styleUrl: './class-section-details-card.component.css',
 })

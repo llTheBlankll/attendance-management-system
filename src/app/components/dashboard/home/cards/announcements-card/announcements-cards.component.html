@@ -6,9 +6,10 @@
           <p-avatar
             [image]="processedAnnouncement.profilePictureUrl"
             shape="circle"
-            size="large"
+            size="normal"
           />
-          <span class="font-bold">Amy Elsner</span>
+          <span class="font-bold">{{ processedAnnouncement.announcement.user.teacher?.lastName }}
+            , {{ processedAnnouncement.announcement.user.teacher?.firstName }}</span>
         </div>
       </ng-template>
       <ng-template pTemplate="footer">
@@ -23,7 +24,7 @@
             ></p-button>
           </div>
           <span class="text-surface-500 dark:text-surface-400"
-          >Updated 2 hours ago</span
+          >Updated {{ processedAnnouncement.timeUpdatedAgo }}</span
           >
         </div>
       </ng-template>

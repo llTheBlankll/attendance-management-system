@@ -30,7 +30,7 @@ import {StudentService} from '../../../../core/services/student/student.service'
     ConfirmDialogModule,
     ToastModule,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
 })
 export class ManualAttendanceInputComponent {
   @Output() onSubmit = new EventEmitter<AttendanceInput>();

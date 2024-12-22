@@ -13,17 +13,28 @@
             shape="circle"
             size="xlarge"
           ></p-avatar>
-          <p-fileUpload
-            #fu
-            (onSelect)="onProfilePictureSelect($event)"
-            auto
-            chooseIcon="pi pi-upload"
-            chooseLabel="Change Profile Picture"
-            maxFileSize="5000000"
-            mode="basic"
-            name="profilePicture"
-            styleClass="mt-2"
-          ></p-fileUpload>
+          @if (!this.profileUpload.display) {
+            <div class="flex flex-row">
+              <p-button (click)="uploadProfilePicture()" styleClass="mr-1">
+                Change
+              </p-button>
+              <p-button (click)="this.profileUpload.display = false">
+                Cancel
+              </p-button>
+            </div>
+          } @else {
+            <p-fileUpload
+              (onSelect)="onProfilePictureSelect($event)"
+              auto
+              showCancelButton="true"
+              chooseIcon="pi pi-upload"
+              chooseLabel="Change Profile Picture"
+              maxFileSize="5000000"
+              mode="basic"
+              name="profilePicture"
+              styleClass="mt-2 mb-1"
+            ></p-fileUpload>
+          }
         </div>
         <div class="field">
           <label class="block font-bold mb-2" for="username">Username</label>
@@ -35,6 +46,7 @@
               id="username"
               pInputText
               type="text"
+              readonly
             />
           </span>
           @if (getFormControl(userForm, 'username')?.touched &&

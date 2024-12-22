@@ -22,9 +22,6 @@ import {BreadcrumbService} from './core/services/breadcrumbs/breadcrumb.service'
     TopbarComponent,
     ToastModule
   ],
-  providers: [
-    MessageService
-  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -66,19 +63,20 @@ export class AppComponent implements OnInit {
 
     // Check if authenticated
     this.authService.isAuthenticated().subscribe({
-      next: (response: HttpResponse<MessageDTO>) => {
-        const message = response.body ?? {status: CodeStatus.OK, message: ''};
+      next: (message: MessageDTO) => {
         if (message.status === CodeStatus.OK) {
           this.authenticated.authenticated = true;
         }
       },
       error: (error: HttpErrorResponse) => {
-        const message = error.error as MessageDTO;
-        // * Failed status is a expired token
-        if (message.status === CodeStatus.FAILED) {
-          console.info('Token expired');
-          this.authenticated.authenticated = false;
-          this.authenticated.role = 'GUEST';
+        if (error.error !== null) {
+          const message = error.error as MessageDTO;
+          // * Failed status is a expired token
+          if (message.status === CodeStatus.FAILED) {
+            console.info('Token expired');
+            this.authenticated.authenticated = false;
+            this.authenticated.role = 'GUEST';
+          }
         }
 
         this.router

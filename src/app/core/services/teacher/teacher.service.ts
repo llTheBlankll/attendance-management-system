@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
-import {catchError, map, Observable, throwError} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {SortRequest} from '../../types/other/SortRequest';
 import {Teacher} from '../../types/dto/teacher/Teacher';
 import {PageRequest} from '../../types/other/PageRequest';
@@ -86,24 +86,6 @@ export class TeacherService {
         {
           headers: new HttpHeaders({Accept: 'application/json'}),
         }
-      )
-      .pipe(
-        catchError((error) => {
-          if (error.status === 404) {
-            return throwError(() => new Error('Teacher not found'));
-          } else if (error.status === 400) {
-            return throwError(
-              () => new Error('Invalid file or no file received')
-            );
-          } else {
-            return throwError(
-              () =>
-                new Error(
-                  'An error occurred while uploading the profile picture'
-                )
-            );
-          }
-        })
       );
   }
 
