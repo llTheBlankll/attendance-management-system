@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
       });
 
     // Check if authenticated
-    this.authService.isAuthenticated().subscribe({
+    this.authService.isAuthenticatedAsync().subscribe({
       next: (message: MessageDTO) => {
         if (message.status === CodeStatus.OK) {
           this.authenticated.authenticated = true;

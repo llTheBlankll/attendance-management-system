@@ -7,6 +7,31 @@ import {AttendanceStatus} from '../../types/enums/AttendanceStatus';
   providedIn: 'root',
 })
 export class UtilService {
+  public getTimeAgo(updatedAt: Date) {
+    const now = new Date();
+    const differenceInSeconds = Math.floor(
+      (now.getTime() - updatedAt.getTime()) / 1000
+    );
+
+    // Add this check
+    if (differenceInSeconds <= 0) {
+      return 'Just now'; // or 'Recently updated' or whatever makes sense
+    }
+
+    if (differenceInSeconds < 60) {
+      return `${differenceInSeconds} seconds ago`;
+    } else if (differenceInSeconds < 3600) {
+      const minutes = Math.floor(differenceInSeconds / 60);
+      return `${minutes} minutes ago`;
+    } else if (differenceInSeconds < 86400) {
+      const hours = Math.floor(differenceInSeconds / 3600);
+      return `${hours} hours ago`;
+    } else {
+      const days = Math.floor(differenceInSeconds / 86400);
+      return `${days} days ago`;
+    }
+  }
+
   public getCurrentWeekOfMonth(date: Date) {
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     return Math.ceil((date.getDate() + firstDayOfMonth.getDay() - 1) / 7);
