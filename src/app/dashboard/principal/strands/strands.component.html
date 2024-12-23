@@ -64,7 +64,7 @@
           <td>
             <div class="flex gap-1">
               <p-button
-                (click)="editStrandDialog = true; strandSelected = strand.strand"
+                (click)="displayEditStrandDialog = true; strandSelected = strand.strand"
                 icon="pi pi-pencil"
                 severity="info"
                 rounded
@@ -82,11 +82,12 @@
     </p-table>
     <div class="flex justify-content-between mt-2">
       <p-button icon="pi pi-plus" label="Add Strand"
-                severity="success"></p-button>
+                severity="success" (click)="displayCreateStrandDialog = true"/>
       <p-button icon="pi pi-download" label="Export Data"
                 severity="info"></p-button>
     </div>
   </div>
 </div>
-<app-edit-strand-dialog [(visible)]="this.editStrandDialog" [strand]="this.strandSelected"
+<app-edit-strand-dialog [(visible)]="this.displayEditStrandDialog" [strand]="this.strandSelected"
                         (editedStrand)="this.editStrand($event)"/>
+<app-create-strand-dialog [(visible)]="this.displayCreateStrandDialog" (createdStrand)="this.createStrand($event)"/>

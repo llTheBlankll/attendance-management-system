@@ -17,7 +17,7 @@ export class StrandService {
   private readonly http = inject(HttpClient);
 
   public createStrand(strand: Strand) {
-    return this.http.post<MessageDTO>(`${this.apiUrl}/strands/create`, strand, {
+    return this.http.post<Strand>(`${this.apiUrl}/strands/create`, strand, {
       responseType: 'json'
     });
   }

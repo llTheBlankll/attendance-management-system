@@ -32,6 +32,9 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {
   EditStrandDialogComponent
 } from "../../../components/dashboard/strands/dialogs/edit-strand-dialog/edit-strand-dialog.component";
+import {
+  CreateStrandDialogComponent
+} from "../../../components/dashboard/strands/dialogs/create-strand-dialog/create-strand-dialog.component";
 
 @Component({
   selector: 'app-strands',
@@ -54,6 +57,7 @@ import {
     ConfirmDialogModule,
     ConfirmPopupModule,
     EditStrandDialogComponent,
+    CreateStrandDialogComponent,
   ],
   providers: [
     ConfirmationService
@@ -71,8 +75,11 @@ export class StrandsComponent implements OnInit {
   strandDistributionData: any;
   strandPopularityData: any;
   chartOptions: any;
-  editStrandDialog: boolean = false;
+
   strandSelected?: Strand;
+
+  displayEditStrandDialog: boolean = false;
+  displayCreateStrandDialog: boolean = false;
 
   private readonly strandService = inject(StrandService);
   private readonly messageService = inject(MessageService);
@@ -223,7 +230,7 @@ export class StrandsComponent implements OnInit {
           });
         },
         complete: () => {
-          this.editStrandDialog = false;
+          this.displayEditStrandDialog = false;
         }
       });
     } else {
@@ -270,7 +277,12 @@ export class StrandsComponent implements OnInit {
                 severity: 'error',
                 summary: 'Error',
                 detail: error.message
-              })
+              });
+            },
+            complete: () => {
+              this.loadMostPopularStrand();
+              this.loadAverageStudentsPerStrand();
+              this.loadStrandDistribution();
             }
           });
         }
@@ -278,43 +290,20 @@ export class StrandsComponent implements OnInit {
     })
   }
 
-  saveStrand() {
+  createStrand(strand: Strand) {
     const result = this.strandService.createStrand(
-      this.strandSelected as Strand
+      strand
     );
     result.subscribe({
-      next: (message: MessageDTO) => {
-        switch (message.status) {
-          case CodeStatus.OK: {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: message.message,
-            });
-            break;
-          }
-          case CodeStatus.BAD_REQUEST: {
-            this.messageService.add({
-              severity: 'warning',
-              summary: 'Warning',
-              detail: message.message,
-            });
-            break;
-          }
-          case CodeStatus.FAILED: {
-            this.messageService.add({
-              severity: 'failed',
-              summary: 'Failed',
-              detail: message.message,
-            });
-            break;
-          }
-          default: {
-            console.error(
-              'INVALID RESPONSE FROM THE SERVER. DEVELOPERS, PLEASE CHECK MY REQUEST!'
-            );
-            break;
-          }
+      next: (response: Strand) => {
+        if (response) {
+          this.strands.push({strand: response, studentCount: 0});
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Strand Created',
+            life: 3000
+          });
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -326,9 +315,10 @@ export class StrandsComponent implements OnInit {
         });
       },
       complete: () => {
-        // This will refresh the strand.
-        this.loadStrands();
-      },
+        this.loadMostPopularStrand();
+        this.loadAverageStudentsPerStrand();
+        this.loadStrandDistribution();
+      }
     });
   }
 }
