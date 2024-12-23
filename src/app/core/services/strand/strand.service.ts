@@ -22,6 +22,18 @@ export class StrandService {
     });
   }
 
+  public updateStrand(strand: Strand, id: number) {
+    return this.http.put<MessageDTO>(`${this.apiUrl}/strands/${id}`, strand, {
+      responseType: 'json'
+    });
+  }
+
+  public deleteStrand(strandId: number): Observable<MessageDTO> {
+    return this.http.delete<MessageDTO>(`${this.apiUrl}/strands/${strandId}`, {
+      responseType: 'json'
+    });
+  }
+
   public getAllStrands(): Observable<Strand[]> {
     return this.http.get<Strand[]>(`${this.apiUrl}/strands/all`);
   }

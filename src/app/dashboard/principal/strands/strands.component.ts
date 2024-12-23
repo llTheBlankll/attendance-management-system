@@ -23,10 +23,15 @@ import {
 import {
   TotalStrandsCardComponent
 } from '../../../components/dashboard/strands/cards/total-strands-card/total-strands-card.component';
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {MessageDTO} from '../../../core/types/other/MessageDTO';
 import {HttpErrorResponse} from '@angular/common/http';
 import {CodeStatus} from '../../../core/types/enums/CodeStatus';
+import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {
+  EditStrandDialogComponent
+} from "../../../components/dashboard/strands/dialogs/edit-strand-dialog/edit-strand-dialog.component";
 
 @Component({
   selector: 'app-strands',
@@ -46,7 +51,13 @@ import {CodeStatus} from '../../../core/types/enums/CodeStatus';
     TotalStrandsCardComponent,
     MostPopularStrandCardComponent,
     AvgStudentsStrandCardComponent,
+    ConfirmDialogModule,
+    ConfirmPopupModule,
+    EditStrandDialogComponent,
   ],
+  providers: [
+    ConfirmationService
+  ]
 })
 export class StrandsComponent implements OnInit {
   strands: { strand: Strand; studentCount: number }[] = [];
@@ -60,12 +71,12 @@ export class StrandsComponent implements OnInit {
   strandDistributionData: any;
   strandPopularityData: any;
   chartOptions: any;
-  strandDialog: boolean = false;
-  strandSelected: Partial<Strand> = {};
-  submitted: boolean = false;
+  editStrandDialog: boolean = false;
+  strandSelected?: Strand;
 
   private readonly strandService = inject(StrandService);
   private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   ngOnInit() {
     this.loadStrands();
@@ -87,18 +98,15 @@ export class StrandsComponent implements OnInit {
       },
       scales: {
         x: {
-          display: true,
           grid: {
-            display: false,
-          },
-          ticks: {
-            display: false,
+            display: false
           },
         },
         y: {
-          display: true,
-          beginAtZero: true,
-        },
+          grid: {
+            display: false
+          }
+        }
       },
     };
   }
@@ -180,23 +188,97 @@ export class StrandsComponent implements OnInit {
     };
   }
 
-  editStrand(strand: { strand: Strand; studentCount: number }) {
-    this.strandSelected = {...strand.strand};
-    this.strandDialog = true;
+  editStrand(strand: Strand) {
+    console.debug("Edited Strand receievd:", strand);
+    if (strand.id !== undefined) {
+      this.strandService.updateStrand(strand, strand.id).subscribe({
+        next: (response) => {
+          if (response.status === CodeStatus.OK) {
+            this.messageService.add({
+              severity: "success",
+              summary: "Successful",
+              detail: "Strand successfully updated!"
+            });
+            // Edit the strands variable to reflect the changes
+            const originalStrand = this.strands.find(s => s.strand.id === strand.id);
+            if (originalStrand) {
+              originalStrand.strand = strand;
+              // Replace the original strand with the updated one
+              this.strands.splice(this.strands.indexOf(originalStrand), 1, originalStrand);
+            }
+          } else {
+            console.debug(response);
+            this.messageService.add({
+              severity: "warn",
+              summary: "",
+              detail: "Failed to update strand."
+            });
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: error.message
+          });
+        },
+        complete: () => {
+          this.editStrandDialog = false;
+        }
+      });
+    } else {
+      console.debug(strand);
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: "Cannot edit strand because the strand has no identifier."
+      });
+    }
   }
 
-  deleteStrand(strand: { strand: Strand; studentCount: number }) {
+  deleteStrand(strand: Strand, event: Event) {
     // Implement delete functionality
     console.log('Delete strand:', strand);
-  }
-
-  hideDialog() {
-    this.strandDialog = false;
-    this.submitted = false;
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure you want to delete this strand? Every student assigned to this strand will be unassigned.',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        if (strand.id !== undefined) {
+          this.strandService.deleteStrand(strand.id).subscribe({
+            next: (response: MessageDTO) => {
+              if (response.status === CodeStatus.OK) {
+                this.strands = this.strands.filter(val => val.strand.id !== strand.id);
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Successful',
+                  detail: 'Strand Deleted',
+                  life: 3000
+                });
+              } else {
+                this.messageService.add({
+                  severity: 'warning',
+                  summary: 'Unsuccessful',
+                  detail: response.message,
+                  life: 3000
+                });
+              }
+            },
+            error: (error: HttpErrorResponse) => {
+              console.error(error.message);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.message
+              })
+            }
+          });
+        }
+      }
+    })
   }
 
   saveStrand() {
-    this.submitted = true;
     const result = this.strandService.createStrand(
       this.strandSelected as Strand
     );
@@ -246,7 +328,6 @@ export class StrandsComponent implements OnInit {
       complete: () => {
         // This will refresh the strand.
         this.loadStrands();
-        this.hideDialog();
       },
     });
   }
