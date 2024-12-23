@@ -54,8 +54,6 @@ import {Student} from '../../../../../core/types/dto/student/Student';
             optionLabel="fullName"
             placeholder="Select students"
             [style]="{ width: '100%' }"
-            (onShow)="onMultiSelectShow(bulkAssignDialog)"
-            (onHide)="onMultiSelectHide(bulkAssignDialog)"
             [filter]="true"
             [virtualScroll]="true"
             [virtualScrollItemSize]="34"
@@ -76,9 +74,9 @@ import {Student} from '../../../../../core/types/dto/student/Student';
 })
 export class BulkAssignDialogComponent {
   @Input() visible: boolean = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
   @Input() classrooms: ClassroomDTO[] = [];
   @Input() allStudents: Student[] = [];
-  @Output() visibleChange = new EventEmitter<boolean>();
   @Output() assign = new EventEmitter<{
     section: ClassroomDTO;
     students: Student[];
@@ -86,22 +84,6 @@ export class BulkAssignDialogComponent {
 
   selectedClassroom?: ClassroomDTO;
   selectedStudents: Student[] = [];
-
-  onMultiSelectShow(dialog: any) {
-    setTimeout(() => {
-      if (dialog) {
-        dialog.maximized = true;
-      }
-    }, 0);
-  }
-
-  onMultiSelectHide(dialog: any) {
-    setTimeout(() => {
-      if (dialog) {
-        dialog.maximized = false;
-      }
-    }, 0);
-  }
 
   bulkAssignStudentsToSection() {
     this.assign.emit({
