@@ -134,7 +134,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadClassrooms() {
-    this.classroomService.getAllClassrooms().subscribe(
+    this.classroomService.listAll().subscribe(
       (classrooms) => {
         this.classrooms = classrooms;
       },
@@ -156,7 +156,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadStrands() {
-    this.strandService.getAllStrands().subscribe({
+    this.strandService.listAll().subscribe({
       next: (strands) => {
         this.strands = strands;
       },

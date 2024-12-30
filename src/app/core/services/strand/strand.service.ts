@@ -16,18 +16,30 @@ export class StrandService {
   private readonly apiUrl = environment.apiUrl;
   private readonly http = inject(HttpClient);
 
-  public createStrand(strand: Strand) {
-    return this.http.post<MessageDTO>(`${this.apiUrl}/strands/create`, strand, {
+  public create(strand: Strand) {
+    return this.http.post<Strand>(`${this.apiUrl}/strands/create`, strand, {
       responseType: 'json'
     });
   }
 
-  public getAllStrands(): Observable<Strand[]> {
+  public update(strand: Strand, id: number) {
+    return this.http.put<MessageDTO>(`${this.apiUrl}/strands/${id}`, strand, {
+      responseType: 'json'
+    });
+  }
+
+  public delete(strandId: number): Observable<MessageDTO> {
+    return this.http.delete<MessageDTO>(`${this.apiUrl}/strands/${strandId}`, {
+      responseType: 'json'
+    });
+  }
+
+  public listAll(): Observable<Strand[]> {
     return this.http.get<Strand[]>(`${this.apiUrl}/strands/all`);
   }
 
   public getAllStrandWithStudentCount(): Observable<{ strand: Strand; studentCount: number }[]> {
-    return this.getAllStrands().pipe(
+    return this.listAll().pipe(
       switchMap(strands =>
         forkJoin(
           strands.map(strand =>

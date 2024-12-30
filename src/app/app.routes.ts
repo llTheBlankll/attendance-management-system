@@ -1,13 +1,6 @@
 import {Routes} from '@angular/router';
 import {AuthComponent} from './auth/auth.component';
 import {authGuard} from './core/guards/auth/auth.guard';
-import {StrandsComponent} from './dashboard/principal/strands/strands.component';
-import {AttendanceComponent} from './dashboard/public/attendances/attendance/attendance.component';
-import {ClassesComponent} from './dashboard/public/classes/classes/classes.component';
-import {StudentsPageComponent} from './dashboard/public/students/students-page/students-page.component';
-import {GradeLevelsComponent} from './dashboard/principal/grade-levels/grade-levels.component';
-import {SettingsComponent} from './dashboard/public/settings/settings/settings.component';
-import {ReportsComponent} from './dashboard/public/reports/reports.component';
 
 export const routes: Routes = [
   {
@@ -56,7 +49,7 @@ export const routes: Routes = [
   // Region: GLOBAL REGION
   {
     path: 'dashboard/students',
-    component: StudentsPageComponent,
+    loadComponent: () => import('./dashboard/public/students/students-page/students-page.component').then(m => m.StudentsPageComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [
@@ -76,7 +69,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/classes',
-    component: ClassesComponent,
+    loadComponent: () => import('./dashboard/public/classes/classes/classes.component').then(m => m.ClassesComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [
@@ -96,7 +89,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/attendances',
-    component: AttendanceComponent,
+    loadComponent: () => import('./dashboard/public/attendances/attendance/attendance.component').then(m => m.AttendanceComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [
@@ -116,7 +109,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/strands',
-    component: StrandsComponent,
+    loadComponent: () => import('./dashboard/principal/strands/strands.component').then(m => m.StrandsComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [
@@ -136,7 +129,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/reports',
-    component: ReportsComponent,
+    loadComponent: () => import('./dashboard/public/reports/reports.component').then(m => m.ReportsComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [
@@ -147,7 +140,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/grade-levels',
-    component: GradeLevelsComponent,
+    loadComponent: () => import('./dashboard/principal/grade-levels/grade-levels.component').then(m => m.GradeLevelsComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [
@@ -168,7 +161,7 @@ export const routes: Routes = [
   // End: GLOBAL REGION
   {
     path: 'settings',
-    component: SettingsComponent,
+    loadComponent: () => import('./dashboard/public/settings/settings/settings.component').then(m => m.SettingsComponent),
     canActivate: [authGuard],
     data: {
       breadcrumb: [

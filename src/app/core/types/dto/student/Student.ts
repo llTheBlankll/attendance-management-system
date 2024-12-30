@@ -20,6 +20,7 @@ interface StudentGuardian {
 
 export interface StudentSchedule {
   id: number;
+  name: String;
   onTime: Date;
   lateTime: Date;
   absentTime: Date;
@@ -35,7 +36,7 @@ export interface Student {
   prefix?: string;
   address?: string;
   sex: Sex;
-  birthdate: Date;
+  birthDate: Date | string;
   classroom?: StudentClassroom;
   gradeLevel?: GradeLevel;
   strand?: Strand;

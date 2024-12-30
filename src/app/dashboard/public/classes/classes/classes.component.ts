@@ -138,7 +138,7 @@ export class ClassesComponent implements OnInit {
 
   public retrieveClasses(): void {
     this.classroomService
-      .getAllClassrooms()
+      .listAll()
       .subscribe((classes: ClassroomDTO[]) => {
         this.classrooms = classes;
       });

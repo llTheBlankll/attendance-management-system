@@ -1,0 +1,50 @@
+<!-- ! Edit Strand Dialog -->
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  header="Add Strand"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="this.strandForm">
+      <div class="field">
+        <label for="name">Name</label>
+        <input
+          autofocus
+          id="name"
+          pInputText
+          required
+          type="text"
+          formControlName="name"
+        />
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea
+          cols="20"
+          id="description"
+          pInputTextarea
+          required
+          rows="3"
+          formControlName="description"
+        ></textarea>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      (click)="visibleChange.emit(false)"
+      icon="pi pi-times"
+      label="Cancel"
+      severity="danger"
+    ></p-button>
+    <p-button
+      (click)="submit()"
+      icon="pi pi-check"
+      label="Save"
+      severity="info"
+    ></p-button>
+  </ng-template>
+</p-dialog>

@@ -4,11 +4,12 @@ import {Button} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {DropdownChangeEvent, DropdownModule} from 'primeng/dropdown';
-import {ConfirmationService, MessageService, PrimeTemplate,} from 'primeng/api';
+import {PrimeTemplate,} from 'primeng/api';
 import {ToastModule} from 'primeng/toast';
 import {TooltipModule} from 'primeng/tooltip';
 import {Student} from '../../../../core/types/dto/student/Student';
 import {StudentService} from '../../../../core/services/student/student.service';
+import {AddStudentDialogComponent} from "../dialogs/add-student-dialog/add-student-dialog.component";
 
 @Component({
   selector: 'student-details-and-selection-card',
@@ -22,18 +23,31 @@ import {StudentService} from '../../../../core/services/student/student.service'
     PrimeTemplate,
     ToastModule,
     TooltipModule,
+    AddStudentDialogComponent,
   ],
   templateUrl: './student-details-and-selection-card.component.html',
   styleUrl: './student-details-and-selection-card.component.css',
 })
 export class StudentDetailsAndSelectionCardComponent {
+
+  // * INJECTIONS
+  private readonly studentService = inject(StudentService);
+
+  // * INPUT AND OUTPUT
   @Output()
   public students: EventEmitter<Student[]> = new EventEmitter<Student[]>();
   public _students: Student[] = [];
+
   @Output()
   public studentSelected: EventEmitter<Student> = new EventEmitter<Student>();
   public _studentSelected?: Student;
-  private readonly studentService = inject(StudentService);
+
+  // * Region: Add Student Dialog
+  displayAddStudentDialog = false;
+
+  public saveStudent(student: Student) {
+
+  }
 
   public onStudentSelectionShow(_: any) {
     // To reduce the read usage of Firebase, we're gonna compare the current count of array `students` to the count of the `students` collection in Firebase.

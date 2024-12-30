@@ -1,0 +1,208 @@
+<!-- ! Create Teacher Dialog -->
+<p-dialog [(visible)]="this.visible" [modal]="true" header="Add Student" styleClass="w-30rem">
+  <div class="grid">
+    <form [formGroup]="this.studentForm" class="w-full">
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="id">LRN:</label>
+          <input
+            class="w-full"
+            formControlName="id"
+            id="id"
+            pInputText
+            placeholder="Please enter their LRN"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="firstName">First Name:</label>
+          <input
+            formControlName="firstName"
+            id="firstName"
+            pInputText
+            placeholder="Please enter their first name"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="middleInitial">Middle Initial:</label>
+          <input
+            formControlName="middleInitial"
+            id="middleInitial"
+            pInputText
+            placeholder="Enter middle initial (Optional)"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="lastName">Last Name:</label>
+          <input
+            formControlName="lastName"
+            id="lastName"
+            pInputText
+            placeholder="Please enter their last name"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="address">Address:</label>
+          <input
+            formControlName="address"
+            id="address"
+            pInputText
+            placeholder="Please enter their address"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="prefix">Prefix:</label>
+          <input
+            formControlName="prefix"
+            id="prefix"
+            pInputText
+            placeholder="Enter student prefix"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="sex">Sex:</label>
+          <p-dropdown
+            [options]="['MALE', 'FEMALE']"
+            formControlName="sex"
+            id="sex"
+            styleClass="w-full"
+            placeholder="Select sex"
+          ></p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="birthDate">Birth Date:</label>
+          <p-calendar
+            id="birthDate"
+            formControlName="birthDate"
+            variant="outlined"
+            placeholder="Select Birth Date"
+            styleClass="w-full"
+            dateFormat="yy-mm-dd"
+          >
+
+          </p-calendar>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="strand">Strand:</label>
+          <p-dropdown
+            [options]="this.strands"
+            formControlName="strand"
+            id="strand"
+            styleClass="w-full"
+            placeholder="Select Strand"
+          >
+            <ng-template pTemplate="selectedItem" let-strandSelected>
+              {{ strandSelected.name }}
+            </ng-template>
+            <ng-template pTemplate="item" let-strand>
+              <div class="flex align-items-center">
+                {{ strand.name }}
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="classroom">Classroom:</label>
+          <p-dropdown
+            [options]="this.classrooms"
+            formControlName="classroom"
+            id="classroom"
+            styleClass="w-full"
+            placeholder="Select Classroom"
+          >
+            <ng-template pTemplate="selectedItem" let-classroomSelected>
+              {{ classroomSelected.classroomName }}
+            </ng-template>
+            <ng-template pTemplate="item" let-classroom>
+              <div class="flex align-items-center">
+                {{ classroom.classroomName }}
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="gradeLevel">Grade Level:</label>
+          <p-dropdown
+            [options]="this.gradeLevels"
+            formControlName="gradeLevel"
+            id="gradeLevel"
+            styleClass="w-full"
+            placeholder="Select Grade Level"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedGradeLevel>
+              {{ selectedGradeLevel.name }}
+            </ng-template>
+            <ng-template pTemplate="item" let-gradeLevel>
+              {{ gradeLevel.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="studentSchedule">Schedule:</label>
+          <p-dropdown
+            [options]="this.schedules"
+            formControlName="schedule"
+            id="studentSchedule"
+            styleClass="w-full"
+            placeholder="Select Student Schedule"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedSchedule>
+              {{ selectedSchedule.name }} - {{ selectedSchedule.onTime }} - {{ selectedSchedule.absentTime }}
+            </ng-template>
+            <ng-template pTemplate="item" let-schedules>
+              {{ schedules.name }} - {{ schedules.onTime }} - {{ schedules.absentTime }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="flex flex-column gap-2 mb-2">
+          <label for="profilePicture">Profile Picture:</label>
+          <p-fileUpload
+            [accept]="'image/*'"
+            [fileLimit]="1"
+            [maxFileSize]="8000000"
+            chooseIcon="pi pi-pencil"
+            chooseLabel="Choose"
+            id="profilePicture"
+            mode="basic"
+            name="profilePicture"
+            pTooltip="Profile Picture"
+            styleClass="w-full"
+            (onSelect)="this.onSelectProfilePicture($event)"
+            auto
+          />
+        </div>
+      </div>
+      <div class="col-12 flex justify-content-center">
+      </div>
+    </form>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button (onClick)="this.visibleChange.emit(false)" label="Cancel" severity="secondary"/>
+      <p-button (onClick)="this.submit()" label="Save"/>
+    </div>
+  </ng-template>
+</p-dialog>

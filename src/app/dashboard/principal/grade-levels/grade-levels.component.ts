@@ -25,8 +25,8 @@ import {
   LowestAttendanceGradeCardComponent
 } from '../../../components/dashboard/grade-levels/cards/lowest-attendance-grade-card/lowest-attendance-grade-card.component';
 import {
-  HighestPerformanceGradeCardComponent
-} from '../../../components/dashboard/grade-levels/cards/highest-performance-grade-card/highest-performance-grade-card.component';
+  HighestAttendanceGradeCard
+} from '../../../components/dashboard/grade-levels/cards/highest-attendance-grade-card/highest-attendance-grade-card';
 
 @Component({
   selector: 'app-grade-levels',
@@ -46,7 +46,7 @@ import {
     AvgStudentsGradeCardComponent,
     LargestClassSizeCardComponent,
     LowestAttendanceGradeCardComponent,
-    HighestPerformanceGradeCardComponent
+    HighestAttendanceGradeCard
   ],
   providers: [ConfirmationService],
   templateUrl: './grade-levels.component.html',
