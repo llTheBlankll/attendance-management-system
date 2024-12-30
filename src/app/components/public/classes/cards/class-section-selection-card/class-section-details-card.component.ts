@@ -158,7 +158,7 @@ export class ClassSectionDetailsCardComponent implements OnInit {
     if (classroomNameSearch === '') {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
-        this.classroomService.getAllClassrooms().subscribe({
+        this.classroomService.listAll().subscribe({
           next: (classes) => {
             this.classes = classes;
           },
