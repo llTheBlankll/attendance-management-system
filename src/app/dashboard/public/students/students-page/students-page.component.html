@@ -51,18 +51,18 @@
 
 <app-assign-section-dialog
   (assign)="onAssignSection($event)"
-  [(visible)]="assignSectionDialogVisible"
+  [(visible)]="displayAssignSectionDialog"
   [sections]="classrooms"
 ></app-assign-section-dialog>
 
 <app-bulk-assign-dialog
   (assign)="onBulkAssignStudents($event)"
-  [(visible)]="bulkAssignDialogVisible"
+  [(visible)]="displayBulkAssignDialog"
   [allStudents]="allStudents"
   [classrooms]="classrooms"
 ></app-bulk-assign-dialog>
 
 <app-bulk-add-dialog
   (addStudents)="onBulkAddStudents($event)"
-  [(visible)]="bulkAddDialogVisible"
+  [(visible)]="displayBulkAddDialog"
 ></app-bulk-add-dialog>

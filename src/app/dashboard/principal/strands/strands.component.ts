@@ -198,7 +198,7 @@ export class StrandsComponent implements OnInit {
   editStrand(strand: Strand) {
     console.debug("Edited Strand receievd:", strand);
     if (strand.id !== undefined) {
-      this.strandService.updateStrand(strand, strand.id).subscribe({
+      this.strandService.update(strand, strand.id).subscribe({
         next: (response) => {
           if (response.status === CodeStatus.OK) {
             this.messageService.add({
@@ -252,7 +252,7 @@ export class StrandsComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         if (strand.id !== undefined) {
-          this.strandService.deleteStrand(strand.id).subscribe({
+          this.strandService.delete(strand.id).subscribe({
             next: (response: MessageDTO) => {
               if (response.status === CodeStatus.OK) {
                 this.strands = this.strands.filter(val => val.strand.id !== strand.id);
@@ -291,7 +291,7 @@ export class StrandsComponent implements OnInit {
   }
 
   createStrand(strand: Strand) {
-    const result = this.strandService.createStrand(
+    const result = this.strandService.create(
       strand
     );
     result.subscribe({

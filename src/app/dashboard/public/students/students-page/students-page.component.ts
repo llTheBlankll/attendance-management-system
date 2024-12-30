@@ -29,20 +29,29 @@ import {TimeRange} from '../../../../core/types/other/DateRange';
 import {Student} from '../../../../core/types/dto/student/Student';
 import {AttendanceService} from '../../../../core/services/attendance/attendance.service';
 import {UtilService} from '../../../../core/services/util/util.service';
-import {Dialog, DialogModule} from 'primeng/dialog';
+import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {FileUploadModule} from 'primeng/fileupload';
 import {TableModule} from 'primeng/table';
 import {FormsModule} from '@angular/forms';
-import {AssignSectionDialogComponent} from '../../../../components/public/students/dialogs/assign-section-dialog/assign-section-dialog.component';
-import {BulkAssignDialogComponent} from '../../../../components/public/students/dialogs/bulk-assign-dialog/bulk-assign-dialog.component';
-import {BulkAddDialogComponent} from '../../../../components/public/students/dialogs/bulk-add-dialog/bulk-add-dialog.component';
+import {
+  AssignSectionDialogComponent
+} from '../../../../components/public/students/dialogs/assign-section-dialog/assign-section-dialog.component';
+import {
+  BulkAssignDialogComponent
+} from '../../../../components/public/students/dialogs/bulk-assign-dialog/bulk-assign-dialog.component';
+import {
+  BulkAddDialogComponent
+} from '../../../../components/public/students/dialogs/bulk-add-dialog/bulk-add-dialog.component';
 import {ClassroomService} from '../../../../core/services/classroom/classroom.service';
 import {StudentService} from '../../../../core/services/student/student.service';
 import {ClassroomDTO} from '../../../../core/types/dto/classroom/ClassroomDTO';
 import {ConfirmationService} from "primeng/api";
+import {
+  AddStudentDialogComponent
+} from "../../../../components/public/students/dialogs/add-student-dialog/add-student-dialog.component";
 
 @Component({
   selector: 'app-students-page',
@@ -65,6 +74,7 @@ import {ConfirmationService} from "primeng/api";
     AssignSectionDialogComponent,
     BulkAssignDialogComponent,
     BulkAddDialogComponent,
+    AddStudentDialogComponent,
   ],
   providers: [
     ConfirmationService
@@ -86,9 +96,10 @@ export class StudentsPageComponent {
       },
     ],
   };
-  assignSectionDialogVisible = false;
-  bulkAssignDialogVisible = false;
-  bulkAddDialogVisible = false;
+  displayAssignSectionDialog = false;
+  displayBulkAssignDialog = false;
+  displayBulkAddDialog = false;
+
   classrooms: ClassroomDTO[] = []; // Populate this with actual section data
   allStudents: Student[] = []; // Populate this with all students
   protected attendanceCard = {
@@ -98,11 +109,14 @@ export class StudentsPageComponent {
     overAllAttendance: 0,
   };
   protected selectedStudent?: Student;
+
   // * Injections
   private readonly attendanceService = inject(AttendanceService);
   private readonly classroomService = inject(ClassroomService);
   private readonly studentService = inject(StudentService);
   private readonly utilService = inject(UtilService);
+
+  // * Time Range
   protected monthlyAttendanceTimeRange = this.utilService.timeRangeConstantToDateRange(
     TimeRangeConstants.LAST_180_DAYS
   );
@@ -240,18 +254,18 @@ export class StudentsPageComponent {
   }
 
   openAssignSectionDialog() {
-    this.assignSectionDialogVisible = true;
+    this.displayAssignSectionDialog = true;
     this.loadSections();
   }
 
   openBulkAssignDialog() {
-    this.bulkAssignDialogVisible = true;
+    this.displayBulkAssignDialog = true;
     this.loadSections();
     this.loadAllStudents();
   }
 
   openBulkAddDialog() {
-    this.bulkAddDialogVisible = true;
+    this.displayBulkAddDialog = true;
   }
 
   onAssignSection(section: any) {
@@ -275,42 +289,11 @@ export class StudentsPageComponent {
     // Implement the actual bulk add logic here
   }
 
-  onMultiSelectShow(dialog: Dialog) {
-    setTimeout(() => {
-      if (dialog) {
-        dialog.maximized = true;
-      }
-    }, 0);
-  }
-
-  onMultiSelectHide(dialog: Dialog) {
-    setTimeout(() => {
-      if (dialog) {
-        dialog.maximized = false;
-      }
-    }, 0);
-  }
-
-  onDropdownShow(dialog: Dialog) {
-    setTimeout(() => {
-      if (dialog) {
-        dialog.maximized = true;
-      }
-    }, 0);
-  }
-
-  onDropdownHide(dialog: Dialog) {
-    setTimeout(() => {
-      if (dialog) {
-        dialog.maximized = false;
-      }
-    }, 0);
-  }
 
   private loadSections() {
     // Call your service to get sections
     // this.sectionService.getSections().subscribe(sections => this.sections = sections);
-    this.classroomService.getAllClassrooms().subscribe((classrooms) => {
+    this.classroomService.listAll().subscribe((classrooms) => {
       this.classrooms = classrooms;
     });
   }
