@@ -64,7 +64,7 @@ export class ClassroomService {
     );
   }
 
-  public getAllClassrooms(
+  public listAll(
     pageRequest?: PageRequest,
     sortRequest?: SortRequest
   ): Observable<ClassroomDTO[]> {
@@ -141,7 +141,7 @@ export class ClassroomService {
       strand: classroomStudent.strand,
       guardian: classroomStudent.guardian,
       studentSchedule: classroomStudent.studentSchedule,
-      birthdate: new Date(classroomStudent.birthdate),
+      birthDate: new Date(classroomStudent.birthdate),
     };
   }
 }
